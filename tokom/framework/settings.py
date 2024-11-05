@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tokom',
+    'tokom', 
+    'auth_app', #login regis
     'django_bootstrap5',
     'django_seed', # Seeder
 ]

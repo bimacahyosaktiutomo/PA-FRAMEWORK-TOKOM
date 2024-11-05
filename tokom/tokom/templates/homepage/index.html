@@ -1,0 +1,87 @@
+{% extends '../layout.html' %}
+{% block title %} Homepage {% endblock %}
+{% block content %}
+{% load static %}
+<section class="flex justify-center my-6">
+    <div class="relative overflow-hidden rounded-xl lg:h-96 h-72 w-11/12 select-none">
+        <div class="flex transition-transform duration-500 ease-in-out" id="carousel">
+            <div class="flex-shrink-0 w-full lg:h-96 h-72 bg-indigo-500 flex items-center justify-center text-white text-2xl">
+                Slide 1
+            </div>
+            <div class="flex-shrink-0 w-full lg:h-96 h-72 bg-blue-500 flex items-center justify-center text-white text-2xl">
+                Slide 2
+            </div>
+            <div class="flex-shrink-0 w-full lg:h-96 h-72 bg-green-500 flex items-center justify-center text-white text-2xl">
+                Slide 3
+            </div>
+        </div>
+
+        <button id="hero-button-left" onclick="prevSlide()"
+            class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-20 rounded-full text-white px-4 py-2 ml-2 hover:bg-opacity-100 hover-anim"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="hero-button-right" onclick="nextSlide()"
+            class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-20 rounded-full text-white px-4 py-2 mr-2 hover:bg-opacity-100 hover-anim"><i class="fa-solid fa-chevron-right"></i></button>
+
+        <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
+            <button class="w-3 h-3 bg-gray-400 rounded-full" onclick="goToSlide(0)" id="dot0"></button>
+            <button class="w-3 h-3 bg-gray-400 rounded-full" onclick="goToSlide(1)" id="dot1"></button>
+            <button class="w-3 h-3 bg-gray-400 rounded-full" onclick="goToSlide(2)" id="dot2"></button>
+        </div>
+    </div>
+</section>
+<section class="flex justify-center">
+    <div class="py-2 w-11/12">
+        <p class="mb-3 text-xl font-semibold">Rekomendasi Produk</p>
+        <div class="grid md:grid-cols-4 grid-cols-2 gap-3">
+            <div class="flex flex-col w-full p-2 bg-indigo-50 rounded-lg">
+                <img src="https://nzxt.com/assets/cms/34299/1723066590-h5-flow-hero-white.png?ar64=MTox&auto=format&dpr=1.5&fit=crop&h=400&w=400" class="w-auto h-56 self-center object-contain" alt="">
+                <div>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                item 1
+                <p>
+                    Rp. 1000.0000
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="flex justify-center ">
+    <div class="py-2 w-11/12">
+        <p class="mb-3 text-xl font-semibold">Brand Unggulan</p>
+        <div class="relative w-full">
+            <button id="left-button" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-20 rounded-full text-white px-4 py-2 ml-2 hover:bg-opacity-100 hover-anim">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <div id="" class="swiper-container flex overflow-x-auto select-none no-scrollbar">
+                <div class="px-1 py-4 md:py-8 mx-2 w-2/12 md:w-2/12 bg-indigo-50 rounded-md flex shrink-0">
+                    <img class="object-contain min-w-full h-auto self-center" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/AMD_Logo.svg/1200px-AMD_Logo.svg.png" alt="">
+                </div>
+                <div class="px-1 md:py-8 py-4  mx-2 md:w-2/12 w-2/12  bg-indigo-50 rounded-md flex shrink-0">
+                    <img class="object-contain min-w-full h-auto self-center" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Intel_logo_2023.svg/1024px-Intel_logo_2023.svg.png" alt="">
+                </div>
+                <div class="px-1 md:py-8 py-4  mx-2 md:w-2/12 w-2/12  bg-indigo-50 rounded-md flex shrink-0">
+                    <img class="object-contain min-w-full h-auto self-center" src="https://upload.wikimedia.org/wikipedia/id/thumb/a/a4/NVIDIA_logo.svg/1024px-NVIDIA_logo.svg.png" alt="">
+                </div>
+                <div class="px-1 md:py-8 py-4  mx-2 md:w-2/12 w-2/12  bg-indigo-50 rounded-md flex shrink-0">
+                    <img class="object-contain min-w-full h-auto self-center" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/ASUS_Logo.svg/1024px-ASUS_Logo.svg.png" alt="">
+                </div>
+                <div class="px-1 md:py-8 py-4  mx-2 md:w-2/12 w-2/12  bg-indigo-50 rounded-md flex shrink-0">
+                    <img class="object-contain min-w-full h-auto self-center" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/ASRock_Logo.svg/1024px-ASRock_Logo.svg.png" alt="">
+                </div>
+                <div class="px-1 md:py-8 py-4  mx-2 md:w-2/12 w-2/12  bg-indigo-50 rounded-md flex shrink-0">
+                    <img class="object-contain min-w-full h-auto self-center" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Micro-Star_International_logo.svg/1024px-Micro-Star_International_logo.svg.png" alt="">
+                </div>
+            </div>
+
+            <button id="right-button" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-20 rounded-full text-white px-4 py-2 ml-2 hover:bg-opacity-100 hover-anim">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</section>
+{% endblock %}

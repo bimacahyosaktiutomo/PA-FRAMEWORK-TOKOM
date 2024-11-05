@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="{% static 'style/output.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+
+    <!-- Includes all JS & CSS for the JavaScript Data Grid -->
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+</head>
+<body class="w-full">
+    <header class="flex flex-row w-full sticky top-0 z-10 shadow-sm bg-indigo-50 py-4 px-2 space-x-2 border-b-2 border-b-indigo-100">
+        <div id="hamburger-button-container" class="flex justify-evenly items-center w-2/12 hover-anim">
+            <!-- <a href="" class="flex md:items-center items-end ml-1 xs:ml-0 px-1 py-2 rounded-md hover:bg-indigo-100 hover-anim">
+                <img class="max-w-full h-auto object-contain md:w-28 w-20 " src="{% static 'asset/logo.png' %}" alt="">
+            </a> -->
+            <button id="hamburger-button" class="" onclick="toggleSideBar()">
+                <i class="xs:block hidden fa-solid fa-bars"></i>
+                <i id="hidden-hamburger-button" class="xs:hidden fa-solid fa-bars hover-anim"></i>
+            </button>
+        </div>
+        <div class="flex md:flex-grow flex-col w-3/4 px-2">
+            <nav class="flex md:justify-between justify-end w-full md:space-x-10">
+                <div class="md:flex hidden flex-grow self-center h-10 basis-3/5">
+                    <input type="text" class="flex-grow border-solid border-2 border-indigo-300 rounded-l-lg px-1 w-96 outline-none focus:outline-indigo-400 hover-anim" placeholder="Cari. . .">
+                    <button class="border-solid border-2 border-y-indigo-300 border-r-indigo-300 rounded-r-lg bg-transparent text-indigo-600 py-1 px-4 hover:bg-indigo-600 hover:text-white hover-anim"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+                <div class="flex flex-row">
+                    <a href="" class="flex align-middle p-1 rounded-md md:hover:bg-indigo-100 hover-anim">
+                        <button class="flex text-indigo-600 md:text-2xl md:mr-2 mr-0 md:p-0 px-1 hover:bg-indigo-100 rounded-lg hover-anim"><i class="self-center fa-regular fa-user xs:align-top hover:text-indigo-800"></i></button>
+                        <div class="object-contain md:flex md:flex-col md:justify-center hidden">
+                            <p class="text-xs">Welcome</p>
+                            <p class="font-semibold">Sign in / Sign Up</p>
+                        </div>
+                    </a>
+                    <a href="" class="flex md:p-3 px-1  rounded-md hover:bg-indigo-100 hover:hover-anim">
+                        <i class="self-center fa-solid fa-cart-shopping md:text-2xl text-indigo-600 hover:text-indigo-800 hover-anim"></i>
+                    </a>
+                </div>
+            </nav>
+    
+            <!-- Hidden -->
+            <div class="md:hidden flex justify-center">
+                <input type="text" class="w-full xs:w-96 border-solid border-2 border-indigo-300 rounded-l-lg h-auto px-1 outline-none focus:outline-indigo-400 hover-anim" placeholder="Cari. . .">
+                <button class="border-solid border-2 border-y-indigo-300 border-r-indigo-300 rounded-r-lg bg-transparent text-indigo-600 py-1 px-4 hover:bg-indigo-600 hover:text-white hover-anim"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <section class="flex">
+        <div id="sidebar" class="xs:block hidden sticky h-screen w-2/12 py-2 overflow-auto bg-indigo-900 text-indigo-50 text-md hover-anim">
+            <!-- <div id="sidebar-name" class="p-2">
+                <h6 class="font-extralight opacity-90">Menu Dashboard</h6>
+            </div> -->
+            <ul class="font-semibold text-slate-300">
+                <li class="cursor-pointer px-4 py-3 hover:text-white hover:bg-indigo-700 hover-anim">
+                    <a href="" class="sidebar-item flex justify-between items-center">
+                        <i class="sidebar-icon w-1/3 fa-solid fa-boxes-stacked"></i>
+                        <span class="w-full">Barang</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="cursor-pointer px-4 py-3 hover:text-white hover:bg-indigo-700 hover-anim">
+                    <a href="" class="sidebar-item flex justify-between items-center">
+                        <i class="sidebar-icon w-1/3 fa-solid fa-user"></i>
+                        <span class="w-full">Akun</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+
+                </li>
+                <li class="cursor-pointer px-4 py-3 hover:text-white hover:bg-indigo-700 hover-anim">
+                    <a href="" class="sidebar-item flex justify-between items-center">
+                        <i class="sidebar-icon w-1/3 fa-solid fa-comment"></i>
+                        <span class="w-full">Ulasan</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="cursor-pointer px-4 py-3 hover:text-white hover:bg-indigo-700 hover-anim">
+                    <a href="" class="sidebar-item flex justify-between items-center">
+                        <i class="sidebar-icon w-1/3 fa-solid fa-cart-flatbed"></i>
+                        <span class="w-full">Transaksi</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Sidebar off canvas -->
+        <div id="sidebar-off-canvas" class="fixed z-50 -translate-x-full h-screen w-1/3 py-2 overflow-auto bg-indigo-900 text-indigo-50 text-xs hover-anim">
+            <div id="sidebar-name" class="p-2">
+                <h6 class="font-extralight opacity-90">Menu Dashboard</h6>
+            </div>
+            <ul class="font-semibold text-slate-300">
+                <li class="px-2 py-3 hover:text-white hover:bg-indigo-700 hover-anim">
+                    <a href="" class="sidebar-item flex justify-between items-center">
+                        <i class="sidebar-icon w-1/3 fa-solid fa-boxes-stacked"></i>
+                        <span class="w-full">Barang</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="px-2 py-3 hover:text-white hover:bg-indigo-700 hover-anim">
+                    <a href="" class="sidebar-item flex justify-between items-center">
+                        <i class="sidebar-icon w-1/3 fa-solid fa-user"></i>
+                        <span class="w-full">Akun</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+
+                </li>
+                <li class="px-2 py-3 hover:text-white hover:bg-indigo-700 hover-anim">
+                    <a href="" class="sidebar-item flex justify-between items-center">
+                        <i class="sidebar-icon w-1/3 fa-solid fa-comment"></i>
+                        <span class="w-full">Ulasan</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="px-2 py-3 hover:text-white hover:bg-indigo-700 hover-anim">
+                    <a href="" class="sidebar-item flex justify-between items-center">
+                        <i class="sidebar-icon w-1/3 fa-solid fa-cart-flatbed"></i>
+                        <span class="w-full">Transaksi</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="flex-grow p-3">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </section>
+</body>
+<script src="{% static 'js/dashboard.js' %}"></script>
+</html>

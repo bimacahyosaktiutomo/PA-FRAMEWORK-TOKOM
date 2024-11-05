@@ -1,0 +1,12 @@
+{% extends '../dashboard/utility.html' %}
+{% block title %} Dashboard {% endblock %}
+{% block content %}
+{% load static %}
+Barang
+<div id="barangGrid" class="ag-theme-quartz" style="height: 560px;"></div>
+
+<script src="{% static 'js/barang.js' %}"></script>
+
+<!-- Buat ngetest class untuk js -->
+<div class="xs:hidden flex justify-between text- bg-red-500"></div> <!-- jangan copy 'hidden' nya -->
+{% endblock %}

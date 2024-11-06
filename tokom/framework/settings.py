@@ -83,17 +83,17 @@ WSGI_APPLICATION = 'framework.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'tokom',  # Nama database yang telah dibuat di phpMyAdmin
-#         'USER': 'root',  # User default MySQL di XAMPP
-#         # Biasanya password default di XAMPP kosong (tidak diisi)
-#         'PASSWORD': '',
-#         'HOST': '127.0.0.1',  # Host MySQL di XAMPP (localhost)
-#         'PORT': '3306',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'tokom',  # Nama database yang telah dibuat di phpMyAdmin
+        'USER': 'root',  # User default MySQL di XAMPP
+        # Biasanya password default di XAMPP kosong (tidak diisi)
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',  # Host MySQL di XAMPP (localhost)
+        'PORT': '3306',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

@@ -1,11 +1,12 @@
 from django.db import models
+from django.conf import settings
 
 class Order(models.Model):
-    # id = models.AutoField(unique=True, primary_key=True)
-    id_user = models.ForeignKey();
-    alamat = models.CharField(max_length=255);
-    total_harga = models.BigIntegerField();
-    status = models.BooleanField();
+    id = models.BigAutoField(primary_key=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
+    address = models.CharField(max_length=255)
+    total_price = models.BigIntegerField()
+    status = models.BooleanField()
 
     def __str__(self):
-        return self.id_user
+        return f"Order {self.id} - User {self.user.username}"

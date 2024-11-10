@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Logout</title>
-</head>
-<body>
+{% extends '../auth.html' %}
+{% block title %} Logout {% endblock %}
+{% block content %}
+{% load static %}
+<section>
     <h1>Logged Out</h1>
     <p>You have been successfully logged out.</p>
     <a href="{% url 'auth_app:login' %}">Login Again</a>
-</body>
-</html>
+</section>
+{% endblock %}

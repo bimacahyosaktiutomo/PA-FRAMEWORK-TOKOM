@@ -20,14 +20,14 @@
                 <button class="border-solid border-2 border-y-indigo-300 border-r-indigo-300 rounded-r-lg bg-transparent text-indigo-600 py-1 px-4 hover:bg-indigo-600 hover:text-white hover-anim"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
             <div class="flex flex-row">
-                <a href="" class="flex align-middle p-1 rounded-md md:hover:bg-indigo-100 hover-anim">
+                <a href="{% url 'auth:login' %}" class="flex align-middle p-1 rounded-md md:hover:bg-indigo-100 hover-anim">
                     <button class="flex text-indigo-600 md:text-2xl md:mr-2 mr-0 md:p-0 px-1 hover:bg-indigo-100 rounded-lg hover-anim"><i class="self-center fa-regular fa-user xs:align-top hover:text-indigo-800"></i></button>
                     <div class="object-contain md:flex md:flex-col md:justify-center hidden">
                         <p class="text-xs">Welcome</p>
                         <p class="font-semibold">Sign in / Sign Up</p>
                     </div>
                 </a>
-                <a href="" class="flex md:p-3 px-1  rounded-md hover:bg-indigo-100 hover:hover-anim">
+                <a href="{% url 'tokom:dashboard' %}" class="flex md:p-3 px-1  rounded-md hover:bg-indigo-100 hover:hover-anim">
                     <i class="self-center fa-solid fa-cart-shopping md:text-2xl text-indigo-600 hover:text-indigo-800 hover-anim"></i>
                 </a>
             </div>

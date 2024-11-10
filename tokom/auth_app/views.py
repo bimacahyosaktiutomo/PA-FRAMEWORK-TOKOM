@@ -11,7 +11,7 @@ def register(request):
             user = form.save()
             login(request, user) #login user habis regis
             messages.success(request, "Registration Successful!")
-            return redirect('dashboard')
+            return redirect('tokom:dashboard')
         else:
             messages.error(request, "Registration Failed. Invalid registration info, try again!")
     else:
@@ -28,7 +28,7 @@ def user_login(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f"Login Succeessful! Youre now logged in as {username}")
-                return redirect('dashboard')
+                return redirect('tokom:dashboard')
             else:
                 messages.error(request, "Invalid Username or Password.")
         else:
@@ -40,4 +40,4 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     messages.info(request, f"Logout Successful!")
-    return redirect('dashboard')
+    return redirect('tokom:home')

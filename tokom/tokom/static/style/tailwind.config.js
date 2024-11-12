@@ -4,8 +4,8 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 module.exports = {
   content: [
     "../../templates/**/*.html",
-    "../../static/js/*.js",
-  './node_modules/flowbite/**/*.js',],
+    "../js/*.js",
+    "../../../static/node_modules/flowbite/**/*.js",],
   theme: {
     extend: {
       fontFamily: {
@@ -22,7 +22,8 @@ module.exports = {
     }
   },
   plugins: [
-    require('flowbite/plugin'),
+    require('../../../static/node_modules/flowbite/plugin'),
+    require('../../../static/node_modules/daisyui/'),
     function({ addUtilities }) {
       const newUtilities = {
         '.hover-anim': {

@@ -10,10 +10,11 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="{% static 'auth_app/style/output.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script> -->
 </head>
 <body>
     {% block content %}
     {% endblock %}
 </body>
-<script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+<script src="{% static 'node_modules/flowbite/dist/flowbite.min.js' %}"></script>
 </html>

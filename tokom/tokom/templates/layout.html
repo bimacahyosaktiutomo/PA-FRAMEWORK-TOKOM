@@ -1,26 +1,35 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="{% static 'style/output.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
-</head>
-<body>
-    <header class="sticky top-0 w-full z-10 shadow-sm bg-indigo-50 py-4 px-2 space-x-2 border-b-2 border-b-indigo-100">
-        <nav class="flex justify-between">
-            <a href="" class="flex items-center ml-1 xs:ml-0 px-1 py-2 rounded-md hover:bg-indigo-100 hover-anim">
-                <img class="max-w-full h-auto object-contain md:w-36 w-20 " src="{% static 'asset/logo.png' %}" alt="">
-            </a>
-            <div class="md:flex hidden  justify-center self-center h-10 basis-3/5">
-                <input type="text" class="flex-grow border-solid border-2 border-indigo-300 rounded-l-lg px-1 w-96 outline-none focus:ring-2 focus:ring-indigo-400 hover-anim" placeholder="Cari. . .">
-                <button class="border-solid border-2 border-y-indigo-300 border-r-indigo-300 rounded-r-lg bg-transparent text-indigo-600 py-1 px-4 hover:bg-indigo-600 hover:text-white hover-anim"><i class="fa-solid fa-magnifying-glass"></i></button>
-            </div>
-            <div class="flex flex-row">
-                {% if user.is_authenticated %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link href="{% static 'style/output.css' %}" rel="stylesheet">
+        <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        <!-- <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script> -->
+    </head>
+    <body>
+        <!-- Header -->
+        <header class="sticky top-0 w-full z-10 shadow-sm bg-indigo-50 py-4 px-2 space-x-2 border-b-2 border-b-indigo-100">
+            <nav class="flex justify-between">
+
+                <!-- Logo -->
+                <a href="{% url 'tokom:home' %}" class="flex items-center ml-1 xs:ml-0 px-1 py-2 rounded-md hover:bg-indigo-100 hover-anim">
+                    <img class="max-w-full h-auto object-contain md:w-36 w-20 " src="{% static 'asset/logo.png' %}" alt="">
+                </a>
+
+                <!-- Search Bar  -->
+                <div class="md:flex hidden  justify-center self-center h-10 basis-3/5">
+                    <input type="text" class="flex-grow border-solid border-2 border-indigo-300 rounded-l-lg px-1 w-96 outline-none focus:ring-2 focus:ring-indigo-400 hover-anim" placeholder="Cari. . .">
+                    <button class="border-solid border-2 border-y-indigo-300 border-r-indigo-300 rounded-r-lg bg-transparent text-indigo-600 py-1 px-4 hover:bg-indigo-600 hover:text-white hover-anim"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+
+                <!-- Authentication Button -->
+                <div class="flex flex-row">
+                    {% if user.is_authenticated %}
                     <a href="{% url 'auth:logout' %}" class="flex align-middle p-1 rounded-md md:hover:bg-indigo-100 hover-anim">
                         <button class="flex text-indigo-600 md:text-2xl md:mr-2 mr-0 md:p-0 px-1 hover:bg-indigo-100 rounded-lg hover-anim">
                             <i class="self-center fa-regular fa-user xs:align-top hover:text-indigo-800"></i>
@@ -30,7 +39,7 @@
                             <p class="font-semibold">Logout</p>
                         </div>
                     </a>
-                {% else %}
+                    {% else %}
                     <a href="{% url 'auth:login' %}" class="flex align-middle p-1 rounded-md md:hover:bg-indigo-100 hover-anim">
                         <button class="flex text-indigo-600 md:text-2xl md:mr-2 mr-0 md:p-0 px-1 hover:bg-indigo-100 rounded-lg hover-anim">
                             <i class="self-center fa-regular fa-user xs:align-top hover:text-indigo-800"></i>
@@ -40,25 +49,28 @@
                             <p class="font-semibold">Sign in / Sign Up</p>
                         </div>
                     </a>
-                {% endif %}
-                <a href="{% url 'tokom:dashboard' %}" class="flex md:p-3 px-1 rounded-md hover:bg-indigo-100 hover-anim">
-                    <i class="self-center fa-solid fa-cart-shopping md:text-2xl text-indigo-600 hover:text-indigo-800 hover-anim"></i>
-                </a>
-            </div>
+                    {% endif %}
+                    <a href="{% url 'tokom:dashboard' %}" class="flex md:p-3 px-1 rounded-md hover:bg-indigo-100 hover-anim">
+                        <i class="self-center fa-solid fa-cart-shopping md:text-2xl text-indigo-600 hover:text-indigo-800 hover-anim"></i>
+                    </a>
+                </div>
+                
+            </nav>
             
-        </nav>
+            <!-- Hidden -->
+            <div class="md:hidden flex  justify-center mt-1">
+                <input type="text" class="w-full xs:w-96 border-solid border-2 border-indigo-300 rounded-l-lg h-auto px-1 outline-none focus:ring-2 focus:ring-indigo-400 hover-anim" placeholder="Cari. . .">
+                <button class="border-solid border-2 border-y-indigo-300 border-r-indigo-300 rounded-r-lg bg-transparent text-indigo-600 py-1 px-4 hover:bg-indigo-600 hover:text-white hover-anim"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+        </header>
 
-        <!-- Hidden -->
-        <div class="md:hidden flex  justify-center mt-1">
-            <input type="text" class="w-full xs:w-96 border-solid border-2 border-indigo-300 rounded-l-lg h-auto px-1 outline-none focus:ring-2 focus:ring-indigo-400 hover-anim" placeholder="Cari. . .">
-            <button class="border-solid border-2 border-y-indigo-300 border-r-indigo-300 rounded-r-lg bg-transparent text-indigo-600 py-1 px-4 hover:bg-indigo-600 hover:text-white hover-anim"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <div class="">
+            {% block content %}
+            {% endblock %}
         </div>
-    </header>
-    <div class="max-w-screen-2xl justify-self-center">
-        {% block content %}
-        {% endblock %}
-    </div>
-    <footer class="bg-indigo-50 flex justify-center ">
+
+        <!-- Footer -->
+        <footer class="bg-indigo-50 flex justify-center ">
         <div class="flex flex-col justify-center py-8 basis-3/4">
             <div class="flex justify-evenly py-4 basis-1/2 text-lg text-indigo-600">
                 <a href=""><i class="fa-brands fa-facebook"></i></a>
@@ -71,6 +83,6 @@
         </div>
     </footer>
 </body>
+<script src="{% static 'node_modules/flowbite/dist/flowbite.min.js' %}"></script>
 <script src="{% static 'js/control.js' %}"></script>
-<script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
 </html>

@@ -5,10 +5,11 @@
 {% load widget_tweaks %}
 <section class="flex flex-col items-center">
     <img class="mt-16 max-w-full h-auto object-contain md:w-36 w-20 " src="{% static 'asset/logo.png' %}" alt="">
-    <div class="w-max">
+    <div class="w-">
         <div class="max-w-xs mx-auto mt-4 p-6 bg-white border border-gray-200 rounded-lg shadow-md">
             <h1 class="text-3xl font-semibold text-center text-gray-800 mb-6">Sign In</h1>
         
+            <!-- Warning -->
             {% if messages %}
                 <div class="mb-4">
                     {% for message in messages %}
@@ -22,12 +23,14 @@
             <form method="post">
                 {% csrf_token %}
                 
+                <!-- Username -->
                 <div class="mb-4">
                     {{ form.username.errors }}
                     <label for="id_username" class="block text-sm font-medium text-gray-600">Username</label>
                     {{ form.username|add_class:"mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" }}
                 </div>
         
+                <!-- Password -->
                 <div class="mb-6">
                     {{ form.password.errors }}
                     <label for="id_password" class="block text-sm font-medium text-gray-600">Password</label>
@@ -39,7 +42,12 @@
                 </button>
             </form>
         </div>
-        <p class="mt-4 text-center text-sm my-2">Don't have an account ?</p>
+
+        <!-- Register button -->
+        <div class="flex items-center justify-center w-full">
+            <hr class="w-full sm:w-64 h-px my-6 bg-gray-200 border-0 dark:bg-gray-700">
+            <span class="absolute px-3 font-medium text-gray-500 -translate-x-1/2 bg-white left-1/2 dark:text-white dark:bg-gray-900">Don't have an account ?</span>
+        </div>
         <button class="w-full mx-auto p-1 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-50">
             <a href="{% url 'auth_app:register' %}">Create your account here</a>
         </button>

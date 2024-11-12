@@ -2,6 +2,7 @@
 {% block title %} Homepage {% endblock %}
 {% block content %}
 {% load static %}
+<!-- Carousel -->
 <section class="flex justify-center my-6">
     <div class="relative overflow-hidden rounded-xl lg:h-96 h-72 w-11/12 select-none">
         <div class="flex transition-transform duration-500 ease-in-out" id="carousel">
@@ -28,27 +29,41 @@
         </div>
     </div>
 </section>
+
+<!-- Product Swiper / Carousel -->
 <section class="flex justify-center">
     <div class="py-2 w-11/12">
         <p class="mb-3 text-xl font-semibold">Rekomendasi Produk</p>
         <div class="grid md:grid-cols-4 grid-cols-2 gap-3">
-            <div class="flex flex-col w-full p-2 bg-indigo-50 rounded-lg">
-                <img src="https://nzxt.com/assets/cms/34299/1723066590-h5-flow-hero-white.png?ar64=MTox&auto=format&dpr=1.5&fit=crop&h=400&w=400" class="w-auto h-56 self-center object-contain" alt="">
-                <div>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
+
+            <!-- Items -->
+            <a href="{% url 'tokom:product_details' %}"> <!-- Sementara -->
+                <div class="flex flex-col rounded-lg shadow-md">
+                    <div class="flex justify-center w-full bg-gray-100 rounded-md">
+                        <img class="self-center object-scale-down w-full h-56"  src="https://nzxt.com/assets/cms/34299/1712947669-h7-flow-hero-white.png?ar64=MTox&auto=format&dpr=1.5&fit=crop&h=400&w=400" alt="">
+                    </div>
+                    <div class="p-3">
+                        <div>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-sm line-clamp-2 max-w-full">
+                            NZXT H7 Flow 2024 - Mid-Tower ATX Airflow Case - Includes Pre-Installed 3 x 120mm Fans - CM-H72FW-01 - Supports Bottom Fans for Dedicated GPU Cooling - Cable Management - White 
+                        </p>
+                        <p class="text-sm font-semibold truncate max-w-full">
+                            Rp. 1.890.0000
+                        </p>
+                    </div>
                 </div>
-                item 1
-                <p>
-                    Rp. 1000.0000
-                </p>
-            </div>
+            </a>
         </div>
     </div>
 </section>
+
+<!-- Brand Swipper -->
 <section class="flex justify-center ">
     <div class="py-2 w-11/12">
         <p class="mb-3 text-xl font-semibold">Brand Unggulan</p>

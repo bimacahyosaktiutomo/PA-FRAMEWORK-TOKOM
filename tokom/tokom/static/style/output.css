@@ -3976,6 +3976,11 @@ details.collapse summary::-webkit-details-marker {
   border-end-start-radius: 0.5rem;
 }
 
+.rounded-t-md {
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
+}
+
 .border {
   border-width: 1px;
 }
@@ -4159,11 +4164,6 @@ details.collapse summary::-webkit-details-marker {
      object-fit: contain;
 }
 
-.object-cover {
-  -o-object-fit: cover;
-     object-fit: cover;
-}
-
 .object-scale-down {
   -o-object-fit: scale-down;
      object-fit: scale-down;
@@ -4172,6 +4172,11 @@ details.collapse summary::-webkit-details-marker {
 .object-left-top {
   -o-object-position: left top;
      object-position: left top;
+}
+
+.object-left {
+  -o-object-position: left;
+     object-position: left;
 }
 
 .p-1 {
@@ -4411,6 +4416,11 @@ details.collapse summary::-webkit-details-marker {
 .text-yellow-500 {
   --tw-text-opacity: 1;
   color: rgb(194 120 3 / var(--tw-text-opacity));
+}
+
+.text-yellow-200 {
+  --tw-text-opacity: 1;
+  color: rgb(252 233 106 / var(--tw-text-opacity));
 }
 
 .opacity-0 {

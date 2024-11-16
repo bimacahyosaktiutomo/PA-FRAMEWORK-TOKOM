@@ -8,5 +8,9 @@ def product_details(request):
     return render(request, 'pages/product_details.html')
 
 @login_required
+def cart(request):
+    return render(request, 'pages/cart.html')
+
+@login_required
 def dashboard(request):
     return render(request, 'dashboard/dashboard.html')

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'django_seed', # Seeder
     'widget_tweaks',
+    'livereload',
 ]
 
 MIDDLEWARE = [

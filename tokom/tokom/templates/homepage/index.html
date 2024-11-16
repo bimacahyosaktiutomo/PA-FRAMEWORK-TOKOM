@@ -18,9 +18,9 @@
         </div>
 
         <button id="hero-button-left" onclick="prevSlide()"
-            class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-20 rounded-full text-white px-4 py-2 ml-2 hover:bg-opacity-100 hover-anim"><i class="fa-solid fa-chevron-left"></i></button>
+            class="swiper-carousel-button-left"><i class="fa-solid fa-chevron-left"></i></button>
         <button id="hero-button-right" onclick="nextSlide()"
-            class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-20 rounded-full text-white px-4 py-2 mr-2 hover:bg-opacity-100 hover-anim"><i class="fa-solid fa-chevron-right"></i></button>
+            class="swiper-carousel-button-right"><i class="fa-solid fa-chevron-right"></i></button>
 
         <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
             <button class="w-3 h-3 bg-gray-400 rounded-full" onclick="goToSlide(0)" id="dot0"></button>
@@ -39,11 +39,11 @@
             <!-- Items -->
             <a href="{% url 'tokom:product_details' %}"> <!-- Sementara -->
                 <div class="flex flex-col rounded-lg shadow-md">
-                    <div class="flex justify-center w-full bg-gray-100 rounded-t-md">
-                        <img class="self-center object-scale-down w-full h-56 transition-transform duration-300 transform hover:scale-110"
+                    <div class="card-img-container">
+                        <img class="card-img"
                         src="https://nzxt.com/assets/cms/34299/1712947669-h7-flow-hero-white.png?ar64=MTox&auto=format&dpr=1.5&fit=crop&h=400&w=400" alt="">
                     </div>
-                    <div class="p-3">
+                    <div class="p-3 h-28">
                         <div  class="text-yellow-300">
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
@@ -61,41 +61,113 @@
                     </div>
                 </div>
             </a>
+            <a href="{% url 'tokom:product_details' %}"> <!-- Sementara -->
+                <div class="flex flex-col rounded-lg shadow-md">
+                    <div class="card-img-container">
+                        <img class="card-img"
+                        src="https://dlcdnwebimgs.asus.com/files/media/C5C2F2D6-2F91-45B6-A49C-1318C35783DC/v1/img/explosion/pd.png" alt="">
+                    </div>
+                    <div class="p-3 h-28">
+                        <div  class="text-gray-400">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span class="text-gray-500">(0)</span>
+                        </div>
+                        <p class="text-sm line-clamp-2 max-w-full">
+                            ROG Strix GeForce RTX 4090 24GB GDDR6X White OC Edition
+                        </p>
+                        <p class="text-sm font-semibold truncate max-w-full">
+                            Rp. 36.500.0000
+                        </p>
+                    </div>
+                </div>
+            </a>
+            <a href="{% url 'tokom:product_details' %}"> <!-- Sementara -->
+                <div class="flex flex-col rounded-lg shadow-md">
+                    <div class="card-img-container">
+                        <img class="card-img"
+                        src="https://www.amd.com/content/dam/amd/en/images/products/processors/ryzen/2505503-ryzen-7-7800x3d.jpg" alt="">
+                    </div>
+                    <div class="p-3 h-28">
+                        <div  class="text-gray-400">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span class="text-gray-500">(0)</span>
+                        </div>
+                        <p class="text-sm line-clamp-2 max-w-full">
+                            AMD Ryzen™ 7 7800X3D Gaming Processor
+                        </p>
+                        <p class="text-sm font-semibold truncate max-w-full">
+                            Rp. 7.875.000
+                        </p>
+                    </div>
+                </div>
+            </a>
+            <a href="{% url 'tokom:product_details' %}"> <!-- Sementara -->
+                <div class="flex flex-col rounded-lg shadow-md">
+                    <div class="card-img-container">
+                        <img class="card-img"
+                        src="https://www.asus.com/microsite/motherboard/AMD-AM5-X670-B650/websites/img/pd/ROG-STRIX-X670E-A-GAMING-WIFI.png" alt="">
+                    </div>
+                    <div class="p-3 h-28">
+                        <div  class="text-gray-400">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span class="text-gray-500">(0)</span>
+                        </div>
+                        <p class="text-sm line-clamp-2 max-w-full">
+                            ROG Strix X670E-A Gaming WiFi 
+                        </p>
+                        <p class="text-sm font-semibold truncate max-w-full">
+                            Rp. 7.310.000
+                        </p>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
 </section>
 
 <!-- Brand Swipper -->
-<section class="flex justify-center ">
+<section class="flex justify-center mb-10">
     <div class="py-2 w-11/12">
         <p class="mb-3 text-xl font-semibold">Brand Unggulan</p>
         <div class="relative w-full">
-            <button id="left-button" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-20 rounded-full text-white px-4 py-2 ml-2 hover:bg-opacity-100 hover-anim">
+            <button id="left-button" class="swiper-carousel-button-left">
                 <i class="fa-solid fa-chevron-left"></i>
             </button>
 
-            <div id="" class="swiper-container flex overflow-x-auto select-none no-scrollbar">
-                <div class="px-1 py-4 md:py-8 mx-2 w-2/12 md:w-2/12 bg-indigo-50 rounded-md flex shrink-0">
+            <div id="" class="swiper-container">
+                <div class="swiper-brand">
                     <img class="object-contain min-w-full h-auto self-center" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/AMD_Logo.svg/1200px-AMD_Logo.svg.png" alt="">
                 </div>
-                <div class="px-1 md:py-8 py-4  mx-2 md:w-2/12 w-2/12  bg-indigo-50 rounded-md flex shrink-0">
+                <div class="swiper-brand">
                     <img class="object-contain min-w-full h-auto self-center" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Intel_logo_2023.svg/1024px-Intel_logo_2023.svg.png" alt="">
                 </div>
-                <div class="px-1 md:py-8 py-4  mx-2 md:w-2/12 w-2/12  bg-indigo-50 rounded-md flex shrink-0">
+                <div class="swiper-brand">
                     <img class="object-contain min-w-full h-auto self-center" src="https://upload.wikimedia.org/wikipedia/id/thumb/a/a4/NVIDIA_logo.svg/1024px-NVIDIA_logo.svg.png" alt="">
                 </div>
-                <div class="px-1 md:py-8 py-4  mx-2 md:w-2/12 w-2/12  bg-indigo-50 rounded-md flex shrink-0">
+                <div class="swiper-brand">
                     <img class="object-contain min-w-full h-auto self-center" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/ASUS_Logo.svg/1024px-ASUS_Logo.svg.png" alt="">
                 </div>
-                <div class="px-1 md:py-8 py-4  mx-2 md:w-2/12 w-2/12  bg-indigo-50 rounded-md flex shrink-0">
+                <div class="swiper-brand">
                     <img class="object-contain min-w-full h-auto self-center" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/ASRock_Logo.svg/1024px-ASRock_Logo.svg.png" alt="">
                 </div>
-                <div class="px-1 md:py-8 py-4  mx-2 md:w-2/12 w-2/12  bg-indigo-50 rounded-md flex shrink-0">
+                <div class="swiper-brand">
                     <img class="object-contain min-w-full h-auto self-center" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Micro-Star_International_logo.svg/1024px-Micro-Star_International_logo.svg.png" alt="">
                 </div>
             </div>
 
-            <button id="right-button" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-20 rounded-full text-white px-4 py-2 ml-2 hover:bg-opacity-100 hover-anim">
+            <button id="right-button" class="swiper-carousel-button-right">
                 <i class="fa-solid fa-chevron-right"></i>
             </button>
         </div>

@@ -6,18 +6,18 @@
     <div class="flex flex-col md:flex-row h-full">
         <!-- Product Image Section -->
         <div class="flex justify-center items-center w-full md:w-1/3 rounded-lg">
-            <img class="w-80 h-80 md:w-96 md:h-96 object-contain object-left-top cursor-pointer transition-transform duration-300 transform hover:scale-110" 
+            <img class="product-details-img" 
                 src="https://nzxt.com/assets/cms/34299/1712947669-h7-flow-hero-white.png?ar64=MTox&auto=format&dpr=1.5&fit=crop&h=400&w=400" 
                 alt="Product Image">
         </div>
 
         <!-- Product Details Section -->
-        <div class="flex flex-col flex-grow justify-between w-full md:w-1/3 py-4 ml-1 mr-3 space-y-4 rounded-lg">
+        <div class="product-details-info-container">
             <div>
                 <h1 class="text-xl md:text-2xl font-semibold mb-2">
                     NZXT H7 Flow 2024 - Mid-Tower ATX Airflow Case - Includes Pre-Installed 3 x 120mm Fans - CM-H72FW-01 - Supports Bottom Fans for Dedicated GPU Cooling - Cable Management - White 
                 </h1>
-                <div class="text-sm text-yellow-300 flex items-center space-x-1 mb-2">
+                <div class="product-details-stars mb-2">
                     <i class="fa-solid fa-star"></i>
                     <i class="fa-solid fa-star"></i>
                     <i class="fa-solid fa-star"></i>
@@ -25,7 +25,7 @@
                     <i class="fa-solid fa-star"></i>
                     <span class="text-gray-500">(3)</span>
                 </div>
-                <hr class="w-full h-px bg-gray-200 border-0 dark:bg-gray-700 mb-3">
+                <hr class="product-details-separator-xs">
                 <p class="text-sm font-light text-gray-700 leading-relaxed">
                     Experience peak performance within an innovative compact dual-chamber. Prioritizing GPU cooling, the H6 Flow's
                     panoramic glass showcases the interior while freeing up space for improved airflow. Wraparound glass panels 
@@ -38,6 +38,7 @@
     <!-- Separator -->
     <hr class="w-screen md:w-full h-2 md:h-px bg-gray-200 border-0 dark:bg-gray-700 mb-4 -mx-4 md:mx-0">
 
+    <!-- Review Section -->
     <div class="flex flex-col md:flex-row">
         <div class="w-full md:w-3/5 p-2">
             <h1 class="text-2xl font-semibold mb-2">Review</h1>
@@ -45,7 +46,7 @@
 
                 <!-- Bintang -->
                 <div class="mt-2 flex items-center gap-2 sm:mt-0">
-                    <div class="text-sm text-yellow-300 flex items-center space-x-1 mb-2">
+                    <div class="product-details-stars mb-2">
                         <i class="fa-solid fa-star"></i>
                         <i class="fa-solid fa-star"></i>
                         <i class="fa-solid fa-star"></i>
@@ -138,16 +139,15 @@
                 </div>
             </div>
             <div>
-                <hr class="w-full h-px bg-gray-200 border-0 dark:bg-gray-700 mb-3">
+                <hr class="product-details-separator-xs">
 
                 <!-- Add Review Here -->
-                <!-- Review Section -->
                 <div>
                     <div class="space-y-2">
                         <div class="flex space-x-2">
                             <img class="w-10 h-10 rounded-full" src="{% static 'sementara/alianur.jpg' %}" alt="Rounded avatar">
                             <div class="">
-                                <div class="text-sm text-yellow-300 flex items-center space-x-1">
+                                <div class="product-details-stars">
                                     <i class="fa-solid fa-star"></i>
                                     <i class="fa-solid fa-star"></i>
                                     <i class="fa-solid fa-star"></i>
@@ -163,14 +163,14 @@
                             <img class="w-40 h-40 object-scale-down object-left" src="https://m.media-amazon.com/images/I/71Gl6jhxKjL.jpg" alt="">
                         </div>
                     </div>
-                    <hr class="w-full h-px bg-gray-200 border-0 dark:bg-gray-700 my-3">
+                    <hr class="product-details-separator-xs">
                 </div>
                 <div>
                     <div class="space-y-2">
                         <div class="flex space-x-2">
                             <img class="w-10 h-10 rounded-full" src="{% static 'sementara/reyhan.jpg' %}" alt="Rounded avatar">
                             <div class="">
-                                <div class="text-sm text-yellow-300 flex items-center space-x-1">
+                                <div class="product-details-stars">
                                     <i class="fa-solid fa-star"></i>
                                     <i class="fa-solid fa-star"></i>
                                     <i class="fa-solid fa-star"></i>
@@ -189,14 +189,14 @@
                             <img class="w-40 h-40 object-scale-down object-left" src="https://m.media-amazon.com/images/I/711Kv8VhSbL._UX352.jpg" alt="">
                         </div>
                     </div>
-                    <hr class="w-full h-px bg-gray-200 border-0 dark:bg-gray-700 my-3">
+                    <hr class="product-details-separator-xs">
                 </div>
                 <div>
                     <div class="space-y-2">
                         <div class="flex space-x-2">
                             <img class="w-10 h-10 rounded-full" src="{% static 'sementara/dustin.jpg' %}" alt="Rounded avatar">
                             <div class="">
-                                <div class="text-sm text-yellow-300 flex items-center space-x-1">
+                                <div class="product-details-stars">
                                     <i class="fa-solid fa-star"></i>
                                     <i class="fa-solid fa-star"></i>
                                     <i class="fa-solid fa-star"></i>
@@ -215,7 +215,7 @@
                             <img class="w-40 h-40 object-scale-down object-left" src="https://m.media-amazon.com/images/I/71lBOd8k7bL._UX352.jpg" alt="">
                         </div>
                     </div>
-                    <hr class="w-full h-px bg-gray-200 border-0 dark:bg-gray-700 my-3">
+                    <hr class="product-details-separator-xs">
                 </div>
 
             </div>
@@ -223,24 +223,24 @@
 
         <!-- Price & Add to Cart Section -->
         <div class="flex w-full md:w-2/5 rounded-lg py-2">
-            <div class="border border-gray-200 rounded-lg w-full h-fit p-6 space-y-4 shadow-sm md:sticky md:top-36">
+            <div class="buy-info">
                 <h2 class="text-2xl font-semibold mb-4">Rp. 1.299.000</h2>
                 <hr class="w-full h-px bg-gray-200 border-0 dark:bg-gray-700 mb-4">
                 <div class="flex items-center space-x-4 mt-4">
 
                     <!-- Quantity Selector -->
                     <div class="flex flex-grow items-center border border-gray-300 rounded-2xl">
-                        <button class="px-3 py-2 text-lg font-semibold text-gray-600 hover:bg-gray-200 rounded-l-lg">-</button>
-                        <h4 class="flex-grow px-4 py-2 border-x border-x-gray-300 text-center text-lg font-semibold text-gray-800">1</h4>
-                        <button class="px-3 py-2 text-lg font-semibold text-gray-600 hover:bg-gray-200 rounded-r-lg">+</button>
+                        <button class="product-details-quantity-button left">-</button>
+                        <h4 class="product-details-quantity-button symbol">1</h4>
+                        <button class="product-details-quantity-button rigth">+</button>
                     </div>
                 
                     <!-- Add to Cart Button -->
-                    <button class="flex-grow bg-orange-500 hover:bg-orange-600 text-white font-semibold p-3 rounded-2xl">
+                    <button class="product-details-cart-button">
                         <i class="fa-solid fa-cart-plus"></i>
                     </button>
                 </div>
-                <button class="flex-grow w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold p-3 rounded-full">
+                <button class="product-details-buy-button">
                     Buy Now
                 </button>
             </div>

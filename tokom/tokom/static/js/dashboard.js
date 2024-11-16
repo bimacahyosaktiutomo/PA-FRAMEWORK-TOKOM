@@ -7,7 +7,7 @@ function toggleSideBar() {
     const hidden_hamburger_button = document.getElementById('hidden-hamburger-button');
     const descendant = sidebar.querySelectorAll('i, span, #sidebar-name');
     const sidebar_item = sidebar.querySelectorAll('.sidebar-item');
-    if (window.innerWidth >= 540) {
+    if (window.innerWidth >= 768) {
         if (!isMinimized) {
             sidebar.classList.remove('w-2/12');
             sidebar.classList.add('w-20');
@@ -66,12 +66,12 @@ sidebarItems.forEach((item) => {
     item.addEventListener('click', function (event) {
         event.preventDefault();
         // Remove 'active' class from all <li> elements
-        sidebarItems.forEach((i) => i.classList.remove('bg-indigo-700'));
+        // sidebarItems.forEach((i) => i.classList.remove('bg-indigo-700'));
         // Add 'active' class to the clicked <li> element
-        item.classList.add('bg-indigo-700');
+        // item.classList.add('bg-indigo-700');
         // Find the index of the clicked item and add 'active' to the corresponding item in the other sidebar
         const itemIndex = Array.from(sidebarItems).indexOf(item) % (sidebarItems.length / 2);
         const matchingItem = sidebarItems[itemIndex + sidebarItems.length / 2];
-        matchingItem.classList.add('bg-indigo-700');
+        // matchingItem.classList.add('bg-indigo-700');
     });
 });

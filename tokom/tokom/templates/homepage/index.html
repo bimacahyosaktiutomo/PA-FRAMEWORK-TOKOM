@@ -3,8 +3,8 @@
 {% block content %}
 {% load static %}
 <!-- Carousel -->
-<section class="flex justify-center my-6">
-    <div class="relative overflow-hidden rounded-xl lg:h-96 h-72 w-11/12 select-none">
+<section class="flex justify-center my-6 md:px-16 px-2">
+    <div class="relative overflow-hidden rounded-xl lg:h-96 h-72 w-full select-none">
         <div class="flex transition-transform duration-500 ease-in-out" id="carousel">
             <div class="flex-shrink-0 w-full lg:h-96 h-72 bg-indigo-500 flex items-center justify-center text-white text-2xl">
                 Slide 1
@@ -31,50 +31,48 @@
 </section>
 
 <!-- Product Swiper / Carousel -->
-<section class="flex justify-center">
-    <div class="py-2 w-11/12">
+<section class="flex justify-center md:px-16 px-2">
+    <div class="py-2 w-full">
         <p class="mb-3 text-xl font-semibold">Rekomendasi Produk</p>
-        <div class="grid md:grid-cols-4 grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 lg:grid-cols-6 md:grid-cols-5 xs:grid-cols-4 gap-3">
 
             <!-- Items -->
             <a href="{% url 'tokom:product_details' %}"> <!-- Sementara -->
-                <div class="flex flex-col rounded-lg shadow-md">
+                <div class="flex flex-col rounded-lg shadow-md hover:shadow-lg">
                     <div class="card-img-container">
-                        <img class="card-img"
+                        <img class="card-img h-40"
                         src="https://nzxt.com/assets/cms/34299/1712947669-h7-flow-hero-white.png?ar64=MTox&auto=format&dpr=1.5&fit=crop&h=400&w=400" alt="">
                     </div>
                     <div class="p-3 h-28">
-                        <div  class="text-yellow-300">
+                        <div class="text-yellow-300 text-sm">
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
-                            <span class="text-gray-500">(3)</span>
                         </div>
                         <p class="text-sm line-clamp-2 max-w-full">
                             NZXT H7 Flow 2024 - Mid-Tower ATX Airflow Case - Includes Pre-Installed 3 x 120mm Fans - CM-H72FW-01 - Supports Bottom Fans for Dedicated GPU Cooling - Cable Management - White 
                         </p>
                         <p class="text-sm font-semibold truncate max-w-full">
-                            Rp. 1.890.0000
+                            Rp. 1.890.000
                         </p>
                     </div>
                 </div>
             </a>
             <a href="{% url 'tokom:product_details' %}"> <!-- Sementara -->
-                <div class="flex flex-col rounded-lg shadow-md">
+                <div class="flex flex-col rounded-lg shadow-md hover:shadow-lg">
                     <div class="card-img-container">
-                        <img class="card-img"
+                        <img class="card-img h-40"
                         src="https://dlcdnwebimgs.asus.com/files/media/C5C2F2D6-2F91-45B6-A49C-1318C35783DC/v1/img/explosion/pd.png" alt="">
                     </div>
                     <div class="p-3 h-28">
-                        <div  class="text-gray-400">
+                        <div class="text-gray-400 text-sm">
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
-                            <span class="text-gray-500">(0)</span>
                         </div>
                         <p class="text-sm line-clamp-2 max-w-full">
                             ROG Strix GeForce RTX 4090 24GB GDDR6X White OC Edition
@@ -86,19 +84,18 @@
                 </div>
             </a>
             <a href="{% url 'tokom:product_details' %}"> <!-- Sementara -->
-                <div class="flex flex-col rounded-lg shadow-md">
+                <div class="flex flex-col rounded-lg shadow-md hover:shadow-lg">
                     <div class="card-img-container">
-                        <img class="card-img"
+                        <img class="card-img h-40"
                         src="https://www.amd.com/content/dam/amd/en/images/products/processors/ryzen/2505503-ryzen-7-7800x3d.jpg" alt="">
                     </div>
                     <div class="p-3 h-28">
-                        <div  class="text-gray-400">
+                        <div  class="text-gray-400 text-sm">
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
-                            <span class="text-gray-500">(0)</span>
                         </div>
                         <p class="text-sm line-clamp-2 max-w-full">
                             AMD Ryzen™ 7 7800X3D Gaming Processor
@@ -110,19 +107,18 @@
                 </div>
             </a>
             <a href="{% url 'tokom:product_details' %}"> <!-- Sementara -->
-                <div class="flex flex-col rounded-lg shadow-md">
+                <div class="flex flex-col rounded-lg shadow-md hover:shadow-lg">
                     <div class="card-img-container">
-                        <img class="card-img"
+                        <img class="card-img h-40"
                         src="https://www.asus.com/microsite/motherboard/AMD-AM5-X670-B650/websites/img/pd/ROG-STRIX-X670E-A-GAMING-WIFI.png" alt="">
                     </div>
                     <div class="p-3 h-28">
-                        <div  class="text-gray-400">
+                        <div class="text-gray-400 text-sm">
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
-                            <span class="text-gray-500">(0)</span>
                         </div>
                         <p class="text-sm line-clamp-2 max-w-full">
                             ROG Strix X670E-A Gaming WiFi 
@@ -138,8 +134,8 @@
 </section>
 
 <!-- Brand Swipper -->
-<section class="flex justify-center mb-10">
-    <div class="py-2 w-11/12">
+<section class="flex justify-center mb-10 md:px-16 px-2">
+    <div class="py-2 w-full">
         <p class="mb-3 text-xl font-semibold">Brand Unggulan</p>
         <div class="relative w-full">
             <button id="left-button" class="swiper-carousel-button-left">

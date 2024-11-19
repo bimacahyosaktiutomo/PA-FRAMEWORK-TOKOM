@@ -25,7 +25,7 @@
 }
 
 .card-img {
-    @apply self-center object-contain w-full h-56 transition-transform duration-300 transform hover:scale-110;
+    @apply self-center object-contain w-full md:h-40 transition-transform duration-300 transform hover:scale-110;
 }
 
 /* PRODUCT DETAILS HTML */

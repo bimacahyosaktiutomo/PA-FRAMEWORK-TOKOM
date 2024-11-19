@@ -157,6 +157,31 @@ swiperContainer.forEach((container) => {
         container.scrollLeft = scrollLeft - walk;
     });
 });
+// BUat pas baru ngeload halaman
+document.addEventListener('DOMContentLoaded', () => {
+    // Darken Background
+    const dropdownBackgroundEffect = document.querySelectorAll('#cartDropdownHover , #UserDropdown');
+    const overlay = document.getElementById('overlay');
+    let hideTimeout = null;
+    if (dropdownBackgroundEffect && overlay) {
+        const showBackground = () => {
+            if (hideTimeout) {
+                clearTimeout(hideTimeout);
+            }
+            overlay.classList.remove('hidden');
+        };
+        const hideBackground = () => {
+            hideTimeout = setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 200);
+        };
+        dropdownBackgroundEffect.forEach((items) => {
+            items.addEventListener('mouseenter', showBackground);
+            items.addEventListener('mouseleave', hideBackground);
+        });
+        overlay.addEventListener('click', hideBackground);
+    }
+});
 // CART
 const cartInteract = document.querySelectorAll('.wishlist, .remove-from-cart');
 cartInteract.forEach((item) => {
@@ -169,26 +194,75 @@ cartInteract.forEach((item) => {
         item.classList.add('fa-regular');
     });
 });
-document.addEventListener('DOMContentLoaded', () => {
-    const cartDropdownHover = document.querySelectorAll('#cartDropdownHoverButton , #cartDropdownHover');
-    const overlay = document.getElementById('overlay');
-    let hideTimeout = null;
-    if (cartDropdownHover && overlay) {
-        const showDropdown = () => {
-            if (hideTimeout) {
-                clearTimeout(hideTimeout);
-            }
-            overlay.classList.remove('hidden');
-        };
-        const hideDropdown = () => {
-            hideTimeout = setTimeout(() => {
-                overlay.classList.add('hidden');
-            }, 200);
-        };
-        cartDropdownHover.forEach((items) => {
-            items.addEventListener('mouseenter', showDropdown);
-            items.addEventListener('mouseleave', hideDropdown);
-        });
-        overlay.addEventListener('click', hideDropdown);
+// Search
+const sortButton = document.getElementById('sortDropdown');
+const icon = sortButton.querySelector('div span i');
+let flip = true;
+function sortButonFocusOut() {
+    if (icon) {
+        if (!flip) {
+            icon.classList.remove('rotate-180');
+            flip = !flip;
+        }
     }
-});
+}
+function sortButonIcon() {
+    if (icon) {
+        if (flip) {
+            icon.classList.add('rotate-180');
+        }
+        else {
+            icon.classList.remove('rotate-180');
+        }
+        flip = !flip;
+    }
+}
+function sortButonText(pilihan) {
+    const sortingText = sortButton.querySelector('h1');
+    if (sortingText) {
+        sortingText.innerText = pilihan;
+    }
+}
+// let searchView = false;
+// function searchViewMode (){
+//     const searchViewButton = document.getElementById('searchViewButton')?.querySelector('i')
+//     const searchList = document.getElementById('searchList');
+//     const searchColumn = document.getElementById('searchColumn');
+//     if (searchList && searchColumn && searchViewButton) {
+//         if (searchView) {
+//             searchViewButton.classList.remove('fa-grip');
+//             searchViewButton.classList.add('fa-list');
+//             searchList.classList.remove('hidden');
+//             searchColumn.classList.add('hidden');
+//             searchColumn.classList.remove('grid');
+//         } else {
+//             searchViewButton.classList.remove('fa-list');
+//             searchViewButton.classList.add('fa-grip');
+//             searchList.classList.add('hidden');
+//             searchColumn.classList.remove('hidden');
+//             searchColumn.classList.add('grid');
+//         }
+//         searchView = !searchView;
+//     }
+// }
+let searchView = false;
+function DisplayMode() {
+    var _a;
+    const DisplayButton = (_a = document.getElementById('DisplayButton')) === null || _a === void 0 ? void 0 : _a.querySelector('i');
+    const searchList = document.getElementById('searchList');
+    const searchColumn = document.getElementById('searchColumn');
+    if (searchList && searchColumn && DisplayButton) {
+        DisplayButton.classList.toggle('fa-grip');
+        DisplayButton.classList.toggle('fa-list');
+        searchList.classList.toggle('hidden');
+        searchColumn.classList.toggle('hidden');
+        searchColumn.classList.toggle('grid');
+    }
+}
+function rotateAccordionIcon(accordion) {
+    var _a;
+    const accordionIcon = (_a = document.getElementById(accordion)) === null || _a === void 0 ? void 0 : _a.querySelector('button span i');
+    if (accordionIcon) {
+        accordionIcon.classList.toggle('rotate-180');
+    }
+}

@@ -245,7 +245,7 @@ function sortButonText(pilihan) {
 //         searchView = !searchView;
 //     }
 // }
-let searchView = false;
+let searchView = true;
 function DisplayMode() {
     var _a;
     const DisplayButton = (_a = document.getElementById('DisplayButton')) === null || _a === void 0 ? void 0 : _a.querySelector('i');

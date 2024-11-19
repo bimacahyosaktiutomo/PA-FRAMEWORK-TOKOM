@@ -280,7 +280,7 @@ function sortButonText(pilihan: string) {
 //     }
 // }
 
-let searchView = false;
+let searchView = true;
 function DisplayMode (){
     const DisplayButton = document.getElementById('DisplayButton')?.querySelector('i');
     const searchList = document.getElementById('searchList');

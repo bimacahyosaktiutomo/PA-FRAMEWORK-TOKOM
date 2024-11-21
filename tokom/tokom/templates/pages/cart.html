@@ -2,7 +2,7 @@
 {% block title %} Cart {% endblock %}
 {% block content %}
 {% load static %}
-<section class="bg-slate-100">
+<section class="bg-slate-100 h-[80vh]">
     <div class="py-1 md:py-10 lg:px-28 md:px-8 justify-center space-y-4">
         <h1 class="font-semibold text-2xl text-center">
             Keranjang
@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="flex w-full md:py-5 md:pr-5 gap-4" href="">
-                    <a href="" class="flex-none md:w-1/6 w-1/4 pl-1">
+                    <a href="" class="flex-shrink-0 flex-none md:w-1/6 w-1/4 pl-1">
                         <img class="object-contain w-full h-full transition-transform duration-300 transform hover:scale-110" src="https://www.asus.com/microsite/motherboard/AMD-AM5-X670-B650/websites/img/pd/ROG-STRIX-X670E-A-GAMING-WIFI.png" alt="">
                     </a>
                     <div class="flex flex-grow flex-col justify-between md:p-0 py-5">
@@ -55,7 +55,7 @@
     
             <!-- Cart Summary -->
             <div class="md:w-1/3">
-                <div class="flex w-full flex-col bg-white rounded-md p-5 md:top-36 md:sticky space-y-4">
+                <div class="flex w-full flex-col bg-white md:rounded-md p-1 md:p-5 md:top-36 fixed bottom-0 md:sticky space-y-2 md:space-y-4">
                     <h1 class="font-semibold text-xl">Checkout</h1>
                     <hr>
                     <div class="flex lg:flex-row md:flex-col justify-between">

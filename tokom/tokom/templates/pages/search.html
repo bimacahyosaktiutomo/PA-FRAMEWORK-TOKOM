@@ -1,0 +1,259 @@
+{% extends '../layout.html' %}
+{% block title %} Tokom {% endblock %}
+{% block content %}
+{% load static %}
+<section class="md:px-16 md:py-4 flex justify-center md:space-x-5">
+    <div class="sticky top-[16vh] h-full hidden md:flex md:flex-col md:flex-none md:w-44 lg:w-72 py-2 space-y-1">
+
+        <!-- Accordion -->
+        <div id="" data-accordion="open" class="w-full h-fit p-4 space-y-3 border">
+            <h1 id="accordion-kategori-heading" class="text-lg font-semibold">
+                <button type="button" class="flex justify-between bg-inherit w-full text-start" onclick="rotateAccordionIcon('accordion-kategori-heading')" data-accordion-target="#accordion-kategori" aria-expanded="true" aria-controls="accordion-kategori">    
+                    Kategori
+                    <span class=""><i class="flex-none text-xs md:text-base fa-solid fa-chevron-up transition-transform"></i></span>
+                </button>
+            </h1>
+            <div id="accordion-kategori" class="flex flex-col space-y-2">
+
+                <!-- Bikin Perulangan pake kategori -->
+                <div class="flex items-center">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded">
+                    <label for="default-checkbox" class="ms-2 text-base font-medium">CPU</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded">
+                    <label for="default-checkbox" class="ms-2 text-base font-medium">GPU</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded">
+                    <label for="default-checkbox" class="ms-2 text-base font-medium">Casing</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded">
+                    <label for="default-checkbox" class="ms-2 text-base font-medium">PSU</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded">
+                    <label for="default-checkbox" class="ms-2 text-base font-medium">Motherboard</label>
+                </div>
+            </div>
+        </div>
+        <div data-accordion="open" class="w-full h-fit p-4 space-y-3 border">
+            <h1 id="accordion-brand-heading" class="text-lg font-semibold flex">
+                <button type="button" class="flex justify-between bg-inherit w-full text-start" onclick="rotateAccordionIcon('accordion-brand-heading')" data-accordion-target="#accordion-brand" aria-expanded="true" aria-controls="accordion-brand">    
+                    Brand
+                    <span class=""><i class="flex-none text-xs md:text-base fa-solid fa-chevron-up transition-transform"></i></span>
+                </button>
+            </h1>
+            <div id="accordion-brand" class="flex flex-col space-y-2">
+                <div class="flex items-center">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded">
+                    <label for="default-checkbox" class="ms-2 text-base font-medium">AMD</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded">
+                    <label for="default-checkbox" class="ms-2 text-base font-medium">Intel</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded">
+                    <label for="default-checkbox" class="ms-2 text-base font-medium">Nvidia</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded">
+                    <label for="default-checkbox" class="ms-2 text-base font-medium">ASUS</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded">
+                    <label for="default-checkbox" class="ms-2 text-base font-medium">MSI</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="py-2 md:flex-grow">
+        <div class="flex justify-between">
+            <h1 class="self-center text-xs md:text-xl font-semibold">Search Result :</h1>
+
+            <div class="flex align-middle py-2 space-x-2">
+                <!-- Display Mode -->
+                <button id="DisplayButton" onclick="DisplayMode()" class="w-8 md:w-12 h-full px-2 border-2 rounded-xl box-border text-sm md:text-lg focus:border-indigo-500">
+                    <i class="fa-solid fa-grip transition-transform duration-30"></i>
+                </button>
+    
+                <!-- Sort by Button -->
+                <button id="sortDropdown" data-dropdown-toggle="sortDropdownList" onclick="sortButonIcon()" onblur="sortButonFocusOut()" 
+                    class="h-full items-end px-3 py-2 border-2 rounded-xl focus:border-indigo-500">
+                    <div class="flex items-center space-x-4">
+                        <h1 id="sortDropdownText" class="flex-grow text-xs md:text-base text-left">
+                            Paling Sesuai
+                        </h1>
+                        <span class=""><i class="flex-none text-xs md:text-base fa-solid fa-chevron-down transition-transform"></i></span>
+                    </div>                    
+                    <div id="sortDropdownList" class="z-1 hidden">
+                        <ul class="menu dropdown-content bg-white border rounded-lg shadow-sm -translate-y-2">
+                            <li onclick="sortButonText('Paling Sesuai')"><a>Paling Sesuai</a></li>
+                            <li onclick="sortButonText('Terbaru')"><a>Terbaru</a></li>
+                            <li onclick="sortButonText('Harga Terendah')"><a>Harga Terendah</a></li>
+                            <li onclick="sortButonText('Harga Tertinggi')"><a>Harga Tertinggi</a></li>
+                        </ul>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Column Item -->
+        <div id="searchColumn" class="px-2 md:px-0 grid grid-cols-2 lg:grid-cols-4 xs:grid-cols-3 gap-3">
+
+            <!-- Items -->
+            <a href="{% url 'tokom:product_details' %}"> <!-- Sementara -->
+                <div class="flex flex-col rounded-lg shadow-md hover:shadow-lg">
+                    <div class="card-img-container">
+                        <img class="card-img h-40"
+                            src="https://nzxt.com/assets/cms/34299/1712947669-h7-flow-hero-white.png?ar64=MTox&auto=format&dpr=1.5&fit=crop&h=400&w=400"
+                            alt="">
+                    </div>
+                    <div class="p-3 h-28">
+                        <div class="text-yellow-300 text-xs">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-sm line-clamp-2 max-w-full">
+                            NZXT H7 Flow 2024 - Mid-Tower ATX Airflow Case - Includes Pre-Installed 3 x 120mm Fans -
+                            CM-H72FW-01 - Supports Bottom Fans for Dedicated GPU Cooling - Cable Management - White
+                        </p>
+                        <p class="text-sm font-semibold truncate max-w-full">
+                            Rp. 1.890.0000
+                        </p>
+                    </div>
+                </div>
+            </a>
+            <a href="{% url 'tokom:product_details' %}"> <!-- Sementara -->
+                <div class="flex flex-col rounded-lg shadow-md hover:shadow-lg">
+                    <div class="card-img-container">
+                        <img class="card-img h-40"
+                            src="https://dlcdnwebimgs.asus.com/files/media/C5C2F2D6-2F91-45B6-A49C-1318C35783DC/v1/img/explosion/pd.png"
+                            alt="">
+                    </div>
+                    <div class="p-3 h-28">
+                        <div class="text-gray-400 text-xs">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-sm line-clamp-2 max-w-full">
+                            ROG Strix GeForce RTX 4090 24GB GDDR6X White OC Edition
+                        </p>
+                        <p class="text-sm font-semibold truncate max-w-full">
+                            Rp. 36.500.0000
+                        </p>
+                    </div>
+                </div>
+            </a>
+            <a href="{% url 'tokom:product_details' %}"> <!-- Sementara -->
+                <div class="flex flex-col rounded-lg shadow-md hover:shadow-lg">
+                    <div class="card-img-container">
+                        <img class="card-img h-40"
+                            src="https://www.amd.com/content/dam/amd/en/images/products/processors/ryzen/2505503-ryzen-7-7800x3d.jpg"
+                            alt="">
+                    </div>
+                    <div class="p-3 h-28">
+                        <div class="text-gray-400 text-xs">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-sm line-clamp-2 max-w-full">
+                            AMD Ryzen™ 7 7800X3D Gaming Processor
+                        </p>
+                        <p class="text-sm font-semibold truncate max-w-full">
+                            Rp. 7.875.000
+                        </p>
+                    </div>
+                </div>
+            </a>
+            <a href="{% url 'tokom:product_details' %}"> <!-- Sementara -->
+                <div class="flex flex-col rounded-lg shadow-md hover:shadow-lg">
+                    <div class="card-img-container">
+                        <img class="card-img h-40"
+                            src="https://www.asus.com/microsite/motherboard/AMD-AM5-X670-B650/websites/img/pd/ROG-STRIX-X670E-A-GAMING-WIFI.png"
+                            alt="">
+                    </div>
+                    <div class="p-3 h-28">
+                        <div class="text-gray-400 text-xs">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-sm line-clamp-2 max-w-full">
+                            ROG Strix X670E-A Gaming WiFi
+                        </p>
+                        <p class="text-sm font-semibold truncate max-w-full">
+                            Rp. 7.310.000
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- List Item -->
+        <div id="searchList" class="hidden border-x border-t">
+
+            <!-- Items -->
+            <div class="flex w-full md:pl-1 md:py-5 md:pr-5 gap-4" href="">
+                <a href="" class="flex-none md:w-1/5 w-1/4 pl-1 h-24">
+                    <img class="object-contain w-full h-full transition-transform duration-300 transform hover:scale-110" src="https://www.amd.com/content/dam/amd/en/images/products/processors/ryzen/2505503-ryzen-7-7800x3d.jpg" alt="">
+                </a>
+                <div class="flex flex-grow flex-col md:p-0 py-5">
+                    <a href="" class="line-clamp-2 w-fit text-sm lg:text-lg">AMD Ryzen™ 7 7800X3D Gaming Processor</a>
+                    <div class="text-gray-400 text-xs lg:text-base">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <span class="text-gray-500">(0)</span>
+                    </div>
+                    <p class="block md:hidden font-bold text-sm lg:text-base">Rp. 7.875.000</p>
+                    <button class="self-end block md:hidden w-fit p-2 text-xs font-semibold border border-indigo-500 rounded-xl hover:bg-indigo-500 hover:text-white">Add to Cart</button>
+                </div>
+                <div class="flex flex-col justify-evenly">
+                    <p class="md:block hidden font-bold text-sm lg:text-base">Rp. 7.875.000</p>
+                    <button class="md:block hidden w-24 md:w-36 p-2 font-semibold border border-indigo-500 rounded-xl hover:bg-indigo-500 hover:text-white">Add to Cart</button>
+                </div>
+            </div>
+            <hr>
+            <div class="flex w-full md:pl-1 md:py-5 md:pr-5 gap-4" href="">
+                <a href="" class="flex-none md:w-1/5 w-1/4 pl-1 h-24">
+                    <img class="object-contain w-full h-full transition-transform duration-300 transform hover:scale-110" src="https://dlcdnwebimgs.asus.com/files/media/C5C2F2D6-2F91-45B6-A49C-1318C35783DC/v1/img/explosion/pd.png" alt="">
+                </a>
+                <div class="flex flex-grow flex-col md:p-0 py-5">
+                    <a href="" class="line-clamp-2 w-fit text-sm lg:text-lg">ROG Strix GeForce RTX 4090 24GB GDDR6X White OC Edition</a>
+                    <div class="text-gray-400 text-xs lg:text-base">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <span class="text-gray-500">(0)</span>
+                    </div>
+                    <p class="block md:hidden font-bold text-sm lg:text-base">Rp. 36.500.0000</p>
+                    <button class="self-end block md:hidden w-fit p-2 text-xs font-semibold border border-indigo-500 rounded-xl hover:bg-indigo-500 hover:text-white">Add to Cart</button>
+                </div>
+                <div class="flex flex-col justify-evenly">
+                    <p class="md:block hidden font-bold text-sm lg:text-base">Rp. 36.500.0000</p>
+                    <button class="md:block hidden w-24 md:w-36 p-2 font-semibold border border-indigo-500 rounded-xl hover:bg-indigo-500 hover:text-white">Add to Cart</button>
+                </div>
+            </div>
+            <hr>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -92,7 +92,7 @@ DATABASES = {
         'USER': 'root',  # User default MySQL di XAMPP
         # Biasanya password default di XAMPP kosong (tidak diisi)
         'PASSWORD': '',
-        'HOST': '127.0.0.1',  # Host MySQL di XAMPP (localhost)
+        'HOST': 'localhost',  # Host MySQL di XAMPP (localhost)
         'PORT': '3306',
     }
 }

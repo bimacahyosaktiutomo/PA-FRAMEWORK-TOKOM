@@ -1,0 +1,8 @@
+<div class="container my-5 text-white">
+    <h2 class="mb-4">Are you sure you want to delete "{{ laptop.laptop_name }}"?</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{% url 'tokom:dashboard' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

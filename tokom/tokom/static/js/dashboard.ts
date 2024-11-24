@@ -75,14 +75,6 @@ const sidebarItems = document.querySelectorAll<HTMLLIElement>(
 sidebarItems.forEach((item) => {
   item.addEventListener("click", function (event: Event) {
     event.preventDefault();
-
-    
-    
-
-    
-    
-
-    
     const itemIndex =
       Array.from(sidebarItems).indexOf(item) % (sidebarItems.length / 2);
     const matchingItem = sidebarItems[itemIndex + sidebarItems.length / 2];
@@ -123,7 +115,7 @@ newCategoryInput.addEventListener('input', () => {
     }   
 });
 
-function resetCategorySelection() {
+function resetCategorySelection(): void {
     const categorySelect = document.getElementById("id_category") as HTMLSelectElement;
     categorySelect.selectedIndex = 0;  
     toggleNewCategoryInput();
@@ -134,7 +126,7 @@ if (resetButton) {
     resetButton.addEventListener('click', resetCategorySelection);
 }
 
-function submitItemsHover (condition: number) {
+function submitItemsHover (condition: number): void {
     const categorySelect = document.getElementById("id_category") as HTMLSelectElement;
     if (condition === 0){
         if (categorySelect.selectedIndex === 1 && categorySelect.disabled === true) {
@@ -145,4 +137,21 @@ function submitItemsHover (condition: number) {
             categorySelect.disabled = true;
         }
     }
+}
+
+function PreviewImage(): void{
+  const fileInput = document.getElementById('id_image') as HTMLInputElement;
+
+  if (fileInput.files) {
+      const oFReader = new FileReader();
+      oFReader.readAsDataURL(fileInput.files[0]);
+
+      oFReader.onload = function (oFREvent) {
+          const imgPreview = document.getElementById('imgPreview') as HTMLImageElement | null;
+          if (imgPreview && oFREvent.target) {
+              imgPreview.src = oFREvent.target.result as string;
+          }
+          imgPreview?.className
+      };
+  };
 }

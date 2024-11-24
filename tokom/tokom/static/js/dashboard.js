@@ -120,3 +120,18 @@ function submitItemsHover(condition) {
         }
     }
 }
+function PreviewImage() {
+    const fileInput = document.getElementById('id_image');
+    if (fileInput.files) {
+        const oFReader = new FileReader();
+        oFReader.readAsDataURL(fileInput.files[0]);
+        oFReader.onload = function (oFREvent) {
+            const imgPreview = document.getElementById('imgPreview');
+            if (imgPreview && oFREvent.target) {
+                imgPreview.src = oFREvent.target.result;
+            }
+            imgPreview === null || imgPreview === void 0 ? void 0 : imgPreview.className;
+        };
+    }
+    ;
+}

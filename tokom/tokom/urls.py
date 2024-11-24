@@ -1,6 +1,9 @@
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 from . import views
+from .views import ItemListAPIView
 
 app_name = 'tokom'
 
@@ -14,4 +17,12 @@ urlpatterns = [
     path('dashboard/add_item/', views.add_item, name='add_item'), #ADD ITEM DI DASHBOARD
     path('dashboard/edit_item/<int:item_id>/', views.edit_item, name='edit_item'),
     path('dashboard/delete_item/<int:item_id>/', views.delete_item, name='delete_item'),
+
+    # API
+
+    path('api/items/' , ItemListAPIView.as_view(), name='item_list'),
 ]
+
+# Biar bisa baca media
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

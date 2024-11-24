@@ -2,6 +2,27 @@
 {% block title %} Dashboard {% endblock %}
 {% block content %}
 {% load static %}
+{% csrf_token %}
+<div class="flex justify-between mb-2">
+    <h1 class="self-center font-bold text-lg">Item Dashboard</h3>
+        <a href="{% url 'tokom:add_item' %}" class="btn btn-success text-white">
+            Add New Item +
+        </a>
+    </div>
+    <div id="barangGrid" class="ag-theme-quartz" style="height: 560px;"></div>
+    
+    <script src="{% static 'node_modules/sweetalert2/dist/sweetalert2.all.min.js' %}"></script>
+    <script type="module" src="{% static 'js/barang.js' %}"></script>
+
+<!-- Buat ngetest class untuk js -->
+<div class="xs:hidden flex justify-between text- bg-red-500"></div> <!-- jangan copy 'hidden' nya -->
+{% endblock %}
+
+{% comment %} 
+{% extends '../dashboard/utility.html' %}
+{% block title %} Dashboard {% endblock %}
+{% block content %}
+{% load static %}
 
 <!-- Container -->
 <div class="container my-5">
@@ -33,6 +54,7 @@
                         <th scope="col">Price</th>
                         <th scope="col">Rating</th>
                         <th scope="col">Stock</th>
+                        <th scope="col">Image</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
@@ -45,6 +67,9 @@
                         <td class="border border-gray-300 px-4 py-2">{{ item.category.name }}</td>
                         <td class="border border-gray-300 px-4 py-2">{{ item.price }}</td>
                         <td class="border border-gray-300 px-4 py-2">{{ item.rating }}</td>
+                        <td class="border border-gray-300 px-4 py-2">
+                            <img src="{{ item.image.url }}" alt="">
+                        </td>
                         <td class="border border-gray-300 px-4 py-2">{{ item.stock }}</td>
                         <td class="text-center">
                             <div class="d-flex flex-column">
@@ -61,16 +86,4 @@
     </div>
 </div>
 {% endblock %}
-
-{% comment %} {% extends '../dashboard/utility.html' %}
-{% block title %} Dashboard {% endblock %}
-{% block content %}
-{% load static %}
-Barang
-<div id="barangGrid" class="ag-theme-quartz" style="height: 560px;"></div>
-
-<script src="{% static 'js/barang.js' %}"></script>
-
-<!-- Buat ngetest class untuk js -->
-<div class="xs:hidden flex justify-between text- bg-red-500"></div> <!-- jangan copy 'hidden' nya -->
-{% endblock %} {% endcomment %}
+{% endcomment %}

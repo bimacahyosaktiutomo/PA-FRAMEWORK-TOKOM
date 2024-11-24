@@ -28,8 +28,11 @@ module.exports = {
     }
   },
   plugins: [
-    require('flowbite/plugin'),
+    require('flowbite/plugin')({
+      wysiwyg: true,
+    }),
     require('daisyui'),
+    require('flowbite-typography'),
     function({ addUtilities }) {
       const newUtilities = {
         '.hover-anim': {

@@ -11,7 +11,7 @@ class Item(models.Model):
     stock = models.BigIntegerField()
     discount = models.BigIntegerField(null=True, blank=True)
     price = models.BigIntegerField()
-    image = models.CharField(max_length=255, null=True, blank=True)
+    image = models.ImageField(upload_to='items/')
 
     def __str__(self):
         return self.name

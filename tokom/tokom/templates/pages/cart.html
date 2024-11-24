@@ -63,9 +63,11 @@
                         <span class="font-semibold">Rp. 15.185.000</span>
                     </div>
                     <hr>
-                    <button class="box-border w-5/6 bg-indigo-500 hover:bg-indigo-600 p-3 self-center rounded-xl hover-anim">
-                        <span class="text-white font-semibold">Beli</span>
-                    </button>
+                    <a href="{% url 'tokom:checkout' %}">
+                        <button class="box-border w-full bg-indigo-500 hover:bg-indigo-600 p-3 self-center rounded-xl hover-anim">
+                            <span class="text-white font-semibold">Beli</span>
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>

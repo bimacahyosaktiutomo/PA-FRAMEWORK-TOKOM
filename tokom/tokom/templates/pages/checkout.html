@@ -1,0 +1,120 @@
+{% extends '../dashboard/form-header.html' %}
+{% block title %} Edit {% endblock %}
+{% block content %}
+{% load static %}
+{% load widget_tweaks %}
+<section class="bg-slate-100 min-h-[100vh]">
+    <div class="py-1 md:py-10 lg:px-28 md:px-8 justify-center space-y-4">
+        <div class="breadcrumbs text-sm">
+            <ul>
+                <li>
+                    <a href="{% url 'tokom:cart' %}">
+                        <span class="inline-flex items-center gap-2">
+                            <i class="fa-regular fa-square-check"></i>
+                            Cart
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <span class="inline-flex items-center gap-2">
+                        <i class="fa-solid fa-money-bill"></i>
+                        Checkout
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <h1 class="font-semibold text-2xl text-center">
+            Checkout
+        </h1>
+        <div class="flex flex-col md:flex-row gap-4">
+            <div class="bg-white md:w-2/3 md:rounded-md p-4 md:p-12">
+                <form action="post" class="space-y-2">
+                    <div class="space-y-2">
+                        <label for="" class="font-semibold">Shipping</label>
+                        <div class="form-control border rounded-lg w-2/5 md:w-1/2 lg:w-1/3 p-1">
+                            <label class="label cursor-pointer">
+                                <span class="label-text">In Store Retrieval</span>
+                                <input type="checkbox" checked="checked"
+                                    class="checkbox checkbox-md [--chkbg:theme(colors.indigo.500)]" />
+                            </label>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label for="" class="font-semibold">Fullname</label>
+                        <div class="form-control border rounded-lg">
+                            <input type="text" name="" id="" placeholder="Fullname" class="input input-bordered w-full">
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label for="" class="font-semibold">Email</label>
+                        <div class="form-control border rounded-lg">
+                            <input type="text" name="" id="" placeholder="email@email.com"
+                                class="input input-bordered w-full">
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label for="" class="font-semibold">Phone number</label>
+                        <div class="form-control border rounded-lg">
+                            <input type="number" name="" id="" placeholder="09xxxxxxxx"
+                                class="input input-bordered w-full">
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label for="" class="font-semibold">Payment</label>
+                        <div class="form-control border rounded-lg w-1/3 p-1">
+                            <label class="label cursor-pointer">
+                                <span class="label-text">COS</span>
+                                <input type="checkbox" checked="checked"
+                                    class="checkbox checkbox-md [--chkbg:theme(colors.indigo.500)]" />
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Cart Summary -->
+            <div class="md:w-1/2">
+                <div class="flex w-full flex-col bg-white md:rounded-md p-1 md:p-5 md:top-0 space-y-2">
+                    <h1 class="font-semibold text-xl">Cart Detail</h1>
+                    <hr>
+                    <div class="flex w-full md:pl-1 md:py-5 md:pr-5 gap-4" href="">
+                        <a href="" class="flex-none md:w-1/5 w-1/4 pl-1 h-full self-center">
+                            <img class="object-contain w-full h-16 transition-transform duration-300 transform hover:scale-110"
+                                src="https://www.amd.com/content/dam/amd/en/images/products/processors/ryzen/2505503-ryzen-7-7800x3d.jpg"
+                                alt="">
+                        </a>
+                        <div class="flex flex-grow flex-col md:p-0 py-5">
+                            <a href="" class="line-clamp-2 w-fit text-sm">AMD Ryzen™ 7 7800X3D Gaming Processor</a>
+                            <p class="block font-thin text-sm">x1</p>
+                            <p class="block font-bold text-sm">Rp. 7.875.000</p>
+                        </div>
+                    </div>
+                    <div class="flex w-full md:pl-1 md:py-5 md:pr-5 gap-4" href="">
+                        <a href="" class="flex-none md:w-1/5 w-1/4 pl-1 h-full self-center">
+                            <img class="object-contain w-full h-16 transition-transform duration-300 transform hover:scale-110"
+                                src="https://www.asus.com/microsite/motherboard/AMD-AM5-X670-B650/websites/img/pd/ROG-STRIX-X670E-A-GAMING-WIFI.png"
+                                alt="">
+                        </a>
+                        <div class="flex flex-grow flex-col md:p-0 py-5">
+                            <a href="" class="line-clamp-2 w-fit text-sm">ROG Strix X670E-A Gaming WiFi</a>
+                            <p class="block font-thin text-sm">x1</p>
+                            <p class="block font-bold text-sm">Rp. 7.310.0000</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="flex lg:flex-row md:flex-col justify-between">
+                        <h1 class="font-medium">Total : </h1>
+                        <span class="font-semibold">Rp. 15.185.000</span>
+                    </div>
+                    <hr>
+                    <button
+                        class="box-border w-5/6 bg-indigo-500 hover:bg-indigo-600 p-3 self-center rounded-xl hover-anim">
+                        <span class="text-white font-semibold">Pay now</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="{% static 'js/control.js' %}"></script>
+{% endblock %}

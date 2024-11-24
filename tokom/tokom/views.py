@@ -1,10 +1,15 @@
 import os
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Item, Category, Stock
 from .forms import ItemForm
+
+
+# cek apakah user memiliki akses
+def is_Authorized(user):
+    return user.groups.filter(name__in=['Worker', 'Admin']).exists() or user.is_superuser
 
 def homepage(request):
     return render(request, 'homepage/index.html')
@@ -27,6 +32,7 @@ def cart(request):
 #     return render(request, 'dashboard/dashboard.html')
 
 @login_required
+@user_passes_test(is_Authorized)
 def dashboard(request):
     items = Item.objects.select_related('category').all()
     return render(request, 'dashboard/dashboard.html', {'items': items})

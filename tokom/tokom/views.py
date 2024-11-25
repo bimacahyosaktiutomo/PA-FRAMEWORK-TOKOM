@@ -4,22 +4,17 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Item, Category, Stock
-from .forms import ItemForm
-
+from django.views.decorators.http import require_POST
+from .models import Item, Category, Stock, OrderDetail, Order, Review
+from .forms import ItemForm, CartAddItemForm
+from .cart import Cart
 
 # cek apakah user memiliki akses
 def is_Authorized(user):
     return user.groups.filter(name__in=['Worker', 'Admin']).exists() or user.is_superuser
 
-def homepage(request):
-    return render(request, 'homepage/index.html')
-
 def search(request):
     return render(request, 'pages/search.html')
-
-def product_details(request):
-    return render(request, 'pages/product_details.html')
 
 def checkout(request):
     return render(request, 'pages/checkout.html')
@@ -28,17 +23,13 @@ def checkout(request):
 def cart(request):
     return render(request, 'pages/cart.html')
 
-# @login_required
-# def dashboard(request):
-#     return render(request, 'dashboard/dashboard.html')
-
+# DASHBOARD
 @login_required
 @user_passes_test(is_Authorized)
 def dashboard(request):
     items = Item.objects.select_related('category').all()
     return render(request, 'dashboard/dashboard.html', {'items': items})
 
-# ADD ITEM DI DASHBOARD
 def add_item(request):
     # Check if categories exist
     if not Category.objects.exists():
@@ -91,6 +82,92 @@ def delete_item(request, item_id):
             messages.error(request, f'Error deleting image file: {e}')
     item.delete()
     return JsonResponse({'success': True})
+
+# Display FRONTEND
+
+def homepage(request):
+    categories = Category.objects.all()
+    items = Item.objects.all()
+    context = {
+        'categories': categories,
+        'items': items,
+    }
+    return render(request, 'homepage/index.html', context)
+
+def product_details(request, item_id):
+    item = get_object_or_404(Item, item_id=item_id)
+    reviews = item.reviews.all()  # Use the 'reviews' related_name
+    context = {
+        'item': item,
+        'reviews': reviews,
+    }
+    return render(request, 'pages/product_details.html', context)
+
+# CARTSSSSS
+@require_POST
+def cart_add(request, item_id):
+    """
+    View to add an item to the cart or update its quantity.
+    """
+    cart = Cart(request)
+    item = get_object_or_404(Item, item_id=item_id)
+    form = CartAddItemForm(request.POST)
+    if form.is_valid():
+        cd = form.cleaned_data
+        cart.add(item=item, quantity=cd['quantity'], update_quantity=cd['update'])
+    return redirect('tokom:cart')  # Replace with your cart detail view URL name
+
+def cart_remove(request, item_id):
+    """
+    View to remove an item from the cart.
+    """
+    cart = Cart(request)
+    item = get_object_or_404(Item, item_id=item_id)
+    cart.remove(item)
+    return redirect('tokom:cart')  # Replace with your cart detail view URL name
+
+def cart_detail(request):
+    """
+    View to display the cart and its contents.
+    """
+    cart = Cart(request)
+    for item in cart:
+        item['update_quantity_form'] = CartAddItemForm(initial={
+            'quantity': item['quantity'],
+            'update': True
+        })
+    return render(request, 'pages/cart.html', {'cart': cart})
+
+
+def order_create(request):
+    """
+    View to create an order from the cart.
+    """
+    cart = Cart(request)
+    if request.method == "POST":
+        # Create the order
+        order = Order.objects.create(
+            user=request.user,  # Assuming the user is logged in
+            address=request.POST.get("address"),  # Collect address via form or POST
+            total_price=cart.get_total_price(),
+            status=False  # Default status as pending
+        )
+
+        # Create order details
+        for item in cart:
+            OrderDetail.objects.create(
+                order=order,
+                item=item['item'],
+                quantity=item['quantity'],
+                total_price=item['total_price']
+            )
+
+        # Clear the cart
+        cart.clear()
+
+        return redirect('order_success')  # Redirect to a success page
+
+    return render(request, 'cart/checkout.html', {'cart': cart})
 
 # BUAT AG GRID
 from rest_framework.views import APIView

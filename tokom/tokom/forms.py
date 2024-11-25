@@ -55,4 +55,20 @@ class ItemForm(forms.ModelForm):
             cleaned_data['category'] = category
 
         return cleaned_data
+    
+PRODUCT_QUANTITY_CHOICES = [(i, str(i)) for i in range(1, 21)]
 
+class CartAddItemForm(forms.Form):
+    """
+    Form for adding items to the cart or updating their quantity.
+    """
+    quantity = forms.TypedChoiceField(
+        choices=PRODUCT_QUANTITY_CHOICES,
+        coerce=int,
+        label="Quantity"
+    )
+    update = forms.BooleanField(
+        required=False,
+        initial=False,
+        widget=forms.HiddenInput
+    )

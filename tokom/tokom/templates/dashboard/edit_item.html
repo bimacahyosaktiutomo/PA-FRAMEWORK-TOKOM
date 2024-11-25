@@ -3,19 +3,81 @@
 {% block content %}
 {% load static %}
 {% load widget_tweaks %}
-<div class="container my-5">
-    <div class="card shadow p-4">
-        <h2 class="mb-4">Add New Item</h2>
-
+<section class="p-4 flex justify-center bg-slate-50">
         <!-- Form to Add Item -->
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" class="py-4 px-4 bg-white border rounded-xl shadow-lg">
             {% csrf_token %}
+            <h2 class="">Edit Item</h2>
+            <!-- Image -->
+            <div class="flex space-x-2">
 
-            <!-- Item Name -->
-            <div class="mb-4">
-                {{ form.name.errors }}
-                <label for="id_name" class="block text-sm font-medium text-gray-600">Item Name</label>
-                {% render_field form.name class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" %}
+                <div class="flex flex-col text-start justify-end w-1/2">
+                    {{ form.image.errors }}
+                    <div class="flex justify-center w-full h-64 border">
+                        <img id="imgPreview" src="{{ form.instance.image.url }}" class="object-contain" alt="">
+                    </div>
+                    <div class="flex-none space-y-2">
+                        <label for="id_image" class="block text-sm font-medium text-gray-600">Image</label>
+                        <!-- <input type="file" class="file-input file-input-bordered w-full max-w-xs" id="id_image" name="image" accept="image/*" onchange="PreviewImage()"> -->
+                        {% render_field form.image id="id_image" onchange="PreviewImage()" class="file-input file-input-bordered w-full max-w-xs" %}
+                    </div>
+                </div>
+                <div class="w-1/2">
+                    <!-- Item Name -->  
+                    <div class="">
+                        {{ form.name.errors }}
+                        <label for="id_name" class="block text-sm font-medium text-gray-600">Item Name</label>
+                        {% render_field form.name class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" %}
+                    </div>
+                    <!-- Category -->
+                    <div class="flex justify-between space-x-4">
+                        <div class="">
+                            {{ form.category.errors }}
+                            <label for="id_category" class="block text-sm font-medium text-gray-600">Category</label>
+                            {% if categories.exists %}
+                            <select name="category" id="id_category"
+                                class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                onchange="toggleNewCategoryInput()">
+                                <option value="" selected disabled>Select a category</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}" 
+                                        {% if form.instance.category and form.instance.category.id == category.id %}
+                                            selected
+                                        {% endif %}>
+                                        {{ category.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% else %}
+                            <p class="text-sm text-gray-600">No categories available. Please add a new category.</p>
+                            {% endif %}
+                            <button type="button" id="resetCategoryBtn"
+                                class="mt-2 p-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400">
+                                Unselect Category
+                            </button>
+                        </div>
+            
+                        <!-- Add New Category -->
+                        <div class="mb-3">
+                            <label for="id_new_category" class="block text-sm font-medium text-gray-600">Or Add New Category</label>
+                            <input type="text" name="new_category"
+                                class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                id="id_new_category" placeholder="Enter new category name (optional)" />
+                        </div>
+                    </div>
+        
+                    <!-- Other Fields -->
+                    <div class="">
+                        {{ form.stock.errors }}
+                        <label for="id_stock" class="block text-sm font-medium text-gray-600">Stock</label>
+                        {% render_field form.stock class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" %}
+                    </div>
+                    <div class="">
+                        {{ form.price.errors }}
+                        <label for="id_price" class="block text-sm font-medium text-gray-600">Price</label>
+                        {% render_field form.price class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" %}
+                    </div>
+                </div>
             </div>
 
             <!-- Description -->
@@ -25,69 +87,13 @@
                 {% render_field form.description class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" %}
             </div>
 
-            <!-- Category -->
-            <div class="mb-4">
-                {{ form.category.errors }}
-                <label for="id_category" class="block text-sm font-medium text-gray-600">Category</label>
-                {% if categories.exists %}
-                <select name="category" id="id_category"
-                    class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    onchange="toggleNewCategoryInput()">
-                    <option value="" selected disabled>Select a category</option>
-                    {% for category in categories %}
-                        <option value="{{ category.id }}" 
-                            {% if form.instance.category and form.instance.category.id == category.id %}
-                                selected
-                            {% endif %}>
-                            {{ category.name }}
-                        </option>
-                    {% endfor %}
-                </select>
-                {% else %}
-                <p class="text-sm text-gray-600">No categories available. Please add a new category.</p>
-                {% endif %}
-                <button type="button" id="resetCategoryBtn"
-                    class="mt-2 p-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400">
-                    Unselect Category
-                </button>
-            </div>
-
-            <!-- Add New Category -->
-            <div class="mb-3">
-                <label for="id_new_category" class="block text-sm font-medium text-gray-600">Or Add New Category</label>
-                <input type="text" name="new_category"
-                    class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    id="id_new_category" placeholder="Enter new category name (optional)" />
-            </div>
-
-            <!-- Other Fields -->
-            <div class="mb-4">
-                {{ form.stock.errors }}
-                <label for="id_stock" class="block text-sm font-medium text-gray-600">Stock</label>
-                {% render_field form.stock class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" %}
-            </div>
-            <div class="mb-4">
-                {{ form.price.errors }}
-                <label for="id_price" class="block text-sm font-medium text-gray-600">Price</label>
-                {% render_field form.price class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" %}
-            </div>
-
-            <!-- Image -->
-            <div class="mb-4">
-                {{ form.image.errors }}
-                <label for="id_image" class="block text-sm font-medium text-gray-600">Image</label>
-                {% render_field form.image class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" %}
-            </div>
-
             <!-- Submit Button -->
             <button type="submit" id="btnSubmitItems" onmouseover="submitItemsHover(0)" onmouseout="submitItemsHover(1)"
                 class="w-full py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 Save Item
             </button>
         </form>
-
-    </div>
-</div>
+</section>
 
 {% if form.errors %}
 <div class="alert alert-danger">

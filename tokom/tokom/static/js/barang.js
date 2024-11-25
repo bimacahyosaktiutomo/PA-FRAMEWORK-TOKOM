@@ -24,8 +24,17 @@ class CustomButtonComponent {
         this.eButtonDelete.appendChild(iconDelete);
 
         // Event listeners
-        this.eventListenerEdit = () => alert('Edit button clicked');
-        this.eventListenerDelete = () => alert('Delete button clicked');
+        this.eventListenerEdit = () => {
+            const itemId = params.data.item_id;
+            window.location.href = `edit_item/${itemId}`;
+        };
+
+        this.eventListenerDelete = () => {
+            const itemId = params.data.item_id; // Get itemId from the row data
+            const itemName = params.data.name
+            confirmDelete(itemId, itemName); // Trigger confirmDelete with itemId
+        };
+
         this.eButtonEdit.addEventListener('click', this.eventListenerEdit);
         this.eButtonDelete.addEventListener('click', this.eventListenerDelete);
 
@@ -44,10 +53,10 @@ class CustomButtonComponent {
 
     destroy() {
         if (this.eButtonEdit) {
-            this.eButtonEdit.removeEventListener("click", this.eventListenerEdit);
+            // this.eButtonEdit.removeEventListener("click", this.eventListenerEdit);
         }
         if (this.eButtonDelete) {
-            this.eButtonDelete.removeEventListener("click", this.eventListenerDelete);
+            // this.eButtonDelete.removeEventListener("click", this.eventListenerDelete);
         }
     }
 }
@@ -55,23 +64,39 @@ class CustomButtonComponent {
 function getColumnDefs() {
     if (window.innerWidth >= 540) {
         return [
-            { field: "nama", flex: 2 },
-            { field: "deskripsi", flex: 2 },
-            { field: "kategori", flex: 1 },
-            { field: "rating", flex: 1 },
-            { field: "stok", flex: 1 },
-            { field: "diskon", flex: 1 },
-            { field: "harga", filter: "agNumberColumnFilter", flex: 1 },
-            { field: "aksi", cellRenderer: CustomButtonComponent, filter: false, flex: 1 },
+            { field: "item_id", headerName: "Item ID", flex: 1 },
+            { field: "name", headerName: "Name", flex: 2 },
+            { field: "description", headerName: "Description", flex: 2 },
+            { 
+                field: "category", 
+                headerName: "Category", 
+                flex: 1, 
+                valueFormatter: (params) => params.value?.name || 'No Category'
+            },
+            { field: "rating", headerName: "Rating", flex: 1 },
+            { field: "stock", headerName: "Stock", flex: 1 },
+            { field: "discount", headerName: "Discount", flex: 1 },
+            { field: "price", headerName: "Price", filter: "agNumberColumnFilter", flex: 1 },
+            { 
+                field: "image", 
+                headerName: "Image", 
+                flex: 1,
+                cellRenderer: (params) => {
+                    return params.value ? `<img src="${params.value}" alt="Product Image" class="" />` : 'No Image';
+                }
+            },
+            { field: "actions", headerName: "Actions", cellRenderer: CustomButtonComponent, filter: false, flex: 1 },
         ];
     } else {
         return [
-            { field: "nama", flex: 2 },
-            { field: "kategori", flex: 1 },
-            { field: "aksi", cellRenderer: CustomButtonComponent, filter: false, flex: 1 },
+            { field: "item_id", headerName: "Item ID", flex: 1 },
+            { field: "name", headerName: "Name", flex: 2 },
+            { field: "category", headerName: "Category", flex: 1, valueFormatter: (params) => params.value?.name || 'No Category'},
+            { field: "actions", headerName: "Actions", cellRenderer: CustomButtonComponent, filter: false, flex: 1 },
         ];
     }
 }
+
 
 function getPagination () {
     if (window.innerWidth >= 540) {
@@ -82,22 +107,30 @@ function getPagination () {
 }
 
 var gridOptions = {
-    rowData: [
-        { nama: "AMD Ryzen 5 5600X", deskripsi: "6-Core 12-Thread Unlocked Desktop Processor", kategori: "Processor", rating: 4.7, stok: 120, diskon: 10, harga: 199, gambar: "https://example.com/ryzen5-5600x.jpg" },
-        { nama: "NVIDIA GeForce RTX 3070", deskripsi: "8GB GDDR6 PCI Express 4.0 Graphics Card", kategori: "Graphics Card", rating: 4.9, stok: 80, diskon: 15, harga: 499, gambar: "https://example.com/rtx3070.jpg" },
-        { nama: "Corsair Vengeance LPX 16GB", deskripsi: "DDR4 DRAM 3200MHz C16 Desktop Memory Kit", kategori: "Memory", rating: 4.6, stok: 200, diskon: 5, harga: 74, gambar: "https://example.com/vengeancelpx.jpg" },
-        { nama: "Samsung 970 EVO Plus 1TB", deskripsi: "M.2 NVMe Internal SSD", kategori: "Storage", rating: 4.8, stok: 150, diskon: 12, harga: 149, gambar: "https://example.com/970evoplus.jpg" },
-        { nama: "ASUS ROG Strix B550-F Gaming", deskripsi: "AMD AM4 TUF Gaming Motherboard", kategori: "Motherboard", rating: 4.5, stok: 90, diskon: 8, harga: 189, gambar: "https://example.com/strixb550.jpg" },
-    ],
     columnDefs: getColumnDefs(),
     defaultColDef: {
         filter: "agTextColumnFilter",
         floatingFilter: true,
     },
+    rowModelType: 'infinite',
+    cacheBlockSize: 20, // Number of rows to fetch per request
+    datasource: {
+        getRows: function(params) {
+            const url = '/api/items/';  // Your API endpoint
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    params.successCallback(data, data.length);  // Pass data and total count
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    params.failCallback();
+                });
+        }
+    },
     pagination: getPagination(),
     paginationPageSize: 10,
 };
-
 
 // -------------- PENTING --------------- //
 const myGridElement = document.querySelector("#barangGrid");
@@ -125,3 +158,49 @@ window.addEventListener("resize", () => {
         api.setGridOption("pagination", newPagination );
     }
 });
+
+function getCSRFToken() {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    return csrfToken;
+}
+
+function confirmDelete(itemsId, itemName) {
+    Swal.fire({
+        title: `Item akan dihapus ${itemName} ID : ${itemsId}`,
+        text: `Item tidak akan bisa dikembalikan! ${itemName} ID : ${itemsId}`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, Hapus!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const csrfToken = getCSRFToken();
+            // Ini AJAX
+            fetch(`delete_item/${itemsId}/`, {
+                method: 'POST',
+                headers: {
+                    // 'X-CSRFToken': '{{ csrf_token }}'
+                    'X-CSRFToken': csrfToken 
+                }
+            }).then(response => {
+                if (response.ok) {
+                    Swal.fire(
+                        'Deleted!',
+                        'Item berhasil dihapus.',
+                        'success'
+                    ).then(() => {
+                        // Reload the page after success
+                        window.location.reload();
+                    });
+                } else {
+                    Swal.fire(
+                        'Error!',
+                        'Gagal menghapus item.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+}

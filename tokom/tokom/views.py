@@ -2,6 +2,7 @@ import os
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.decorators.http import require_POST
 from .models import Item, Category, Stock, OrderDetail, Order, Review
@@ -73,16 +74,14 @@ def edit_item(request, item_id):
 
 def delete_item(request, item_id):
     item = get_object_or_404(Item, item_id=item_id)
-    if request.method == 'POST':
-        if item.image:
-            try:
-                os.remove(os.path.join(settings.MEDIA_ROOT, str(item.image)))  # Adjust if necessary
-            except Exception as e:
-                messages.error(request, f'Error deleting image file: {e}')
-        item.delete()
-        return redirect('tokom:dashboard')
-        
-    return render(request, 'dashboard/delete_item.html', {'item': item})
+    # if request.method == 'POST':
+    if item.image:
+        try:
+            os.remove(os.path.join(settings.MEDIA_ROOT, str(item.image)))  # Adjust if necessary
+        except Exception as e:
+            messages.error(request, f'Error deleting image file: {e}')
+    item.delete()
+    return JsonResponse({'success': True})
 
 # Display FRONTEND
 
@@ -169,3 +168,15 @@ def order_create(request):
         return redirect('order_success')  # Redirect to a success page
 
     return render(request, 'cart/checkout.html', {'cart': cart})
+
+# BUAT AG GRID
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import Item
+from .serializers import ItemSerializer
+
+class ItemListAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        items = Item.objects.all()
+        serializer = ItemSerializer(items, many=True)
+        return Response(serializer.data)

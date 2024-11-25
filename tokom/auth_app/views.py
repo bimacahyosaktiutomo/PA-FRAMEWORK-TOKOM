@@ -19,7 +19,6 @@ def register(request):
         form = UserRegisForm()
     return render(request, 'auth_app/register.html', {'form': form})
 
-
 # def register(request):
 #     if request.method == 'POST':
 #         form = UserRegisForm(request.POST)
@@ -38,7 +37,6 @@ def register(request):
 #     else:
 #         form = UserRegisForm()
 #     return render(request, 'auth_app/register.html', {'form': form})
-
 
 def user_login(request):
     if request.method == 'POST':

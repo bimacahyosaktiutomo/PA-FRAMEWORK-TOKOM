@@ -143,3 +143,5 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/auth/login/'  # The URL to redirect to when the user is not authenticated
+
+CART_SESSION_ID = 'cart'

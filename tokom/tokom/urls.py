@@ -8,10 +8,15 @@ urlpatterns = [
     path('', views.homepage, name='home'),
     path('search', views.search, name='search'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    path('product_details/', views.product_details, name='product_details'),
-    path('cart/', views.cart, name='cart'),
+    path('product_details/<int:item_id>/', views.product_details, name='product_details'),
     path('checkout/', views.checkout, name='checkout'),
-    path('dashboard/add_item/', views.add_item, name='add_item'), #ADD ITEM DI DASHBOARD
+    
+    path('dashboard/add_item/', views.add_item, name='add_item'), 
     path('dashboard/edit_item/<int:item_id>/', views.edit_item, name='edit_item'),
     path('dashboard/delete_item/<int:item_id>/', views.delete_item, name='delete_item'),
+    
+    # path('cart/', views.cart, name='cart'),
+    path('cart/', views.cart_detail, name='cart'),
+    path('cart/add/<int:product_id>/', views.cart_add, name='cart_add'),
+    path('cart/remove/<int:product_id>/', views.cart_remove, name='cart_remove'),
 ]

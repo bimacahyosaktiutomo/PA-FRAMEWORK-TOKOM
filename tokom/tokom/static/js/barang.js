@@ -65,22 +65,24 @@ function getColumnDefs() {
     if (window.innerWidth >= 540) {
         return [
             { field: "item_id", headerName: "Item ID", flex: 1 },
-            { field: "name", headerName: "Name", flex: 2 },
-            { field: "description", headerName: "Description", flex: 2 },
+            { field: "name", headerName: "Name", filter: "agTextColumnFilter", flex: 2 },
+            { field: "description", headerName: "Description",  flex: 2 },
             { 
                 field: "category", 
                 headerName: "Category", 
                 flex: 1, 
+                filter: "agTextColumnFilter",
                 valueFormatter: (params) => params.value?.name || 'No Category'
             },
-            { field: "rating", headerName: "Rating", flex: 1 },
-            { field: "stock", headerName: "Stock", flex: 1 },
-            { field: "discount", headerName: "Discount", flex: 1 },
+            { field: "rating", headerName: "Rating", filter: "agNumberColumnFilter", flex: 1 },
+            { field: "stock", headerName: "Stock", filter: "agNumberColumnFilter", flex: 1 },
+            { field: "discount", headerName: "Discount", filter: "agNumberColumnFilter", flex: 1 },
             { field: "price", headerName: "Price", filter: "agNumberColumnFilter", flex: 1 },
             { 
                 field: "image", 
                 headerName: "Image", 
                 flex: 1,
+                filter: false,
                 cellRenderer: (params) => {
                     return params.value ? `<img src="${params.value}" alt="Product Image" class="" />` : 'No Image';
                 }
@@ -91,7 +93,7 @@ function getColumnDefs() {
         return [
             { field: "item_id", headerName: "Item ID", flex: 1 },
             { field: "name", headerName: "Name", flex: 2 },
-            { field: "category", headerName: "Category", flex: 1, valueFormatter: (params) => params.value?.name || 'No Category'},
+            { field: "category", headerName: "Category", filter: "agTextColumnFilter", flex: 1, valueFormatter: (params) => params.value?.name || 'No Category'},
             { field: "actions", headerName: "Actions", cellRenderer: CustomButtonComponent, filter: false, flex: 1 },
         ];
     }
@@ -110,31 +112,40 @@ var gridOptions = {
     columnDefs: getColumnDefs(),
     defaultColDef: {
         filter: "agTextColumnFilter",
-        floatingFilter: true,
+        // floatingFilter: false,
     },
-    rowModelType: 'infinite',
-    cacheBlockSize: 20, // Number of rows to fetch per request
-    datasource: {
-        getRows: function(params) {
-            const url = '/api/items/';  // Your API endpoint
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    params.successCallback(data, data.length);  // Pass data and total count
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                    params.failCallback();
-                });
-        }
-    },
+    // rowModelType: 'infinite',
+    cacheBlockSize: 60, // Number of rows to fetch per request
+    // datasource: {
+    //     getRows: function(params) {
+    //         const url = '/api/items/';  // Your API endpoint
+    //         fetch(url)
+    //             .then(response => response.json())
+    //             .then(data => {
+    //                 params.successCallback(data, data.length);  // Pass data and total count
+    //             })
+    //             .catch(error => {
+    //                 console.error('Error fetching data:', error);
+    //                 params.failCallback();
+    //             });
+    //     }
+    // },
     pagination: getPagination(),
-    paginationPageSize: 10,
+    paginationPageSize: 20,
 };
 
 // -------------- PENTING --------------- //
-const myGridElement = document.querySelector("#barangGrid");
-const api = agGrid.createGrid(myGridElement, gridOptions);
+let api;
+document.addEventListener("DOMContentLoaded", function () {
+    var myGridElement = document.querySelector("#barangGrid");
+    api = agGrid.createGrid(myGridElement, gridOptions);
+
+    fetch('/api/items/')
+        .then((response) => response.json())
+        .then((data) => {
+            api.setGridOption("rowData", data);
+        })
+})
 // -------------- PENTING --------------- //
 
 function destroyGrid() { // Ngehapus grid, referensi saja
@@ -170,8 +181,8 @@ function confirmDelete(itemsId, itemName) {
         text: `Item tidak akan bisa dikembalikan! ${itemName} ID : ${itemsId}`,
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '##e5e7eb',
         confirmButtonText: 'Ya, Hapus!'
     }).then((result) => {
         if (result.isConfirmed) {

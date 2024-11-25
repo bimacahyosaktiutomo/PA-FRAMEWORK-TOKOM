@@ -103,3 +103,42 @@ class ItemListAPIView(APIView):
         items = Item.objects.all()
         serializer = ItemSerializer(items, many=True)
         return Response(serializer.data)
+    
+
+# AG GRID FILTERING
+
+from django.core.paginator import Paginator
+from django.http import JsonResponse
+
+def items_api(request):
+    items = Item.objects.all()
+
+    # Handle filtering
+    name_filter = request.GET.get('name_filter', '')
+    if name_filter:
+        items = items.filter(name__icontains=name_filter)
+
+    category_filter = request.GET.get('category_filter', '')
+    if category_filter:
+        items = items.filter(category__name__icontains=category_filter)
+
+    # Handle sorting
+    sort_field = request.GET.get('sortField', 'id')
+    sort_order = request.GET.get('sortOrder', 'asc')
+    if sort_order == 'desc':
+        sort_field = f"-{sort_field}"
+    items = items.order_by(sort_field)
+
+    # Handle pagination
+    start = int(request.GET.get('start', 0))
+    end = int(request.GET.get('end', 100))
+    paginator = Paginator(items, end - start)
+    page = paginator.get_page(start // paginator.per_page + 1)
+
+    rows = list(page.object_list.values(
+        "id", "name", "category__name", "price", "stock"
+    ))
+    return JsonResponse({
+        "rows": rows,
+        "totalCount": paginator.count,
+    })

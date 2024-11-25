@@ -103,10 +103,6 @@
                     </div>
                     <div class="flex md:flex-grow flex-col w-3/4 px-2">
                         <nav class="flex md:justify-between justify-end w-full md:space-x-10">
-                            <div class="md:flex hidden flex-grow self-center h-10 basis-3/5">
-                                <input type="text" class="flex-grow border-solid border-2 border-indigo-300 rounded-l-lg px-1 w-96 outline-none focus:outline-indigo-400 hover-anim" placeholder="Cari. . .">
-                                <button class="border-solid border-2 border-y-indigo-300 border-r-indigo-300 rounded-r-lg bg-transparent text-indigo-600 py-1 px-4 hover:bg-indigo-600 hover:text-white hover-anim"><i class="fa-solid fa-magnifying-glass"></i></button>
-                            </div>
                             <div class="flex flex-row">
                                 {% if user.is_authenticated %}
                                     <a href="{% url 'auth:logout' %}" class="flex align-middle p-1 rounded-md md:hover:bg-indigo-100 hover-anim">
@@ -129,17 +125,8 @@
                                         </div>
                                     </a>
                                 {% endif %}
-                                <a href="{% url 'tokom:dashboard' %}" class="flex md:p-3 px-1 rounded-md hover:bg-indigo-100 hover-anim">
-                                    <i class="self-center fa-solid fa-cart-shopping md:text-2xl text-indigo-600 hover:text-indigo-800 hover-anim"></i>
-                                </a>
                             </div>
                         </nav>
-                
-                        <!-- Hidden -->
-                        <div class="md:hidden flex justify-center">
-                            <input type="text" class="w-full xs:w-96 border-solid border-2 border-indigo-300 rounded-l-lg h-auto px-1 outline-none focus:outline-indigo-400 hover-anim" placeholder="Cari. . .">
-                            <button class="border-solid border-2 border-y-indigo-300 border-r-indigo-300 rounded-r-lg bg-transparent text-indigo-600 py-1 px-4 hover:bg-indigo-600 hover:text-white hover-anim"><i class="fa-solid fa-magnifying-glass"></i></button>
-                        </div>
                     </div>
                 </header>
                 <div class="flex-grow p-3">

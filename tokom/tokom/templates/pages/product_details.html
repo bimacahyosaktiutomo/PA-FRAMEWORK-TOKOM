@@ -164,7 +164,20 @@
                                 <h6 class="font-semibold">{{ review.user.username }}</h6>
                             </div>
                         </div>
-                        <p>{{ review.text }}</p>
+                        <h6 class="line-clamp-4">
+                            {{ review.text }}
+                        </h6>
+                        {% if review.image %}
+                        <button class="cursor-zoom-in" onclick="{{ review.id }}_modal.showModal()">
+                            <img class="w-40 h-40 object-scale-down object-left" src="{{ review.image.url }}" alt="">
+                        </button>
+                        <dialog id="{{ review.id }}_modal" class="modal">
+                            <div class="modal-box p-0 w-fit">
+                                <img class="object-scale-down" src="{{ review.image.url }}" alt="">
+                            </div>
+                            <form method="dialog" class="modal-backdrop"><button></button></form>
+                        </dialog>
+                        {% endif %}
                     </div>
                     <hr class="product-details-separator-xs">
                     {% empty %}

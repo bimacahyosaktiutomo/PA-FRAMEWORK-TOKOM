@@ -37,10 +37,11 @@
             </a>
             
             <!-- Search Bar  -->
-            <div class="md:flex hidden justify-center self-center h-10 basis-3/5">
-                <input type="text" class="flex-grow border-solid border-2 border-indigo-300 rounded-l-lg px-1 w-96 outline-none focus:ring-2 focus:ring-indigo-400 hover-anim" placeholder="Cari. . .">
-                <button class="border-solid border-2 border-y-indigo-300 border-r-indigo-300 rounded-r-lg bg-transparent text-indigo-600 py-1 px-4 hover:bg-indigo-600 hover:text-white hover-anim"><i class="fa-solid fa-magnifying-glass"></i></button>
-            </div>
+            <form class="md:flex hidden justify-center self-center h-10 basis-3/5" id="search-bar" action="{% url 'tokom:search' %}" method="get">
+                <input type="search" name="q" placeholder="Cari. . ." value="{{ query|default:'' }}" aria-label="Search"
+                    class="flex-grow border-solid border-2 border-indigo-300 rounded-l-lg px-1 w-96 outline-none focus:ring-2 focus:ring-indigo-400 hover-anim">
+                <button type="submit" class="border-solid border-2 border-y-indigo-300 border-r-indigo-300 rounded-r-lg bg-transparent text-indigo-600 py-1 px-4 hover:bg-indigo-600 hover:text-white hover-anim"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
             
             <!-- Authentication Button -->
             <div class="flex gap-4">
@@ -132,7 +133,7 @@
                 <!-- User link -->
                 {% if user.is_authenticated %}
                 <div id="UserDropdown" class="dropdown dropdown-hover dropdown-bottom dropdown-end flex cursor-pointer p-1 rounded-md md:hover:bg-indigo-100 hover-anim">
-                    <a href="{% url 'tokom:dashboard' %}" class="flex">
+                    <a href="{% url 'tokom:dashboard' 'items' %}" class="flex">
                         <button class="flex text-indigo-600 md:text-2xl md:mr-2 mr-0 md:p-0 px-1 hover:bg-indigo-100 rounded-lg hover-anim">
                             <i class="self-center fa-regular fa-user xs:align-top hover:text-indigo-800"></i>
                         </button>

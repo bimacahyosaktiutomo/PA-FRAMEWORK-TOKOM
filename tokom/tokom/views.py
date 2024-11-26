@@ -5,8 +5,10 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.decorators.http import require_POST
+from django.db.models import Q
 from .models import Item, Category, Stock, OrderDetail, Order, Review
-from .forms import ItemForm, CartAddItemForm
+from django.contrib.auth.models import User
+from .forms import ItemForm, CartAddItemForm, UserForm
 from .cart import Cart
 
 # cek apakah user memiliki akses
@@ -14,7 +16,60 @@ def is_Authorized(user):
     return user.groups.filter(name__in=['Worker', 'Admin']).exists() or user.is_superuser
 
 def search(request):
-    return render(request, 'pages/search.html')
+    query = request.GET.get('q', '')  # Search query
+    queryCategories = request.GET.getlist('c')  # List of selected categories
+    sort_by = request.GET.get('sort', '') # Sorting parameter
+    items = Item.objects.all()
+    categories = Category.objects.all()
+
+    # Apply search filters
+    filters = Q()
+    if query:
+        filters &= Q(name__icontains=query)  # Filter by name
+    if queryCategories:
+        # Combine category filters with OR logic
+        category_filters = Q()
+        for category in queryCategories:
+            category_filters |= Q(category__name__icontains=category)
+        filters &= category_filters
+
+    items = items.filter(filters) if filters else items
+
+    if sort_by:
+        if sort_by == 'price_asc':
+            items = items.order_by('price')  # Sort by price (ascending)
+        elif sort_by == 'price_desc':
+            items = items.order_by('-price')
+        elif sort_by == 'default':
+            items = items.filter(filters) if filters else items
+        # elif sort_by == 'date_desc':
+        #     items = items.order_by('-price')
+
+    return render(request, 'pages/search.html', {
+        'items': items,
+        'category' : categories,
+        'query': query,
+        'queryCategory': queryCategories,
+        'sort_by': sort_by,
+    })
+
+# def search(request):
+#     query = request.GET.get('q')
+#     queryCategory = request.GET.get('c')
+#     items = Item.objects.all()
+#     categories = Category.objects.all()
+#     if query or queryCategory:
+#         filters = Q()
+#         if query:
+#             filters &= Q(name__icontains=query)  # Add name filter if query exists
+#         if queryCategory:
+#             category_filters = Q()
+#             for category in queryCategory:
+#                 category_filters &= Q(category__name__icontains=category)
+#             filters &= category_filters # Add category filter if queryCategory exists
+
+#         items = items.filter(filters) if filters else items
+#     return render(request, 'pages/search.html', {'items' : items, 'category' : categories, 'query' : query, 'queryCategory': queryCategory,})
 
 def checkout(request):
     return render(request, 'pages/checkout.html')
@@ -26,10 +81,21 @@ def cart(request):
 # DASHBOARD
 @login_required
 @user_passes_test(is_Authorized)
-def dashboard(request):
-    items = Item.objects.select_related('category').all()
-    return render(request, 'dashboard/dashboard.html', {'items': items})
+def dashboard(request, dashboard_mode):
+    context = {}
+    # Determine the mode and fetch the necessary data
+    if dashboard_mode == 'items':
+        context['items'] = Item.objects.select_related('category').all()
+        template = 'dashboard/item.html'
+    elif dashboard_mode == 'users':
+        context['users'] = User.objects.all()
+        template = 'dashboard/user.html'
+    else:
+        return render(request, '404.html', status=404)
 
+    return render(request, template, context)
+
+# Item
 def add_item(request):
     # Check if categories exist
     if not Category.objects.exists():
@@ -42,7 +108,7 @@ def add_item(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Produk berhasil ditambah!')
-            return redirect('tokom:dashboard')
+            return redirect('tokom:dashboard', dashboard_mode='items')
         else:
             messages.error(request, 'Produk gagal ditambah!')
     else:
@@ -63,7 +129,7 @@ def edit_item(request, item_id):
                     os.remove(os.path.join(settings.MEDIA_ROOT, str(old_image)))
             form.save()
             messages.success(request, 'Produk berhasil diubah!')
-            return redirect('tokom:dashboard')
+            return redirect('tokom:dashboard', dashboard_mode='items')
         else:
             messages.error(request, 'Produk gagal diubah!')
     else:
@@ -81,6 +147,31 @@ def delete_item(request, item_id):
         except Exception as e:
             messages.error(request, f'Error deleting image file: {e}')
     item.delete()
+    return JsonResponse({'success': True})
+
+# User
+def edit_user(request, id):
+    users = get_object_or_404(User, id=id)
+    # old_image = users.image
+
+    if request.method == 'POST':
+        form = UserForm(request.POST, request.FILES, instance=users)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Produk berhasil diubah!')
+            return redirect('tokom:dashboard', dashboard_mode='users')
+        else:
+            messages.error(request, 'Produk gagal diubah!')
+    else:
+        form = UserForm(instance=users)
+
+    categories = Category.objects.all()
+    return render(request, 'dashboard/edit_user.html', {'form': form, 'users' : users})
+
+def delete_user(request, id):
+    user = get_object_or_404(User, id=id)
+    # if request.method == 'POST':
+    user.delete()
     return JsonResponse({'success': True})
 
 # Display FRONTEND
@@ -173,49 +264,17 @@ def order_create(request):
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Item
-from .serializers import ItemSerializer
+from .serializers import ItemSerializer, UserSerializer
+from django.contrib.auth.models import User
 
 class ItemListAPIView(APIView):
     def get(self, request, *args, **kwargs):
         items = Item.objects.all()
         serializer = ItemSerializer(items, many=True)
         return Response(serializer.data)
-    
 
-# AG GRID FILTERING
-
-from django.core.paginator import Paginator
-from django.http import JsonResponse
-
-def items_api(request):
-    items = Item.objects.all()
-
-    # Handle filtering
-    name_filter = request.GET.get('name_filter', '')
-    if name_filter:
-        items = items.filter(name__icontains=name_filter)
-
-    category_filter = request.GET.get('category_filter', '')
-    if category_filter:
-        items = items.filter(category__name__icontains=category_filter)
-
-    # Handle sorting
-    sort_field = request.GET.get('sortField', 'id')
-    sort_order = request.GET.get('sortOrder', 'asc')
-    if sort_order == 'desc':
-        sort_field = f"-{sort_field}"
-    items = items.order_by(sort_field)
-
-    # Handle pagination
-    start = int(request.GET.get('start', 0))
-    end = int(request.GET.get('end', 100))
-    paginator = Paginator(items, end - start)
-    page = paginator.get_page(start // paginator.per_page + 1)
-
-    rows = list(page.object_list.values(
-        "id", "name", "category__name", "price", "stock"
-    ))
-    return JsonResponse({
-        "rows": rows,
-        "totalCount": paginator.count,
-    })
+class UserListAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)

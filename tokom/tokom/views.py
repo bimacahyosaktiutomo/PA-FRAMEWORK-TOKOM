@@ -104,18 +104,46 @@ def product_details(request, item_id):
     return render(request, 'pages/product_details.html', context)
 
 # CARTSSSSS
+# @require_POST
+# def cart_add(request, item_id):
+#     """
+#     View to add an item to the cart or update its quantity.
+#     """
+#     cart = Cart(request)
+#     item = get_object_or_404(Item, item_id=item_id)
+#     form = CartAddItemForm(request.POST)
+#     if form.is_valid():
+#         cd = form.cleaned_data
+#         print("Form is valid:", cd)  # Debugging line
+#         cart.add(item=item, quantity=cd['quantity'], update_quantity=cd['update'])
+#     else:
+#         print("Form is not valid:", form.errors)  # Debugging line
+#     return redirect('tokom:cart')  # Replace with your cart detail view URL name
+
 @require_POST
 def cart_add(request, item_id):
     """
     View to add an item to the cart or update its quantity.
     """
     cart = Cart(request)
-    item = get_object_or_404(Item, item_id=item_id)
+    item = get_object_or_404(Item, item_id=item_id)  # Ensure you're getting the item correctly
     form = CartAddItemForm(request.POST)
+    
     if form.is_valid():
         cd = form.cleaned_data
-        cart.add(item=item, quantity=cd['quantity'], update_quantity=cd['update'])
-    return redirect('tokom:cart')  # Replace with your cart detail view URL name
+        print("Form is valid:", cd)  # Debugging line
+        quantity = cd['quantity']
+        update_quantity = cd['update']
+        
+        # Add or update the item in the cart
+        cart.add(item=item, quantity=quantity, update_quantity=update_quantity)
+        
+        # Debugging to check if the item is added
+        print(f"Item {item.name} added to cart with quantity {quantity}.")
+    else:
+        print("Form is not valid:", form.errors)  # Debugging line  
+    return redirect('tokom:cart')  # Redirect to the cart page
+
 
 def cart_remove(request, item_id):
     """
@@ -126,18 +154,29 @@ def cart_remove(request, item_id):
     cart.remove(item)
     return redirect('tokom:cart')  # Replace with your cart detail view URL name
 
-def cart_detail(request):
-    """
-    View to display the cart and its contents.
-    """
-    cart = Cart(request)
-    for item in cart:
-        item['update_quantity_form'] = CartAddItemForm(initial={
-            'quantity': item['quantity'],
-            'update': True
-        })
-    return render(request, 'pages/cart.html', {'cart': cart})
+# def cart_detail(request):
+#     """
+#     View to display the cart and its contents.
+#     """
+#     cart = Cart(request)
+#     for item in cart:
+#         print(item)  # Debug the cart item
+#         item['update_quantity_form'] = CartAddItemForm(initial={
+#             'quantity': item['quantity'],
+#             'update': True
+#         })
+#     return render(request, 'pages/cart.html', {'cart': cart})
 
+def cart_detail(request):
+    cart = Cart(request)
+    # Debugging: Check if item.item exists and has item_id (your custom primary key)
+    for cart_item in cart:
+        item = cart_item.get('item')
+        if item:
+            print(f"Item ID: {item.item_id}, Item Name: {item.name}")  # Use item_id instead of id
+        else:
+            print(f"Item is missing for cart item {cart_item}")
+    return render(request, 'pages/cart.html', {'cart': cart})
 
 def order_create(request):
     """

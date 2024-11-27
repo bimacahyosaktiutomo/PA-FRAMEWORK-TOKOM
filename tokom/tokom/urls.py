@@ -29,14 +29,15 @@ urlpatterns = [
     path('cart/remove/<int:item_id>/', views.cart_remove, name='cart_remove'),
     path('cart/update/<int:item_id>/', views.cart_update, name='cart_update'),
     path('checkout/', views.checkout, name='checkout'),
+    path('order_success/', views.OrderSuccess, name='order_success'),
     
     # Order history & Review
     path('orders/', views.order_history, name='order_history'),
     path('orders/<int:order_id>/', views.order_detail, name='order_detail'),
+    path('order_status_change/<int:order_id>/', views.change_order_status, name='order_status_change'),
     path('items/<int:item_id>/review/', views.create_review, name='create_review'),
     path('reviews/edit/<int:review_id>/', views.edit_review, name='edit_review'),
     path('reviews/delete/<int:review_id>/', views.delete_review, name='delete_review'),
-    
     
     # API
     path('api/items/' , ItemListAPIView.as_view(), name='item_list'),

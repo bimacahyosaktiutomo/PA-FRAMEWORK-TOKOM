@@ -1,21 +1,30 @@
+<!-- order_detail.html -->
 <h1>Order {{ order.order_id }}</h1>
 <p>Status: {{ order.status }}</p>
 <p>Address: {{ order.address }}</p>
 <p>Total Price: {{ order.total_price }}</p>
 
+<!-- Add a button to change the status -->
+{% if order.status != 'finished' %}
+  <form method="post" action="{% url 'tokom:order_status_change' order.order_id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Mark as Finished</button>
+  </form>
+{% endif %}
+
 <h2>Items</h2>
 <ul>
-    {% for item_data in items_data %}
+  {% for item_data in items_data %}
     <li>
-        <strong>{{ item_data.item_name }}</strong><br>
-        Price per Item: {{ item_data.price_per_item }}<br>
-        Quantity: {{ item_data.quantity }}<br>
-        Total Item Price: {{ item_data.total_item_price }}<br>
-        {% if item_data.item %}
+      <strong>{{ item_data.item_name }}</strong><br />
+      Price per Item: {{ item_data.price_per_item }}<br />
+      Quantity: {{ item_data.quantity }}<br />
+      Total Item Price: {{ item_data.total_item_price }}<br />
+      {% if item_data.item %}
         <a href="{% url 'tokom:create_review' item_data.item.item_id %}">Write a Review</a>
-        {% else %}
+      {% else %}
         <em>Item not available for review</em>
-        {% endif %}
+      {% endif %}
     </li>
-    {% endfor %}
+  {% endfor %}
 </ul>

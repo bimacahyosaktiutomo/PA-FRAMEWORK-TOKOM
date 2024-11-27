@@ -200,32 +200,6 @@ def product_details(request, item_id):
     }
     return render(request, 'pages/product_details.html', context)
 
-# def product_details(request, item_id):
-#     item = Item.objects.get(item_id=item_id)
-#     reviews = Review.objects.filter(item=item)
-
-#     # Calculate the average rating
-#     total_reviews = reviews.count()
-#     if total_reviews > 0:
-#         average_rating = sum([review.rating for review in reviews]) / total_reviews
-#     else:
-#         average_rating = 0
-
-#     # Calculate rating distribution (how many 5-star, 4-star, etc. reviews)
-#     rating_distribution = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
-#     for review in reviews:
-#         rating_distribution[review.rating] += 1
-
-#     # Prepare context for the template
-#     context = {
-#         'item': item,
-#         'average_rating': average_rating,
-#         'review_count': total_reviews,
-#         'rating_distribution': rating_distribution,
-#     }
-    
-#     return render(request, 'pages/product_details.html', context)
-
 def search(request):
     query = request.GET.get('q', '')  # Search query
     queryCategories = request.GET.getlist('c')  # List of selected categories
@@ -300,6 +274,18 @@ def order_detail(request, order_id):
     })
 
 @login_required
+def change_order_status(request, order_id):
+    order = get_object_or_404(Order, pk=order_id, user=request.user)
+    # Only allow changing status to "finished" if the order is not already finished
+    if order.status != 'finished':
+        order.status = 'finished'
+        order.save()
+        messages.success(request, "Order status has been updated to 'Finished'.")
+    else:
+        messages.info(request, "This order is already marked as finished.")
+    return redirect('tokom:order_detail', order_id=order_id)
+
+@login_required
 def create_review(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
     if request.method == 'POST':
@@ -309,7 +295,6 @@ def create_review(request, item_id):
         Review.objects.create(user=request.user, item=item, review_text=review_text, rating=rating, image=image)
         return redirect('tokom:product_details', item_id=item_id)
     return render(request, 'pages/review_create.html', {'item': item})
-
 
 @login_required
 def edit_review(request, review_id):
@@ -347,7 +332,7 @@ def delete_review(request, review_id):
 
     return render(request, 'pages/review_delete.html.html', {'review': review})
 
-# CARTSSSSS
+# Cart
 @require_POST
 def cart_add(request, item_id):
     """
@@ -437,7 +422,7 @@ def checkout(request):
             user=user,
             address=address,
             total_price=total_price,
-            status=False
+            status='Ongoing'
         )
 
         # Create OrderDetails with item details (name, id, price per item, etc.)
@@ -460,10 +445,13 @@ def checkout(request):
 
         # Clear the cart and redirect
         cart.clear()
-        return redirect('tokom:home')
+        return redirect('tokom:order_success')
 
     # Pre-fill form with default address if available
     return render(request, 'pages/checkout.html', {'cart': cart})
+
+def OrderSuccess(request):
+    return render(request, 'pages/order_success.html')
 
 # BUAT AG GRID
 from rest_framework.views import APIView

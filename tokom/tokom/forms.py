@@ -1,5 +1,5 @@
 from django import forms
-from .models import Item, Category
+from .models import Item, Category, Review
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
 from django.core.exceptions import ValidationError
@@ -15,26 +15,6 @@ class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
         fields = ['name', 'description', 'category', 'rating', 'stock', 'discount', 'price', 'image']
-        # widgets = {
-        #     'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter item name'}),
-        #     'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Enter item description'}),
-        #     'category': forms.Select(attrs={'class': 'form-select'}),
-        #     'rating': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter item rating (optional)'}),
-        #     'stock': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter stock quantity'}),
-        #     'discount': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter discount (optional)'}),
-        #     'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter price'}),
-        #     'image': forms.FileInput(attrs={'class': 'form-control', 'placeholder': 'Enter image URL (optional)'}),
-        # }
-        # labels = {
-        #     'name': 'Item Name',
-        #     'description': 'Description',
-        #     'category': 'Category',
-        #     'rating': 'Rating',
-        #     'stock': 'Stock',
-        #     'discount': 'Discount',
-        #     'price': 'Price',
-        #     'image': 'Image URL',
-        # }
 
     def clean(self):
         """
@@ -88,3 +68,8 @@ class CartAddItemForm(forms.Form):
         initial=False,
         widget=forms.HiddenInput
     )
+    
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['review_text', 'image', 'rating']  # Include fields you want to be editabl

@@ -2,6 +2,7 @@
 {% load humanize %}
 {% block title %}{{ item.name }}{% endblock %}
 {% block content %}
+{% load static %}
 <section class="mx-auto px-4 md:px-16 py-4">
     <div class="flex flex-col md:flex-row h-full">
       <!-- Product Image Section -->
@@ -146,8 +147,13 @@
                     {% for review in reviews %}
                     <div class="space-y-2">
                         <div class="flex space-x-2">
-                            <img class="w-10 h-10 rounded-full" src="{{ review.user.profile_picture.url }}"
-                                alt="Avatar">
+                            {% with review.user.images.first as profile_picture %}
+                                {% if profile_picture and profile_picture.image %}
+                                <img class="w-10 h-10 rounded-full" src="{{ profile_picture.image.url }}" alt="Avatar">
+                                {% else %}
+                                <img class="w-10 h-10 rounded-full" src="{% static 'asset/profile.jpg' %}" alt="Avatar">
+                                {% endif %}
+                            {% endwith %}
                             <div>
                                 <div class="product-details-stars">
                                     {% comment %} {% for _ in 1|to:review.rating %}

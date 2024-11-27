@@ -1,5 +1,6 @@
 from django import forms
 from .models import Item, Category
+from .models.user_image import UserImage
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
 from django.core.exceptions import ValidationError
@@ -59,18 +60,33 @@ class ItemForm(forms.ModelForm):
         return cleaned_data
 
 class UserForm(UserChangeForm):
-    email = forms.EmailField(required=True)
-
     class Meta:
         model = User
         fields = ['username', 'password', 'email', 'first_name', 'last_name', 'is_staff', 'is_active']
 
 class UserProfileForm(UserChangeForm):
-    email = forms.EmailField(required=True)
+    # Add the image field manually
+    image = forms.ImageField(
+        required=False,
+        widget=forms.ClearableFileInput(attrs={'class': 'file-input file-input-bordered w-full max-w-xs'})
+    )
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name']
+        fields = ['first_name', 'last_name', 'email']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)  # Save the base User fields
+        if commit:
+            user.save()
+            # Save or update the UserImage model instance
+            image = self.cleaned_data.get('image')
+            if image:
+                UserImage.objects.update_or_create(
+                    user=user,
+                    defaults={'image': image},
+                )
+        return user
 
 PRODUCT_QUANTITY_CHOICES = [(i, str(i)) for i in range(1, 21)]
 

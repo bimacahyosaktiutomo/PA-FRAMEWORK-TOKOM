@@ -11,7 +11,7 @@ urlpatterns = [
     path('', views.homepage, name='home'),
     path('search', views.search, name='search'),
     path('dashboard/<str:dashboard_mode>/', views.dashboard, name='dashboard'),
-    path('profile', views.dashboard, name='profile'),
+    path('profile/<int:user_id>', views.profile, name='profile'),
     path('product_details/<int:item_id>/', views.product_details, name='product_details'),
     
     # Item

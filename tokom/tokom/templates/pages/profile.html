@@ -2,7 +2,51 @@
 {% block title %} Tokom {% endblock %}
 {% block content %}
 {% load static %}
-<section>
+{% load widget_tweaks %}
+<section class="flex justify-center items-center mt-">
+    <div class="flex flex-col py-4 px-4 w-full text-lg md:mt-10 md:w-1/2 bg-white border roundedlg md:shadow-md">
+        <div class="p-3 font-semibold">
+            <i class="fa-regular fa-user"></i>
+            <span class="">{{ user.username }}</span>
+        </div>
+        <form method="post" enctype="multipart/form-data" class="flex space-x-3">
+            {% csrf_token %}
+            <div class="flex flex-col p-2 self-center md:self-start text-start w-72 space-y-2 border rounded-xl shadow-md">
+                {{ form.image.errors }}
+                <div class="flex justify-center w-full h-64 border">
+                    <img id="imgPreview" src="{{ user_image.image.url }}" class="object-contain" alt="">
+                </div>
+                <div class="flex-none space-y-2">
+                    <!-- <input type="file" class="file-input file-input-bordered w-full max-w-xs" id="id_image" name="image" accept="image/*" onchange="PreviewImage()"> -->
+                    {% render_field form.image id="id_image" onchange="PreviewImage()" class="file-input file-input-bordered w-full max-w-xs" %}
+                </div>
+            </div>
+            <div class="flex flex-col flex-grow">
+                <h1 class="font-semibold text-gray-400 mb-1">Change Profile Detail</h1>
+                <div class="">
+                    {{ form.first_name.errors }}
+                    <label for="id_firstname" class="block text-sm font-medium text-gray-600">First Name</label>
+                    {% render_field form.first_name class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" %}
+                </div>
+                <div class="">
+                    {{ form.last_name.errors }}
+                    <label for="id_lastname" class="block text-sm font-medium text-gray-600">Last Name</label>
+                    {% render_field form.last_name class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" %}
+                </div>
+                <div class="">
+                    {{ form.email.errors }}
+                    <label for="id_email" class="block text-sm font-medium text-gray-600">Email</label>
+                    {% render_field form.email class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" %}
+                </div>
     
+                <!-- Submit Button -->
+                <button type="submit" id="btnSubmitProfile"
+                    class="w-11/12 py-3 self-center mt-auto bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Save 
+                </button>
+            </div>
+        </form>
+    </div>
 </section>
+<script src="{% static 'js/dashboard.js' %}"></script>
 {% endblock %}

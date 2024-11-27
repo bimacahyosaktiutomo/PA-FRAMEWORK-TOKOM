@@ -9,7 +9,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from .models import Item, Category, Stock, OrderDetails, Order, Review
 from .models.user_image import UserImage
-from .forms import ItemForm, CartAddItemForm, UserForm, UserProfileForm
+from .forms import ItemForm, CartAddItemForm, UserForm, UserProfileForm, ReviewForm
 from .cart import Cart
 
 # cek apakah user memiliki akses
@@ -17,8 +17,34 @@ def is_Authorized(user):
     return user.groups.filter(name__in=['Worker', 'Admin']).exists() or user.is_superuser
 
 @login_required
-def cart(request):
-    return render(request, 'pages/cart.html')
+def profile(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    # Get the related image, or initialize it as None if it doesn't exist
+    user_image = UserImage.objects.filter(user=user).first()
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            # Handle old image removal if a new one is uploaded
+            if request.FILES.get('image') and user_image and user_image.image:
+                old_image_path = user_image.image.path
+                if os.path.exists(old_image_path):
+                    os.remove(old_image_path)
+
+            form.save()
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('tokom:profile', user_id=user_id)
+        else:
+            messages.error(request, 'Failed to update profile.')
+    else:
+        form = UserProfileForm(instance=user)
+
+    return render(request, 'pages/profile.html', {
+        'form': form,
+        'user': user,
+        'user_image': user_image,
+    })
+
 
 @login_required
 def profile(request, user_id):
@@ -122,18 +148,18 @@ def delete_item(request, item_id):
     return JsonResponse({'success': True})
 
 # User
-def edit_user(request, id):
-    users = get_object_or_404(User, id=id)
+def edit_user(request, user_id):
+    users = get_object_or_404(User, id=user_id)
     # old_image = users.image
 
     if request.method == 'POST':
         form = UserForm(request.POST, instance=users)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Produk berhasil diubah!')
+            messages.success(request, 'User berhasil diubah!')
             return redirect('tokom:dashboard', dashboard_mode='users')
         else:
-            messages.error(request, 'Produk gagal diubah!')
+            messages.error(request, 'User gagal diubah!')
     else:
         form = UserForm(instance=users)
 
@@ -147,7 +173,6 @@ def delete_user(request, id):
     return JsonResponse({'success': True})
 
 # Display FRONTEND
-
 def homepage(request):
     categories = Category.objects.all()
     items = Item.objects.all()
@@ -160,11 +185,46 @@ def homepage(request):
 def product_details(request, item_id):
     item = get_object_or_404(Item, item_id=item_id)
     reviews = item.reviews.all()  # Use the 'reviews' related_name
+    
+    # Calculate the average rating
+    total_reviews = reviews.count()
+    if total_reviews > 0:
+        average_rating = sum([review.rating for review in reviews]) / total_reviews
+    else:
+        average_rating = 0
     context = {
         'item': item,
         'reviews': reviews,
+        'average_rating': average_rating,
+        'review_count': total_reviews,
     }
     return render(request, 'pages/product_details.html', context)
+
+# def product_details(request, item_id):
+#     item = Item.objects.get(item_id=item_id)
+#     reviews = Review.objects.filter(item=item)
+
+#     # Calculate the average rating
+#     total_reviews = reviews.count()
+#     if total_reviews > 0:
+#         average_rating = sum([review.rating for review in reviews]) / total_reviews
+#     else:
+#         average_rating = 0
+
+#     # Calculate rating distribution (how many 5-star, 4-star, etc. reviews)
+#     rating_distribution = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
+#     for review in reviews:
+#         rating_distribution[review.rating] += 1
+
+#     # Prepare context for the template
+#     context = {
+#         'item': item,
+#         'average_rating': average_rating,
+#         'review_count': total_reviews,
+#         'rating_distribution': rating_distribution,
+#     }
+    
+#     return render(request, 'pages/product_details.html', context)
 
 def search(request):
     query = request.GET.get('q', '')  # Search query
@@ -199,9 +259,95 @@ def search(request):
         'queryCategory': queryCategories,
         'sort_by': sort_by,
     })
+    
+# Order history & review
+@login_required
+def order_history(request):
+    orders = Order.objects.filter(user=request.user).order_by('-order_id')
+    return render(request, 'pages/order_history.html', {'orders': orders})
+
+@login_required
+def order_detail(request, order_id):
+    order = get_object_or_404(Order, pk=order_id, user=request.user)
+    order_details = order.order_details.all()
+
+    # Parse items from JSON and retrieve corresponding Item instances
+    items_data = []
+    for detail in order_details:
+        for item_data in detail.items:  # Iterate through the list in JSONField
+            try:
+                item = Item.objects.get(pk=item_data['item_id'])
+                items_data.append({
+                    'item': item,
+                    'item_name': item_data['item_name'],
+                    'price_per_item': item_data['price_per_item'],
+                    'quantity': item_data['quantity'],
+                    'total_item_price': item_data['total_item_price']
+                })
+            except Item.DoesNotExist:
+                # Handle the case where an item_id in the JSON is not in the database
+                items_data.append({
+                    'item': None,
+                    'item_name': item_data['item_name'],
+                    'price_per_item': item_data['price_per_item'],
+                    'quantity': item_data['quantity'],
+                    'total_item_price': item_data['total_item_price']
+                })
+
+    return render(request, 'pages/order_detail.html', {
+        'order': order,
+        'items_data': items_data,
+    })
+
+@login_required
+def create_review(request, item_id):
+    item = get_object_or_404(Item, pk=item_id)
+    if request.method == 'POST':
+        review_text = request.POST.get('review_text')
+        rating = request.POST.get('rating')
+        image = request.FILES.get('image')
+        Review.objects.create(user=request.user, item=item, review_text=review_text, rating=rating, image=image)
+        return redirect('tokom:product_details', item_id=item_id)
+    return render(request, 'pages/review_create.html', {'item': item})
+
+
+@login_required
+def edit_review(request, review_id):
+    review = get_object_or_404(Review, review_id=review_id)
+    
+    # Ensure that the logged-in user is the one who created the review
+    if review.user != request.user:
+        messages.error(request, "You are not authorized to edit this review.")
+        return redirect('tokom:product_details', item_id=review.item.item_id)
+    
+    if request.method == 'POST':
+        form = ReviewForm(request.POST, instance=review)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your review has been updated!")
+            return redirect('tokom:product_details', item_id=review.item.item_id)
+    else:
+        form = ReviewForm(instance=review)
+
+    return render(request, 'pages/review_edit.html', {'form': form, 'review': review})
+
+@login_required
+def delete_review(request, review_id):
+    review = get_object_or_404(Review, review_id=review_id)
+    
+    # Ensure that the logged-in user is the one who created the review
+    if review.user != request.user:
+        messages.error(request, "You are not authorized to delete this review.")
+        return redirect('tokom:product_details', item_id=review.item.item_id)
+    
+    if request.method == 'POST':
+        review.delete()
+        messages.success(request, "Your review has been deleted.")
+        return redirect('tokom:product_details', item_id=review.item.item_id)
+
+    return render(request, 'pages/review_delete.html.html', {'review': review})
 
 # CARTSSSSS
-
 @require_POST
 def cart_add(request, item_id):
     """
@@ -314,11 +460,10 @@ def checkout(request):
 
         # Clear the cart and redirect
         cart.clear()
-        return redirect('tokom:order_success')
+        return redirect('tokom:home')
 
     # Pre-fill form with default address if available
     return render(request, 'pages/checkout.html', {'cart': cart})
-
 
 # BUAT AG GRID
 from rest_framework.views import APIView

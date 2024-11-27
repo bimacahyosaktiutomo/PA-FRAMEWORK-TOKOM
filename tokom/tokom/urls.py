@@ -3,7 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 from . import views
-from .views import ItemListAPIView, UserListAPIView
+from .views import ItemListAPIView, UserListAPIView 
 
 app_name = 'tokom'
 
@@ -23,12 +23,20 @@ urlpatterns = [
     path('dashboard/users/edit_user/<int:user_id>/', views.edit_user, name='edit_user'),
     path('dashboard/users/delete_user/<int:user_id>/', views.delete_user, name='delete_user'),
     
-    # path('cart/', views.cart, name='cart'),
+    # Pembelian
     path('cart/', views.cart_detail, name='cart'),
     path('cart/add/<int:item_id>/', views.cart_add, name='cart_add'),
     path('cart/remove/<int:item_id>/', views.cart_remove, name='cart_remove'),
     path('cart/update/<int:item_id>/', views.cart_update, name='cart_update'),
     path('checkout/', views.checkout, name='checkout'),
+    
+    # Order history & Review
+    path('orders/', views.order_history, name='order_history'),
+    path('orders/<int:order_id>/', views.order_detail, name='order_detail'),
+    path('items/<int:item_id>/review/', views.create_review, name='create_review'),
+    path('reviews/edit/<int:review_id>/', views.edit_review, name='edit_review'),
+    path('reviews/delete/<int:review_id>/', views.delete_review, name='delete_review'),
+    
     
     # API
     path('api/items/' , ItemListAPIView.as_view(), name='item_list'),

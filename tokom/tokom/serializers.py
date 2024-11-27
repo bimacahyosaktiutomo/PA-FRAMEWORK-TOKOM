@@ -24,3 +24,18 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User 
         fields = '__all__'
+
+class ReviewSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    item = ItemSerializer()
+
+    class Meta:
+        model = Review
+        fields = '__all__'
+
+class OrderSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
+    class Meta:
+        model = Order
+        fields = '__all__'

@@ -154,9 +154,11 @@
                                     {% comment %} {% for _ in 1|to:review.rating %}
                                     <i class="fa-solid fa-star"></i>
                                     {% endfor %} {% endcomment %}
-                                    <p class="font-normal text-gray-400">{{ review.created_at|timesince }} ago</p>
                                 </div>
-                                <h6 class="font-semibold">{{ review.user.username }}</h6>
+                                <div class="flex space-x-2">
+                                  <h6 class="font-semibold">{{ review.user.username }}</h6>
+                                  <p class="font-normal text-gray-400">{{ review.created_at|timesince }} ago</p>
+                                </div>
                             </div>
                         </div>
                         <h6 class="line-clamp-4">

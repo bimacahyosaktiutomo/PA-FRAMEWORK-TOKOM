@@ -88,6 +88,12 @@ def dashboard(request, dashboard_mode):
     elif dashboard_mode == 'users':
         context['users'] = User.objects.all()
         template = 'dashboard/user.html'
+    elif dashboard_mode == 'reviews':
+        context['reviews'] = Review.objects.all()
+        template = 'dashboard/review.html'
+    elif dashboard_mode == 'orders':
+        context['orders'] = Order.objects.all()
+        template = 'dashboard/order.html'
     else:
         return render(request, '404.html', status=404)
 
@@ -169,7 +175,10 @@ def edit_user(request, user_id):
 def delete_user(request, id):
     user = get_object_or_404(User, id=id)
     # if request.method == 'POST':
-    user.delete()
+    if not user.is_superuser:
+        user.delete()
+    else:
+        JsonResponse({'success': False})
     return JsonResponse({'success': True})
 
 # Display FRONTEND
@@ -314,6 +323,7 @@ def create_review(request, item_id):
 @login_required
 def edit_review(request, review_id):
     review = get_object_or_404(Review, review_id=review_id)
+    old_image = review.image
     
     # Ensure that the logged-in user is the one who created the review
     if review.user != request.user:
@@ -321,8 +331,11 @@ def edit_review(request, review_id):
         return redirect('tokom:product_details', item_id=review.item.item_id)
     
     if request.method == 'POST':
-        form = ReviewForm(request.POST, instance=review)
+        form = ReviewForm(request.POST, request.FILES, instance=review)
         if form.is_valid():
+            if request.FILES:
+                if old_image and os.path.isfile(str(old_image.path)):
+                    os.remove(os.path.join(settings.MEDIA_ROOT, str(old_image)))
             form.save()
             messages.success(request, "Your review has been updated!")
             return redirect('tokom:product_details', item_id=review.item.item_id)
@@ -341,11 +354,16 @@ def delete_review(request, review_id):
         return redirect('tokom:product_details', item_id=review.item.item_id)
     
     if request.method == 'POST':
+        if review.image:
+            try:
+                os.remove(os.path.join(settings.MEDIA_ROOT, str(review.image)))  # Adjust if necessary
+            except Exception as e:
+                messages.error(request, f'Error deleting image file: {e}')
         review.delete()
         messages.success(request, "Your review has been deleted.")
-        return redirect('tokom:product_details', item_id=review.item.item_id)
+        return JsonResponse({'success': True})
 
-    return render(request, 'pages/review_delete.html.html', {'review': review})
+    return JsonResponse({'success': True})
 
 # CARTSSSSS
 @require_POST
@@ -469,7 +487,7 @@ def checkout(request):
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Item
-from .serializers import ItemSerializer, UserSerializer
+from .serializers import ItemSerializer, UserSerializer, ReviewSerializer, OrderSerializer
 from django.contrib.auth.models import User
 
 class ItemListAPIView(APIView):
@@ -482,4 +500,16 @@ class UserListAPIView(APIView):
     def get(self, request, *args, **kwargs):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
+    
+class ReviewListAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        reviews = Review.objects.all()
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data)
+    
+class OrderListAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        orders = Order.objects.all()
+        serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data)

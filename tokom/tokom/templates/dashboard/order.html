@@ -1,0 +1,197 @@
+{% extends '../dashboard/dashboard.html' %}
+{% block title %} Dashboard {% endblock %}
+{% block content %}
+{% load static %}
+{% csrf_token %}
+<div class="flex justify-between mb-2">
+    <h1 class="self-center font-bold text-lg">Order Dashboard</h3>
+    </div>
+    <div id="orderGrid" class="ag-theme-quartz shadow-lg" style="height: 540px;"></div>
+    
+    
+<script src="{% static 'node_modules/sweetalert2/dist/sweetalert2.all.min.js' %}"></script>
+<script type="module">
+//     class CustomButtonComponent {
+//     eGui;
+//     eButtonEdit;
+//     eButtonDelete;
+//     eventListenerEdit;
+//     eventListenerDelete;
+
+//     init(params) {
+//         this.eGui = document.createElement('div');
+//         this.eGui.className = 'flex justify-evenly';
+
+//         // Edit button setup
+//         this.eButtonEdit = document.createElement('button');
+//         this.eButtonEdit.className = 'px-2 rounded-md bg-blue-500 text-blue-50 hover:bg-blue-600 hover:text-zinc-900 hover-anim';
+//         const iconEdit = document.createElement('i');
+//         iconEdit.className = 'fa-regular fa-pen-to-square';
+//         this.eButtonEdit.appendChild(iconEdit);
+
+//         // Delete button setup
+//         this.eButtonDelete = document.createElement('button');
+//         this.eButtonDelete.className = 'px-2 rounded-md bg-red-500 text-red-50 hover:bg-red-600 hover:text-zinc-900 hover-anim';
+//         const iconDelete = document.createElement('i');
+//         iconDelete.className = 'fa-solid fa-trash';
+//         this.eButtonDelete.appendChild(iconDelete);
+
+//         // Event listeners
+//         this.eventListenerEdit = () => {
+//             const itemId = params.data.item_id;
+//             window.location.href = `edit_item/${itemId}`;
+//         };
+
+//         this.eventListenerDelete = () => {
+//             const itemId = params.data.item_id; // Get itemId from the row data
+//             const itemName = params.data.name
+//             confirmDelete(itemId, itemName); // Trigger confirmDelete with itemId
+//         };
+
+//         this.eButtonEdit.addEventListener('click', this.eventListenerEdit);
+//         this.eButtonDelete.addEventListener('click', this.eventListenerDelete);
+
+//         // Append buttons to the GUI element
+//         this.eGui.appendChild(this.eButtonEdit);
+//         this.eGui.appendChild(this.eButtonDelete);
+//     }
+
+//     getGui() {
+//         return this.eGui;
+//     }
+
+//     refresh(params) {
+//         return true;
+//     }
+
+//     destroy() {
+//         if (this.eButtonEdit) {
+//             // this.eButtonEdit.removeEventListener("click", this.eventListenerEdit);
+//         }
+//         if (this.eButtonDelete) {
+//             // this.eButtonDelete.removeEventListener("click", this.eventListenerDelete);
+//         }
+//     }
+// }
+
+function getColumnDefs() {
+    if (window.innerWidth >= 540) {
+        return [
+            { field: "order_id", headerName: "Order ID", flex: 0.7 },
+            { 
+                field: "user", 
+                headerName: "User ID", 
+                filter: "agNumberColumnFilter", 
+                flex: 1 ,
+                valueGetter: (params) => {
+                    return params.data.user ? params.data.user.id : ''; // Use user.id for filtering
+                },
+                valueFormatter: (params) => {
+                    const user = params.value ? params.data.user : null;
+                    return user ? `${user.id} | ${user.first_name + " " + user.last_name}` : 'No User'; // Display both id and name
+                }
+            },
+            { field: "phone_number", headerName: "Phone Number", filter: "agNumberColumnFilter", flex: 1 },
+            { field: "address", headerName: "Address", filter: "agTextColumnFilter", flex: 1 },
+            { field: "total_price", headerName: "Total Price", filter: "agNumberColumnFilter",  flex: 1 },
+            { field: "status", headerName: "Status", filter: "agTextColumnFilter", flex: 1 },
+        ];
+    } else {
+        return [
+            { field: "order_id", headerName: "Order ID", flex: 0.7 },
+            { field: "user_id", headerName: "User ID", filter: "agNumberColumnFilter", flex: 1 },
+            { field: "phone_number", headerName: "Phone Number", filter: "agNumberColumnFilter", flex: 1 },
+            { field: "address", headerName: "Address", filter: "agTextColumnFilter", flex: 1 },
+            { field: "total_price", headerName: "Total Price", filter: "agNumberColumnFilter",  flex: 1 },
+            { field: "status", headerName: "Status", filter: "agTextColumnFilter", flex: 1 },
+        ];
+    }
+}
+
+// import { themeQuartz } from '@ag-grid-community/theming';
+// // to use myTheme in an application, pass it to the theme grid option
+// const myTheme = themeQuartz
+// 	.withParams({
+//         accentColor: "#818CF8",
+//         borderColor: "#4F47E640",
+//         browserColorScheme: "light",
+//         fontFamily: {
+//             googleFont: "Inter"
+//         },
+//         headerFontSize: 14
+//     });
+
+
+function getPagination () {
+    if (window.innerWidth >= 540) {
+        return true
+    } else {
+        return false;
+    }
+}
+
+var gridOptions = {
+    columnDefs: getColumnDefs(),
+    defaultColDef: {
+        filter: "agTextColumnFilter",
+        // floatingFilter: false,
+    },
+    // rowModelType: 'infinite',
+    cacheBlockSize: 60, // Number of rows to fetch per request
+    // datasource: {
+    //     getRows: function(params) {
+    //         const url = '/api/items/';  // Your API endpoint
+    //         fetch(url)
+    //             .then(response => response.json())
+    //             .then(data => {
+    //                 params.successCallback(data, data.length);  // Pass data and total count
+    //             })
+    //             .catch(error => {
+    //                 console.error('Error fetching data:', error);
+    //                 params.failCallback();
+    //             });
+    //     }
+    // },
+    pagination: getPagination(),
+    paginationPageSize: 20,
+    // themegrid: myTheme(),
+};
+
+// -------------- PENTING --------------- //
+let api;
+document.addEventListener("DOMContentLoaded", function () {
+    var myGridElement = document.querySelector("#orderGrid");
+    api = agGrid.createGrid(myGridElement, gridOptions);
+
+    fetch('/api/orders/')
+        .then((response) => response.json())
+        .then((data) => {
+            api.setGridOption("rowData", data);
+        })
+})
+// -------------- PENTING --------------- //
+
+function destroyGrid() { // Ngehapus grid, referensi saja
+    api.destroy();
+}
+
+window.addEventListener("resize", () => {
+
+    // Buat ngubah header kolom sesuai ukuran
+    if (window.innerWidth <= 540) {
+        const newColumnDefs = getColumnDefs();
+        api.setGridOption("columnDefs", newColumnDefs);
+
+        const newPagination = getPagination();
+        api.setGridOption("pagination", newPagination );
+    } else {
+        const newColumnDefs = getColumnDefs();
+        api.setGridOption("columnDefs", newColumnDefs);
+        
+        const newPagination = getPagination();
+        api.setGridOption("pagination", newPagination );
+    }
+});
+
+</script>
+{% endblock %}

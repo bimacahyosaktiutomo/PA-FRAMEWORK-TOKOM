@@ -1,5 +1,7 @@
 from django import forms
 from .models import Item, Category
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserChangeForm
 from django.core.exceptions import ValidationError
 
 class ItemForm(forms.ModelForm):
@@ -55,7 +57,14 @@ class ItemForm(forms.ModelForm):
             cleaned_data['category'] = category
 
         return cleaned_data
-    
+
+class UserForm(UserChangeForm):
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = User
+        fields = ['username', 'password', 'email', 'first_name', 'last_name', 'is_staff', 'is_active']
+
 PRODUCT_QUANTITY_CHOICES = [(i, str(i)) for i in range(1, 21)]
 
 class CartAddItemForm(forms.Form):

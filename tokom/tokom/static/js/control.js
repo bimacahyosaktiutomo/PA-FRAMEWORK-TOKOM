@@ -217,11 +217,44 @@ function sortButonIcon() {
         flip = !flip;
     }
 }
-function sortButonText(pilihan) {
-    const sortingText = sortButton.querySelector('h1');
-    if (sortingText) {
-        sortingText.innerText = pilihan;
+// function sortButonText(sortOption = null) {
+//     // Change the button text to reflect the selected sort option
+//     var sortText = document.getElementById('sortDropdownText')
+//     if (sortText) {
+//         sortText.textContent = sortOption
+//     }
+//     // Call the updateFilters function to update the URL with the selected sort option
+//     updateFilters(sortOption);
+// }
+function updateFilters(sortOption = null, viewOption) {
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+    const checkboxes = document.querySelectorAll('#accordion-kategori input[type="checkbox"]');
+    // Clear existing category filters
+    params.delete('c');
+    // Append checked categories to the query parameters
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            params.append('c', checkbox.value);
+        }
+    });
+    // Add or update the sort parameter
+    if (sortOption) {
+        params.set('sort', sortOption);
     }
+    let viewOptionText;
+    if (viewOption) {
+        if (viewOption === true) {
+            viewOptionText = 'grid';
+            params.set('view', viewOptionText);
+        }
+        else {
+            viewOptionText = 'list';
+            params.set('view', viewOptionText);
+        }
+    }
+    // Update the URL and reload the page
+    window.location.href = `${url.pathname}?${params.toString()}`;
 }
 // let searchView = false;
 // function searchViewMode (){
@@ -245,7 +278,14 @@ function sortButonText(pilihan) {
 //         searchView = !searchView;
 //     }
 // }
-let searchView = true;
+function rotateAccordionIcon(accordion) {
+    var _a;
+    const accordionIcon = (_a = document.getElementById(accordion)) === null || _a === void 0 ? void 0 : _a.querySelector('button span i');
+    if (accordionIcon) {
+        accordionIcon.classList.toggle('rotate-180');
+    }
+}
+// let searchView = true;
 function DisplayMode() {
     var _a;
     const DisplayButton = (_a = document.getElementById('DisplayButton')) === null || _a === void 0 ? void 0 : _a.querySelector('i');
@@ -257,12 +297,7 @@ function DisplayMode() {
         searchList.classList.toggle('hidden');
         searchColumn.classList.toggle('hidden');
         searchColumn.classList.toggle('grid');
-    }
-}
-function rotateAccordionIcon(accordion) {
-    var _a;
-    const accordionIcon = (_a = document.getElementById(accordion)) === null || _a === void 0 ? void 0 : _a.querySelector('button span i');
-    if (accordionIcon) {
-        accordionIcon.classList.toggle('rotate-180');
+        // searchView = !searchView
+        // updateFilters(null, searchView)
     }
 }

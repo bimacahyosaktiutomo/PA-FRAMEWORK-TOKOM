@@ -1,0 +1,233 @@
+{% extends '../dashboard/dashboard.html' %}
+{% block title %} Dashboard {% endblock %}
+{% block content %}
+{% load static %}
+{% csrf_token %}
+<div class="flex justify-between mb-2">
+    <h1 class="self-center font-bold text-lg">User Dashboard</h3>
+    </div>
+    <div id="userGrid" class="ag-theme-quartz shadow-lg" style="height: 560px;"></div>
+    
+    
+<script src="{% static 'node_modules/sweetalert2/dist/sweetalert2.all.min.js' %}"></script>
+<script>
+    class CustomButtonComponent {
+    eGui;
+    eButtonEdit;
+    eButtonDelete;
+    eventListenerEdit;
+    eventListenerDelete;
+
+    init(params) {
+        this.eGui = document.createElement('div');
+        this.eGui.className = 'flex justify-evenly';
+
+        // Edit button setup
+        this.eButtonEdit = document.createElement('button');
+        this.eButtonEdit.className = 'px-2 rounded-md bg-blue-500 text-blue-50 hover:bg-blue-600 hover:text-zinc-900 hover-anim';
+        const iconEdit = document.createElement('i');
+        iconEdit.className = 'fa-regular fa-pen-to-square';
+        this.eButtonEdit.appendChild(iconEdit);
+
+        // Delete button setup
+        this.eButtonDelete = document.createElement('button');
+        this.eButtonDelete.className = 'px-2 rounded-md bg-red-500 text-red-50 hover:bg-red-600 hover:text-zinc-900 hover-anim';
+        const iconDelete = document.createElement('i');
+        iconDelete.className = 'fa-solid fa-trash';
+        this.eButtonDelete.appendChild(iconDelete);
+
+        // Event listeners
+        this.eventListenerEdit = () => {
+            const userId = params.data.id;
+            window.location.href = `edit_user/${userId}`;
+        };
+
+        this.eventListenerDelete = () => {
+            const userId = params.data.id; // Get userId from the row data
+            const userName = params.data.name
+            confirmDelete(userId, userName); // Trigger confirmDelete with userId
+        };
+
+        this.eButtonEdit.addEventListener('click', this.eventListenerEdit);
+        this.eButtonDelete.addEventListener('click', this.eventListenerDelete);
+
+        // Append buttons to the GUI element
+        this.eGui.appendChild(this.eButtonEdit);
+        this.eGui.appendChild(this.eButtonDelete);
+    }
+
+    getGui() {
+        return this.eGui;
+    }
+
+    refresh(params) {
+        return true;
+    }
+
+    destroy() {
+        if (this.eButtonEdit) {
+            // this.eButtonEdit.removeEventListener("click", this.eventListenerEdit);
+        }
+        if (this.eButtonDelete) {
+            // this.eButtonDelete.removeEventListener("click", this.eventListenerDelete);
+        }
+    }
+}
+
+var filterParams = {
+    comparator: (filterLocalDateAtMidnight, cellValue) => {
+        var dateAsString = cellValue;
+        if (dateAsString == null) return -1;
+        var dateParts = dateAsString.split("/");
+        var cellDate = new Date(
+            Number(dateParts[2]),
+            Number(dateParts[1]) - 1,
+            Number(dateParts[0]),
+        );
+
+        if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
+            return 0;
+        }
+
+        if (cellDate < filterLocalDateAtMidnight) {
+            return -1;
+        }
+
+        if (cellDate > filterLocalDateAtMidnight) {
+            return 1;
+        }
+        return 0;
+    },
+};
+
+function getColumnDefs() {
+    if (window.innerWidth >= 540) {
+        return [
+            { field: "id", headerName: "ID", flex: 0.4 },
+            { field: "username", headerName: "Username", filter: "agTextColumnFilter", flex: 1 },
+            { field: "password", headerName: "Password", filter: false,  flex: 1 },
+            { field: "email", headerName: "Email", filter: "agTextColumnFilter",  flex: 1 },
+            { field: "is_staf", headerName: "Staf", filter: "agNumberColumnFilter", flex: 0.5 },
+            { field: "is_active", headerName: "Active", filter: "agNumberColumnFilter", flex: 0.5 },
+            { 
+                field: "date_joined", 
+                headerName: "Date Joined", 
+                filter: "agDateColumnFilter",
+                filterParams: filterParams,
+                flex: 1 
+            },
+            { field: "actions", headerName: "Actions", cellRenderer: CustomButtonComponent, filter: false, flex: 1 },
+        ];
+    } else {
+        return [
+            { field: "id", headerName: "ID", flex: 1 },
+            { field: "username", headerName: "Username", filter: "agTextColumnFilter", flex: 2 },
+            { field: "password", headerName: "Password",  flex: 1 },
+            { field: "email", headerName: "Email", filter: false,  flex: 1 },
+            { field: "actions", headerName: "Actions", cellRenderer: CustomButtonComponent, filter: false, flex: 1 },
+        ];
+    }
+}
+
+
+function getPagination () {
+    if (window.innerWidth >= 540) {
+        return true
+    } else {
+        return false;
+    }
+}
+
+var gridOptions = {
+    columnDefs: getColumnDefs(),
+    defaultColDef: {
+        filter: "agTextColumnFilter",
+    },
+    cacheBlockSize: 60, // Number of rows to fetch per request
+    pagination: getPagination(),
+    paginationPageSize: 20,
+};
+
+// -------------- PENTING --------------- //
+let api;
+document.addEventListener("DOMContentLoaded", function () {
+    var myGridElement = document.querySelector("#userGrid");
+    api = agGrid.createGrid(myGridElement, gridOptions);
+
+    fetch('/api/users/')
+        .then((response) => response.json())
+        .then((data) => {
+            api.setGridOption("rowData", data);
+        })
+})
+// -------------- PENTING --------------- //
+
+function destroyGrid() { // Ngehapus grid, referensi saja
+    api.destroy();
+}
+
+window.addEventListener("resize", () => {
+
+    // Buat ngubah header kolom sesuai ukuran
+    if (window.innerWidth <= 540) {
+        const newColumnDefs = getColumnDefs();
+        api.setGridOption("columnDefs", newColumnDefs);
+
+        const newPagination = getPagination();
+        api.setGridOption("pagination", newPagination );
+    } else {
+        const newColumnDefs = getColumnDefs();
+        api.setGridOption("columnDefs", newColumnDefs);
+        
+        const newPagination = getPagination();
+        api.setGridOption("pagination", newPagination );
+    }
+});
+
+function getCSRFToken() {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    return csrfToken;
+}
+
+function confirmDelete(usersId, userName) {
+    Swal.fire({
+        title: `User akan dihapus ${userName} ID : ${usersId}`,
+        text: `User tidak akan bisa dikembalikan! ${userName} ID : ${usersId}`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '##e5e7eb',
+        confirmButtonText: 'Ya, Hapus!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const csrfToken = getCSRFToken();
+            // Ini AJAX
+            fetch(`delete_user/${usersId}/`, {
+                method: 'POST',
+                headers: {
+                    // 'X-CSRFToken': '{{ csrf_token }}'
+                    'X-CSRFToken': csrfToken 
+                }
+            }).then(response => {
+                if (response.ok) {
+                    Swal.fire(
+                        'Deleted!',
+                        'User berhasil dihapus.',
+                        'success'
+                    ).then(() => {
+                        // Reload the page after success
+                        window.location.reload();
+                    });
+                } else {
+                    Swal.fire(
+                        'Error!',
+                        'Gagal menghapus User.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+}
+</script>
+{% endblock %}

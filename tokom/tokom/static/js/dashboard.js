@@ -2,7 +2,10 @@
 let isMinimized = false;
 function toggleSideBar() {
     const sidebar = document.getElementById("sidebar");
-    const sidebar_off_canvas = document.getElementById("sidebar-off-canvas");
+    const overlay = document.getElementById('overlay');
+    // const sidebar_off_canvas = document.getElementById(
+    //   "sidebar-off-canvas"
+    // ) as HTMLElement;
     const hamburger_button_container = document.getElementById("hamburger-button-container");
     const hidden_hamburger_button = document.getElementById("hidden-hamburger-button");
     const descendant = sidebar.querySelectorAll("i, span, #sidebar-name");
@@ -44,30 +47,35 @@ function toggleSideBar() {
     }
     else {
         if (!isMinimized) {
-            sidebar_off_canvas.classList.remove("-translate-x-full");
-            sidebar_off_canvas.classList.add("translate-x-0");
+            sidebar.classList.remove("-translate-x-full");
+            sidebar.classList.add("translate-x-0");
             hidden_hamburger_button.classList.add("rotate-90");
             hidden_hamburger_button.classList.remove("fa-bars");
             hidden_hamburger_button.classList.add("fa-x");
+            overlay.classList.remove("hidden");
         }
         else {
-            sidebar_off_canvas.classList.add("-translate-x-full");
-            sidebar_off_canvas.classList.remove("translate-x-0");
+            sidebar.classList.add("-translate-x-full");
+            sidebar.classList.remove("translate-x-0");
             hidden_hamburger_button.classList.remove("rotate-90");
             hidden_hamburger_button.classList.remove("fa-x");
             hidden_hamburger_button.classList.add("fa-bars");
+            overlay.classList.add("hidden");
         }
     }
     isMinimized = !isMinimized;
 }
-const sidebarItems = document.querySelectorAll("#sidebar li, #sidebar-off-canvas li");
-sidebarItems.forEach((item) => {
-    item.addEventListener("click", function (event) {
-        event.preventDefault();
-        const itemIndex = Array.from(sidebarItems).indexOf(item) % (sidebarItems.length / 2);
-        const matchingItem = sidebarItems[itemIndex + sidebarItems.length / 2];
-    });
-});
+// const sidebarItems = document.querySelectorAll<HTMLLIElement>(
+//   "#sidebar li, #sidebar-off-canvas li"
+// );
+// sidebarItems.forEach((item) => {
+//   item.addEventListener("click", function (event: Event) {
+//     event.preventDefault();
+//     const itemIndex =
+//       Array.from(sidebarItems).indexOf(item) % (sidebarItems.length / 2);
+//     const matchingItem = sidebarItems[itemIndex + sidebarItems.length / 2];
+//   });
+// });
 function toggleNewCategoryInput() {
     const categorySelect = document.getElementById("id_category");
     const newCategoryInput = document.getElementById("id_new_category");

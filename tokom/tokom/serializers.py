@@ -6,7 +6,7 @@ from .models.order_detail import OrderDetails
 from .models.order import Order
 from .models.review import Review
 from .models.stock import Stock
-
+from django.contrib.auth.models import User
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,3 +19,8 @@ class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = ['item_id', 'name', 'description', 'category' , 'rating', 'stock', 'discount', 'price', 'image']
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User 
+        fields = '__all__'

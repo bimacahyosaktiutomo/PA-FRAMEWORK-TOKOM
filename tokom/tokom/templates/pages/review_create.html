@@ -1,0 +1,8 @@
+<h1>Write a Review for {{ item.name }}</h1>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <textarea name="review_text" placeholder="Write your review"></textarea><br>
+    <input type="number" name="rating" step="0.1" max="5" placeholder="Rating (out of 5)"><br>
+    <input type="file" name="image"><br>
+    <button type="submit">Submit Review</button>
+</form>

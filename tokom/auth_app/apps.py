@@ -49,12 +49,3 @@ class AuthAppConfig(AppConfig):
             admin_group.permissions.set(admin_permissions)
             worker_group.permissions.set(worker_permissions)
             customer_group.permissions.set(customer_permissions)
-
-from django.apps import AppConfig
-
-class AuthAppConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'auth_app'
-
-    def ready(self):
-        import auth_app.signals  # Import the signals module

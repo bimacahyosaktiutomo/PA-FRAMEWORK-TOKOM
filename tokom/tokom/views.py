@@ -15,9 +15,6 @@ from .cart import Cart
 def is_Authorized(user):
     return user.groups.filter(name__in=['Worker', 'Admin']).exists() or user.is_superuser
 
-def search(request):
-    return render(request, 'pages/search.html')
-
 @login_required
 def cart(request):
     return render(request, 'pages/cart.html')
@@ -99,7 +96,7 @@ def edit_user(request, id):
     # old_image = users.image
 
     if request.method == 'POST':
-        form = UserForm(request.POST, request.FILES, instance=users)
+        form = UserForm(request.POST, instance=users)
         if form.is_valid():
             form.save()
             messages.success(request, 'Produk berhasil diubah!')
@@ -137,6 +134,40 @@ def product_details(request, item_id):
         'reviews': reviews,
     }
     return render(request, 'pages/product_details.html', context)
+
+def search(request):
+    query = request.GET.get('q', '')  # Search query
+    queryCategories = request.GET.getlist('c')  # List of selected categories
+    sort_by = request.GET.get('sort', '') # Sorting parameter
+    items = Item.objects.all()
+    categories = Category.objects.all()
+    # Apply search filters
+    filters = Q()
+    if query:
+        filters &= Q(name__icontains=query)  # Filter by name
+    if queryCategories:
+        # Combine category filters with OR logic
+        category_filters = Q()
+        for category in queryCategories:
+            category_filters |= Q(category__name__icontains=category)
+        filters &= category_filters
+    items = items.filter(filters) if filters else items
+    if sort_by:
+        if sort_by == 'price_asc':
+            items = items.order_by('price')  # Sort by price (ascending)
+        elif sort_by == 'price_desc':
+            items = items.order_by('-price')
+        elif sort_by == 'default':
+            items = items.filter(filters) if filters else items
+        # elif sort_by == 'date_desc':
+        #     items = items.order_by('-price')
+    return render(request, 'pages/search.html', {
+        'items': items,
+        'category' : categories,
+        'query': query,
+        'queryCategory': queryCategories,
+        'sort_by': sort_by,
+    })
 
 # CARTSSSSS
 

@@ -1,8 +1,10 @@
 from django.db import models
+from django.conf import settings
 from .item import Item
 
 class Review(models.Model):
     review_id = models.BigAutoField(primary_key=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviews')
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='reviews')
     review_text = models.CharField(max_length=50)
     rating = models.FloatField(null=True, blank=True)

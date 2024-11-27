@@ -65,6 +65,13 @@ class UserForm(UserChangeForm):
         model = User
         fields = ['username', 'password', 'email', 'first_name', 'last_name', 'is_staff', 'is_active']
 
+class UserProfileForm(UserChangeForm):
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name']
+
 PRODUCT_QUANTITY_CHOICES = [(i, str(i)) for i in range(1, 21)]
 
 class CartAddItemForm(forms.Form):

@@ -2,10 +2,10 @@ import os
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.decorators.http import require_POST
-from .models import Item, Category, Stock, OrderDetail, Order, Review
+from .models import Item, Category, Stock, OrderDetails, Order, Review
 from .forms import ItemForm, CartAddItemForm
 from .cart import Cart
 
@@ -15,9 +15,6 @@ def is_Authorized(user):
 
 def search(request):
     return render(request, 'pages/search.html')
-
-def checkout(request):
-    return render(request, 'pages/checkout.html')
 
 @login_required
 def cart(request):
@@ -104,21 +101,6 @@ def product_details(request, item_id):
     return render(request, 'pages/product_details.html', context)
 
 # CARTSSSSS
-# @require_POST
-# def cart_add(request, item_id):
-#     """
-#     View to add an item to the cart or update its quantity.
-#     """
-#     cart = Cart(request)
-#     item = get_object_or_404(Item, item_id=item_id)
-#     form = CartAddItemForm(request.POST)
-#     if form.is_valid():
-#         cd = form.cleaned_data
-#         print("Form is valid:", cd)  # Debugging line
-#         cart.add(item=item, quantity=cd['quantity'], update_quantity=cd['update'])
-#     else:
-#         print("Form is not valid:", form.errors)  # Debugging line
-#     return redirect('tokom:cart')  # Replace with your cart detail view URL name
 
 @require_POST
 def cart_add(request, item_id):
@@ -144,6 +126,29 @@ def cart_add(request, item_id):
         print("Form is not valid:", form.errors)  # Debugging line  
     return redirect('tokom:cart')  # Redirect to the cart page
 
+def cart_update(request, item_id):
+    cart = Cart(request)
+    item = get_object_or_404(Item, item_id=item_id)
+
+    # Get the action from the query parameters (?action=increase or ?action=decrease)
+    action = request.GET.get('action')
+
+    if action == "increase":
+        cart.add(item=item, quantity=1, update_quantity=False)
+    elif action == "decrease":
+        if cart.get_item_quantity(item_id) > 1:  # Ensure quantity doesn't drop below 1
+            cart.add(item=item, quantity=-1, update_quantity=False)
+        else:
+            cart.remove(item)  # Remove item if quantity drops to zero
+
+    # # Optionally handle AJAX responses
+    # if request.is_ajax():
+    #     return JsonResponse({
+    #         'quantity': cart.get_item_quantity(item_id),
+    #         'total_price': cart.get_total_price(),
+    #     })
+
+    return redirect('tokom:cart')
 
 def cart_remove(request, item_id):
     """
@@ -153,19 +158,6 @@ def cart_remove(request, item_id):
     item = get_object_or_404(Item, item_id=item_id)
     cart.remove(item)
     return redirect('tokom:cart')  # Replace with your cart detail view URL name
-
-# def cart_detail(request):
-#     """
-#     View to display the cart and its contents.
-#     """
-#     cart = Cart(request)
-#     for item in cart:
-#         print(item)  # Debug the cart item
-#         item['update_quantity_form'] = CartAddItemForm(initial={
-#             'quantity': item['quantity'],
-#             'update': True
-#         })
-#     return render(request, 'pages/cart.html', {'cart': cart})
 
 def cart_detail(request):
     cart = Cart(request)
@@ -178,35 +170,55 @@ def cart_detail(request):
             print(f"Item is missing for cart item {cart_item}")
     return render(request, 'pages/cart.html', {'cart': cart})
 
-def order_create(request):
-    """
-    View to create an order from the cart.
-    """
+@login_required
+def checkout(request):
+    user = request.user
     cart = Cart(request)
-    if request.method == "POST":
-        # Create the order
+
+    if request.method == 'POST':
+        fullname = request.POST.get('fullname')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        address = request.POST.get('address')
+
+        if not address:
+            return render(request, 'pages/checkout.html', {'cart': cart, 'error': "Address is required."})
+
+        # Create the Order
+        total_price = float(cart.get_total_price())  # Convert Decimal to float
+
         order = Order.objects.create(
-            user=request.user,  # Assuming the user is logged in
-            address=request.POST.get("address"),  # Collect address via form or POST
-            total_price=cart.get_total_price(),
-            status=False  # Default status as pending
+            user=user,
+            address=address,
+            total_price=total_price,
+            status=False
         )
 
-        # Create order details
+        # Create OrderDetails with item details (name, id, price per item, etc.)
+        items = []
         for item in cart:
-            OrderDetail.objects.create(
-                order=order,
-                item=item['item'],
-                quantity=item['quantity'],
-                total_price=item['total_price']
-            )
+            items.append({
+                'item_id': item['item'].item_id,
+                'item_name': item['item'].name,
+                'price_per_item': float(item['item'].price),  # Convert Decimal to float
+                'quantity': item['quantity'],
+                'total_item_price': float(item['total_price'])  # Convert Decimal to float
+            })
 
-        # Clear the cart
+        # Create the OrderDetails entry with all items and total price
+        order_details = OrderDetails.objects.create(
+            order=order,
+            items=items,
+            total_price=total_price
+        )
+
+        # Clear the cart and redirect
         cart.clear()
+        return redirect('tokom:order_success')
 
-        return redirect('order_success')  # Redirect to a success page
+    # Pre-fill form with default address if available
+    return render(request, 'pages/checkout.html', {'cart': cart})
 
-    return render(request, 'cart/checkout.html', {'cart': cart})
 
 # BUAT AG GRID
 from rest_framework.views import APIView
@@ -220,7 +232,6 @@ class ItemListAPIView(APIView):
         serializer = ItemSerializer(items, many=True)
         return Response(serializer.data)
     
-
 # AG GRID FILTERING
 
 from django.core.paginator import Paginator

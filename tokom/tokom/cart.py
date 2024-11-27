@@ -48,34 +48,9 @@ class Cart:
             del self.cart[item_id]
             self.save()
 
-    # def __iter__(self):
-    #     """
-    #     Iterate over items in the cart and fetch items from the database.
-    #     """
-    #     item_ids = self.cart.keys()
-    #     items = Item.objects.filter(item_id__in=item_ids)  # Fetch items from the database
-    #     for item in items:
-    #         self.cart[str(item.item_id)]['item'] = item
-
-    #     for cart_item in self.cart.values():
-    #         cart_item['price'] = Decimal(cart_item['price'])
-    #         cart_item['total_price'] = cart_item['price'] * cart_item['quantity']
-    #         yield cart_item
-
-    # def __iter__(self):
-    #     """
-    #     Iterate over items in the cart and fetch items from the database.
-    #     """
-    #     item_ids = self.cart.keys()
-    #     items = Item.objects.filter(item_id__in=item_ids)  # Fetch items from the database
-    #     items_dict = {str(item.item_id): item for item in items}  # Create a dictionary to map item_ids to items
-
-    #     for item_id, cart_item in self.cart.items():
-    #         if item_id in items_dict:
-    #             cart_item['item'] = items_dict[item_id]  # Assign the actual Item object
-    #             cart_item['price'] = Decimal(cart_item['price'])
-    #             cart_item['total_price'] = cart_item['price'] * cart_item['quantity']
-    #             yield cart_item
+    def get_item_quantity(self, item_id):
+        """Get the quantity of a specific item in the cart."""
+        return self.cart[str(item_id)]['quantity'] if str(item_id) in self.cart else 0
     
     def __iter__(self):
         """
@@ -84,14 +59,13 @@ class Cart:
         item_ids = self.cart.keys()
         items = Item.objects.filter(item_id__in=item_ids)  # Use item_id instead of id
         items_dict = {str(item.item_id): item for item in items}  # Use item_id as the key
-    
+
         for item_id, cart_item in self.cart.items():
             if item_id in items_dict:
                 cart_item['item'] = items_dict[item_id]  # Correctly assign the Item object
                 cart_item['price'] = Decimal(cart_item['price'])
                 cart_item['total_price'] = cart_item['price'] * cart_item['quantity']
                 yield cart_item
-
 
     def __len__(self):
         """

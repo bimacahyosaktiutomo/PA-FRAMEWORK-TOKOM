@@ -12,7 +12,6 @@ urlpatterns = [
     path('search', views.search, name='search'),
     path('dashboard/<str:dashboard_mode>/', views.dashboard, name='dashboard'),
     path('product_details/<int:item_id>/', views.product_details, name='product_details'),
-    path('checkout/', views.checkout, name='checkout'),
     
     # Item
     path('dashboard/items/add_item/', views.add_item, name='add_item'), 
@@ -25,8 +24,10 @@ urlpatterns = [
     
     # path('cart/', views.cart, name='cart'),
     path('cart/', views.cart_detail, name='cart'),
-    path('cart/add/<int:product_id>/', views.cart_add, name='cart_add'),
-    path('cart/remove/<int:product_id>/', views.cart_remove, name='cart_remove'),
+    path('cart/add/<int:item_id>/', views.cart_add, name='cart_add'),
+    path('cart/remove/<int:item_id>/', views.cart_remove, name='cart_remove'),
+    path('cart/update/<int:item_id>/', views.cart_update, name='cart_update'),
+    path('checkout/', views.checkout, name='checkout'),
     
     # API
     path('api/items/' , ItemListAPIView.as_view(), name='item_list'),

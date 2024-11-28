@@ -7,7 +7,7 @@
     <div class="flex flex-col py-4 px-4 w-full text-lg text-center md:text-start md:mt-10 lg:w-3/4 xl:w-1/2 bg-white border roundedlg md:shadow-md">
         <div class="p-3 font-semibold">
             <i class="fa-regular fa-user"></i>
-            <span class="">{{ user.username }}</span>
+            <span class="">{{ form.instance.username }}</span>
         </div>
         <form method="post" enctype="multipart/form-data" class="flex flex-col md:flex-row space-x-3">
             {% csrf_token %}

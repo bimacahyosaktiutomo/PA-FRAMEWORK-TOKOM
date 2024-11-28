@@ -165,6 +165,9 @@ def edit_user(request, user_id):
                 old_image_path = user_image.image.path
                 if os.path.exists(old_image_path):
                     os.remove(old_image_path)
+            new_password = form.cleaned_data.get('password')
+            if new_password:
+                users.set_password(new_password)  # Hash and save the new password
             form.save()
             messages.success(request, 'User berhasil diubah!')
             return redirect('tokom:dashboard', dashboard_mode='users')

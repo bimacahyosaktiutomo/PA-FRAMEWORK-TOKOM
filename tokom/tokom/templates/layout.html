@@ -135,7 +135,7 @@
                 <h1>Rp. {{ cart.get_total_price|intcomma }}</h1>
               </div>
 
-              <a href="{% url 'tokom:checkout' %}" class="btn btn-primary w-full text-center mt-2">Checkout</a>
+              <a href="{% url 'tokom:checkout' %}" class="btn btn-primary bg-indigo-500 text-white w-full text-center mt-2">Checkout</a>
             </div>
           </div>
 
@@ -164,7 +164,7 @@
                   <a href="{% url 'tokom:cart' %}">Cart</a>
                 </li>
                 <li>
-                  <a href="{% url 'auth:logout' %}">Logout</a>
+                  <a href="{% url 'auth:logout' %}" class="text-red-500">Logout</a>
                 </li>
               </ul>
             </div>

@@ -45,14 +45,6 @@ class UserForm(UserChangeForm):
         widget=forms.ClearableFileInput(attrs={'class': 'file-input file-input-bordered w-full max-w-xs'})
     )
 
-    current_password = forms.CharField(
-        required=True,
-        widget=forms.PasswordInput(attrs={
-            # 'class': 'mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none',
-        }),
-        label="Current Password",
-    )
-
     password = forms.CharField(
         required=False,
         widget=forms.PasswordInput(attrs={

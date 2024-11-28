@@ -21,11 +21,11 @@
 }
 
 .card-img-container {
-    @apply flex justify-center w-full bg-gray-100 rounded-t-md;
+    @apply flex justify-center w-full bg-gray-100 rounded-t-md overflow-hidden;
 }
 
 .card-img {
-    @apply self-center object-contain w-full md:h-40 transition-transform duration-300 transform hover:scale-110;
+    @apply self-center object-cover w-full md:h-40 transition-transform duration-300 transform hover:scale-110;
 }
 
 /* PRODUCT DETAILS HTML */

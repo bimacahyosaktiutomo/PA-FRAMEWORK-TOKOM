@@ -1,10 +1,10 @@
-{% extends '../layout.html' %}
+{% extends '../dashboard/dashboard.html' %}
 {% block title %} Dashboard {% endblock %}
 {% block content %}
 {% load static %}
 {% load humanize %}
-<section class="md:px-16 md:py-4 bg-slate-100 min-h-[80vh]">
-    <div class="bg-white space-y-3 p-4 shadow-sm border md:rounded-lg">
+<section>
+    <div class="bg-white space-y-3 p-4 shadow-sm border rounded-lg">
         <h1 class="font-bold text-xl">Order Information</h1>
         <hr>
         <div class="text-sm md:text-base">
@@ -29,17 +29,9 @@
                         <p class="font-light text-xs xs:text-base">{{ item_data.quantity }} x {{ item_data.price_per_item|intcomma }}</p>
                     </a>
                 </div>
-                <div class="flex justify-between">
-                    <div>
-                        <p class="text-xs">Total Harga</p>
-                        <h1 class="font-semibold text-sm">{{ item_data.total_item_price|intcomma }}</h1>
-                    </div>
-                    <a href="{% url 'tokom:create_review' item_data.item.item_id %}">
-                        <button 
-                            class="border border-indigo-400 p-2 text-indigo-500 hover:text-white hover:bg-indigo-500 font-semibold rounded-2xl hover-anim">
-                            Review
-                        </button>
-                    </a>
+                <div>
+                    <p class="text-xs">Total Harga</p>
+                    <h1 class="font-semibold text-sm">{{ item_data.total_item_price|intcomma }}</h1>
                 </div>
             </div>
             {% if not forloop.last %}
@@ -50,4 +42,3 @@
     </div>
 </section>
 {% endblock %}
-

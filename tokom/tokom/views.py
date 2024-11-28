@@ -283,7 +283,7 @@ def order_history(request):
     return render(request, 'pages/order_history.html', {'orders': orders})
 
 @login_required
-def order_detail(request, order_id):
+def order_detail(request, order_id, mode = None):
     order = get_object_or_404(Order, pk=order_id, user=request.user)
     order_details = order.order_details.all()
 
@@ -298,7 +298,8 @@ def order_detail(request, order_id):
                     'item_name': item_data['item_name'],
                     'price_per_item': item_data['price_per_item'],
                     'quantity': item_data['quantity'],
-                    'total_item_price': item_data['total_item_price']
+                    'total_item_price': item_data['total_item_price'],
+                    'image_url': item.image.url if item.image else None,
                 })
             except Item.DoesNotExist:
                 # Handle the case where an item_id in the JSON is not in the database
@@ -310,10 +311,19 @@ def order_detail(request, order_id):
                     'total_item_price': item_data['total_item_price']
                 })
 
-    return render(request, 'pages/order_detail.html', {
-        'order': order,
-        'items_data': items_data,
-    })
+    item = Item.objects.all
+    if mode == None:
+        return render(request, 'pages/order_detail.html', {
+            'order': order,
+            'items_data': items_data,
+            'item' : item,
+        })
+    else:
+        return render(request, 'dashboard/order_details.html', {
+            'order': order,
+            'items_data': items_data,
+            'item' : item,
+        })
 
 @login_required
 def create_review(request, item_id):

@@ -9278,6 +9278,10 @@ html:has(.drawer-open.drawer-open) {
     width: 100%;
   }
 
+  .md\:w-28 {
+    width: 7rem;
+  }
+
   .md\:flex-none {
     flex: none;
   }

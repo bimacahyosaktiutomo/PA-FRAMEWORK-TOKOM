@@ -6715,6 +6715,11 @@ html:has(.drawer-open.drawer-open) {
   margin-bottom: 1.5rem;
 }
 
+.my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
 .mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -6809,6 +6814,10 @@ html:has(.drawer-open.drawer-open) {
 
 .mt-auto {
   margin-top: auto;
+}
+
+.mt-3 {
+  margin-top: 0.75rem;
 }
 
 .box-border {
@@ -6942,6 +6951,10 @@ html:has(.drawer-open.drawer-open) {
 
 .h-72 {
   height: 18rem;
+}
+
+.h-8 {
+  height: 2rem;
 }
 
 .h-80 {
@@ -8997,6 +9010,10 @@ html:has(.drawer-open.drawer-open) {
     margin-top: 2.5rem;
   }
 
+  .md\:mt-auto {
+    margin-top: auto;
+  }
+
   .md\:block {
     display: block;
   }
@@ -9208,6 +9225,10 @@ html:has(.drawer-open.drawer-open) {
     padding-right: 1.25rem;
   }
 
+  .md\:text-start {
+    text-align: start;
+  }
+
   .md\:text-2xl {
     font-size: 1.5rem;
     line-height: 2rem;
@@ -9245,8 +9266,16 @@ html:has(.drawer-open.drawer-open) {
     height: 24rem;
   }
 
+  .lg\:w-1\/2 {
+    width: 50%;
+  }
+
   .lg\:w-72 {
     width: 18rem;
+  }
+
+  .lg\:w-3\/4 {
+    width: 75%;
   }
 
   .lg\:grid-cols-4 {
@@ -9274,6 +9303,12 @@ html:has(.drawer-open.drawer-open) {
   .lg\:text-lg {
     font-size: 1.125rem;
     line-height: 1.75rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .xl\:w-1\/2 {
+    width: 50%;
   }
 }
 

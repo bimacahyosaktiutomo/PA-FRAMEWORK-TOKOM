@@ -156,11 +156,15 @@ def delete_item(request, item_id):
 # User
 def edit_user(request, user_id):
     users = get_object_or_404(User, id=user_id)
-    # old_image = users.image
+    user_image = UserImage.objects.filter(user=users).first()
 
     if request.method == 'POST':
         form = UserForm(request.POST, instance=users)
         if form.is_valid():
+            if request.FILES.get('image') and user_image and user_image.image:
+                old_image_path = user_image.image.path
+                if os.path.exists(old_image_path):
+                    os.remove(old_image_path)
             form.save()
             messages.success(request, 'User berhasil diubah!')
             return redirect('tokom:dashboard', dashboard_mode='users')
@@ -170,10 +174,10 @@ def edit_user(request, user_id):
         form = UserForm(instance=users)
 
     categories = Category.objects.all()
-    return render(request, 'dashboard/edit_user.html', {'form': form, 'users' : users})
+    return render(request, 'dashboard/edit_user.html', {'form': form, 'users' : users, 'user_image': user_image,})
 
-def delete_user(request, id):
-    user = get_object_or_404(User, id=id)
+def delete_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
     # if request.method == 'POST':
     if not user.is_superuser:
         user.delete()

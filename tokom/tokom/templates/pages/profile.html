@@ -4,24 +4,29 @@
 {% load static %}
 {% load widget_tweaks %}
 <section class="flex justify-center items-center mt-">
-    <div class="flex flex-col py-4 px-4 w-full text-lg md:mt-10 md:w-1/2 bg-white border roundedlg md:shadow-md">
+    <div class="flex flex-col py-4 px-4 w-full text-lg text-center md:text-start md:mt-10 lg:w-3/4 xl:w-1/2 bg-white border roundedlg md:shadow-md">
         <div class="p-3 font-semibold">
             <i class="fa-regular fa-user"></i>
             <span class="">{{ user.username }}</span>
         </div>
-        <form method="post" enctype="multipart/form-data" class="flex space-x-3">
+        <form method="post" enctype="multipart/form-data" class="flex flex-col md:flex-row space-x-3">
             {% csrf_token %}
             <div class="flex flex-col p-2 self-center md:self-start text-start w-72 space-y-2 border rounded-xl shadow-md">
                 {{ form.image.errors }}
                 <div class="flex justify-center w-full h-64 border">
+                    {% if user_image.image %}
                     <img id="imgPreview" src="{{ user_image.image.url }}" class="object-contain" alt="">
+                    {% else %}
+                    <img id="imgPreview" src="" class="object-contain" alt="">
+                    {% endif %}
                 </div>
                 <div class="flex-none space-y-2">
                     <!-- <input type="file" class="file-input file-input-bordered w-full max-w-xs" id="id_image" name="image" accept="image/*" onchange="PreviewImage()"> -->
                     {% render_field form.image id="id_image" onchange="PreviewImage()" class="file-input file-input-bordered w-full max-w-xs" %}
                 </div>
             </div>
-            <div class="flex flex-col flex-grow">
+            <hr class="md:hidden my-4">
+            <div class="flex flex-col flex-grow text-start">
                 <h1 class="font-semibold text-gray-400 mb-1">Change Profile Detail</h1>
                 <div class="">
                     {{ form.first_name.errors }}
@@ -41,7 +46,7 @@
     
                 <!-- Submit Button -->
                 <button type="submit" id="btnSubmitProfile"
-                    class="w-11/12 py-3 self-center mt-auto bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    class="w-11/12 py-3 self-center mt-4 md:mt-auto bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     Save 
                 </button>
             </div>

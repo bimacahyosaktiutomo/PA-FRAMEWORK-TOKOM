@@ -203,6 +203,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         overlay.addEventListener('click', hideBackground);
     }
+
+    // Review
+    reviewStar('1');
 });
 
 // CART
@@ -364,4 +367,37 @@ function sortOrderHistory() {
             sortTextElement.textContent = currentText === "Newest" ? "Oldest" : "Newest";
         }
     }
+}
+
+// Review
+var isRated = false
+var lastRatingValue = '1'
+function reviewStar (ratingValue: string) {
+    let inputValue = document.getElementById('ratingReviewValue') as HTMLInputElement;
+    const starContainer = document.getElementById('starContainer') as HTMLElement;
+
+    if (lastRatingValue === ratingValue) {
+        inputValue.value = '1';
+        lastRatingValue = '1';
+    } else {
+        inputValue.value = ratingValue;
+        lastRatingValue = ratingValue;
+    }
+    
+
+    if (starContainer) {
+        Array.from(starContainer.children).forEach((e, index) => {
+            const child = e as HTMLElement
+            if (child.nodeType === Node.ELEMENT_NODE && index < parseInt(inputValue.value)) {
+                child.classList.remove('fa-reguler')
+                child.classList.add('fa-solid')
+                child.classList.add('text-yellow-300')
+            } else if (child.nodeType === Node.ELEMENT_NODE) {
+                child.classList.add('fa-reguler')
+                child.classList.remove('fa-solid')
+                child.classList.remove('text-yellow-300')
+            }
+        });
+        console.log(inputValue.value)
+    }  
 }

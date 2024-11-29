@@ -267,7 +267,7 @@ function confirmDelete(reviewId, userName, itemName) {
         if (result.isConfirmed) {
             const csrfToken = getCSRFToken();
             // Ini AJAX
-            fetch(`delete_review/${reviewId}/`, {
+            fetch(`/reviews/delete/${reviewId}/`, {
                 method: 'POST',
                 headers: {
                     // 'X-CSRFToken': '{{ csrf_token }}'

@@ -36,6 +36,7 @@ urlpatterns = [
     path('orders/<int:order_id>/', views.order_detail, name='order_detail'),
     path('dashboard/orders/<int:order_id>/<str:mode>/', views.order_detail, name='order_detail'),
     path('order_status_change/<int:order_id>/', views.change_order_status, name='order_status_change'),
+    path('update_order_status/<int:order_id>/', views.update_order_status, name='update_order_status'),
     path('items/<int:item_id>/review/', views.create_review, name='create_review'),
     path('reviews/edit/<int:item_id>/<int:review_id>/', views.edit_review, name='edit_review'),
     path('reviews/delete/<int:review_id>/', views.delete_review, name='delete_review'),

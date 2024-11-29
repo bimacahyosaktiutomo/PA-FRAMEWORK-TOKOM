@@ -199,22 +199,42 @@ def homepage(request):
     return render(request, 'homepage/index.html', context)
 
 def product_details(request, item_id):
-    item = get_object_or_404(Item, item_id=item_id)
-    reviews = item.reviews.all()  # Use the 'reviews' related_name
-    
+    item = Item.objects.get(item_id=item_id)
+    reviews = Review.objects.filter(item=item)
+    review_count = reviews.count()
+
+    # Calculate the rating counts
+    rating_counts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
+    for review in reviews:
+        rating_counts[review.rating] += 1
+
+    # Calculate percentages for each rating
+    rating_percentages = {}
+    for rating in rating_counts:
+        if review_count > 0:
+            rating_percentages[rating] = (rating_counts[rating] / review_count) * 100
+        else:
+            rating_percentages[rating] = 0
+
     # Calculate the average rating
     total_reviews = reviews.count()
     if total_reviews > 0:
         average_rating = sum([review.rating for review in reviews]) / total_reviews
     else:
         average_rating = 0
-    context = {
-        'item': item,
-        'reviews': reviews,
-        'average_rating': average_rating,
-        'review_count': total_reviews,
-    }
-    return render(request, 'pages/product_details.html', context)
+
+    return render(
+        request,
+        "pages/product_details.html",
+        {
+            "item": item,
+            'reviews': reviews,
+            'review_count' : total_reviews,
+            "rating_counts": rating_counts,
+            "rating_percentages": rating_percentages,
+            'average_rating': average_rating,
+        },
+    )
 
 def search(request):
     query = request.GET.get('q', '')  # Search query

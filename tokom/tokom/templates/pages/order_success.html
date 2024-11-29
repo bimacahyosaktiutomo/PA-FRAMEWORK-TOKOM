@@ -4,17 +4,10 @@
 {% load static %}
 <section class="flex justify-center items-center bg-slate-100 min-h-[100vh]">
     <div class="flex justify-center flex-col bg-white w-max h-fit md:rounded-md p-8 space-y-4">
-        <h1 class="text-3xl font-semibold">
+        <a href="{% url 'tokom:home' %}" class="text-3xl font-semibold">
             <span class="text-green-400"><i class="fa-regular fa-circle-check"></i></span>
             Thank you for your order
-        </h1>
-        <div class="border p-3">
-            <ul class="text-base font-semibold space-y-1">
-                <li><h1>Order Id : <span>{{ order.id }}</span></h1></li>
-                <li><h1>Nama     : <span>{{ user.name }}</span></h1></li>
-                <li><h1>Email    : <span>{{ user.email }}</span></h1></li>
-            </ul>
-        </div>
+        </a>
     </div>
 </section>
 {% endblock %}

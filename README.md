@@ -57,7 +57,6 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Lorem
 <!-- <p align="right">(<a href="#readme-top">back to top</a>)</p> -->
 
 ### Built With
@@ -206,7 +205,9 @@ Project Link: https://github.com/bimacahyosaktiutomo/PA-FRAMEWORK-TOKOM
 
 * [Best-README-Template](https://github.com/othneildrew/Best-README-Template) - For the amazing README.md template provided
 * [Shield.io](https://shields.io/) - For the ![Badges]
-* [contrib.rocks](https://contrib.rocks/preview?repo=angular%2Fangular-ja) 
+* [contrib.rocks](https://contrib.rocks/preview?repo=angular%2Fangular-ja)
+  
+* All Framework Based Programming Aslab who have taught and guided us ❤️
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

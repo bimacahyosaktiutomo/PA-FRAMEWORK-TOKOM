@@ -105,7 +105,7 @@ _Follow the command below with your terminal/cmd/git bash._
    ```
 3. Install the requirements
    ```bash
-   pip install -r requirements.txtl
+   pip install -r requirements.txt
    ```
 4. Run the migration
    ```bash
@@ -184,6 +184,7 @@ Use this space to list resources you find helpful and would like to give credit 
 
 * [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 * [contrib.rocks](https://contrib.rocks/preview?repo=angular%2Fangular-ja)
+* [Static Badge](https://shields.io/)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

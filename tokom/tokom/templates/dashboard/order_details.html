@@ -11,6 +11,10 @@
             <h1>Order Id : {{ order.order_id }}</h1>
             <p>Status: {{ order.status }}</p>
             <p>Address: {{ order.address }}</p>
+            <p>Date Ordered: {{ order.date_created|date:'F j, Y H:i' }}</p>
+            {% if order.date_arrived %}
+                <p>Date Arrived: {{ order.date_arrived|date:'F j, Y' }}</p>
+            {% endif %}
             <p class="font-semibold text-lg">Total Price: Rp. {{ order.total_price|intcomma }}</p>
         </div>
         <hr>

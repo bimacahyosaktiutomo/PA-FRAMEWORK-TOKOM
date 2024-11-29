@@ -303,8 +303,8 @@ def order_detail(request, order_id, mode = None):
 def change_order_status(request, order_id):
     order = get_object_or_404(Order, pk=order_id, user=request.user)
 
-    if order.status != 'finished':
-        order.status = 'finished'
+    if order.status != 'Arrived':
+        order.status = 'Arrived'
         order.date_arrived = now().date()  # Set the arrival date
         order.save()
         messages.success(request, "Order status has been updated to 'Finished' and arrival date recorded.")
@@ -453,14 +453,15 @@ def checkout(request):
     cart = Cart(request)
 
     if request.method == 'POST':
+        
         fullname = request.POST.get('fullname')
-        email = request.POST.get('email')
-        phone = request.POST.get('phone')
+        # email = request.POST.get('email')
+        phone_number = request.POST.get('phone')
         address = request.POST.get('address')
 
-        if not address:
-            messages.error(request, "Address is required.")
-            return render(request, 'pages/checkout.html', {'cart': cart})
+        # if not address:
+        #     messages.error(request, "Address is required.")
+        #     return render(request, 'pages/checkout.html', {'cart': cart})
 
         # Validate stock availability for all items in the cart
         for item in cart:
@@ -476,6 +477,7 @@ def checkout(request):
         order = Order.objects.create(
             user=user,
             address=address,
+            phone_number=phone_number,
             total_price=total_price,
             status='Ongoing'
         )

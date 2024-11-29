@@ -2,19 +2,19 @@
 {% block title %} Homepage {% endblock %}
 {% block content %}
 {% load static %}
-
+{% load humanize %}
 <!-- Carousel -->
 <section class="flex justify-center my-6 md:px-16 px-2">
     <div class="relative overflow-hidden rounded-xl lg:h-96 h-72 w-full select-none">
         <div class="flex transition-transform duration-500 ease-in-out" id="carousel">
             <div class="flex-shrink-0 w-full lg:h-96 h-72 bg-indigo-500 flex items-center justify-center text-white text-2xl">
-                Slide 1
+                <img class="w-full h-full object-cover" src="{% static 'asset/asrock-banner.png' %}" alt="">
             </div>
             <div class="flex-shrink-0 w-full lg:h-96 h-72 bg-blue-500 flex items-center justify-center text-white text-2xl">
-                Slide 2
+                <img class="w-full h-full object-cover" src="{% static 'asset/NZXT-banner.png' %}" alt="">
             </div>
             <div class="flex-shrink-0 w-full lg:h-96 h-72 bg-green-500 flex items-center justify-center text-white text-2xl">
-                Slide 3
+                <img class="w-full h-full object-cover" src="{% static 'asset/ROG-banner.png' %}" alt="">
             </div>
         </div>
 
@@ -47,14 +47,16 @@
                         </div>
                         <div class="p-3 h-28">
                             <div class="text-yellow-300 text-sm">
-                                {% for i in "⭐"|slice:item.rating|default:"" %}
-                                    <i class="fa-solid fa-star"></i>
-                                {% empty %}
-                                    <i class="fa-solid fa-star text-gray-400"></i>
+                                {% for i in '12345'|make_list %}
+                                    {% if forloop.counter <= item.average_rating %}
+                                        <i class="fa-solid fa-star"></i>
+                                    {% else %}
+                                        <i class="fa-solid fa-star text-gray-400"></i>
+                                    {% endif %}
                                 {% endfor %}
-                            </div>
+                            </div>                            
                             <p class="text-sm line-clamp-2 max-w-full">{{ item.name }}</p>
-                            <p class="text-sm font-semibold truncate max-w-full">Rp. {{ item.price|floatformat:0 }}</p>
+                            <p class="text-sm font-semibold truncate max-w-full">Rp. {{ item.price|intcomma }}</p>
                         </div>
                     </div>
                 </a>

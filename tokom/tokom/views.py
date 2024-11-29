@@ -1,4 +1,5 @@
 import os
+import json
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -189,9 +190,11 @@ def delete_user(request, user_id):
     return JsonResponse({'success': True})
 
 # Display FRONTEND
+from django.db.models import Avg
 def homepage(request):
     categories = Category.objects.all()
-    items = Item.objects.all()
+    # items = Item.objects.all()
+    items = Item.objects.annotate(average_rating=Avg('reviews__rating'))
     context = {
         'categories': categories,
         'items': items,
@@ -208,6 +211,10 @@ def product_details(request, item_id):
         average_rating = sum([review.rating for review in reviews]) / total_reviews
     else:
         average_rating = 0
+
+    if request.user.is_authenticated:
+        user = request.user
+        reviews = sorted(reviews, key=lambda r: r.user != user)
     context = {
         'item': item,
         'reviews': reviews,
@@ -220,7 +227,7 @@ def search(request):
     query = request.GET.get('q', '')  # Search query
     queryCategories = request.GET.getlist('c')  # List of selected categories
     sort_by = request.GET.get('sort', '') # Sorting parameter
-    items = Item.objects.all()
+    items = Item.objects.annotate(average_rating=Avg('reviews__rating'))
     categories = Category.objects.all()
     # Apply search filters
     filters = Q()
@@ -312,6 +319,32 @@ def change_order_status(request, order_id):
         messages.info(request, "This order is already marked as finished.")
 
     return redirect('tokom:order_detail', order_id=order_id)
+
+def update_order_status(request, order_id):
+    if request.method == 'POST':
+        order = get_object_or_404(Order, pk=order_id, user=request.user)
+        data = json.loads(request.body)
+        new_status = data.get('status')
+
+        if new_status == 'Arrived' and order.status != 'Arrived':
+            order.status = 'Arrived'
+            order.date_arrived = now().date()  # Set the arrival date
+            order.save()
+            return JsonResponse({'success': True, 'message': "Order status updated to 'Arrived' and arrival date recorded."})
+        
+        elif new_status == 'Ongoing' and order.status != 'Ongoing':
+            order.status = 'Ongoing'
+            order.save()
+            return JsonResponse({'success': True, 'message': "Order status updated to 'Ongoing'."})
+        
+        elif new_status == 'Package' and order.status != 'Package':
+            order.status = 'Package'
+            order.save()
+            return JsonResponse({'success': True, 'message': "Order status updated to 'Package'."})
+
+        return JsonResponse({'success': False, 'message': "No changes made to the order status."})
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
 @login_required
 def create_review(request, item_id):

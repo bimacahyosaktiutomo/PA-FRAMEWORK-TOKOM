@@ -366,7 +366,6 @@ def delete_review(request, review_id):
         review.delete()
         messages.success(request, "Your review has been deleted.")
         return JsonResponse({'success': True})
-
     return JsonResponse({'success': True})
 
 # Cart

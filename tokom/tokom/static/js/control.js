@@ -181,6 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         overlay.addEventListener('click', hideBackground);
     }
+    // Review
+    reviewStar('1');
 });
 // CART
 const cartInteract = document.querySelectorAll('.wishlist, .remove-from-cart');
@@ -314,5 +316,36 @@ function sortOrderHistory() {
             const currentText = (_b = sortTextElement.textContent) === null || _b === void 0 ? void 0 : _b.trim(); // Trim the text to remove extra spaces
             sortTextElement.textContent = currentText === "Newest" ? "Oldest" : "Newest";
         }
+    }
+}
+// Review
+var isRated = false;
+var lastRatingValue = '1';
+function reviewStar(ratingValue) {
+    let inputValue = document.getElementById('ratingReviewValue');
+    const starContainer = document.getElementById('starContainer');
+    if (lastRatingValue === ratingValue) {
+        inputValue.value = '1';
+        lastRatingValue = '1';
+    }
+    else {
+        inputValue.value = ratingValue;
+        lastRatingValue = ratingValue;
+    }
+    if (starContainer) {
+        Array.from(starContainer.children).forEach((e, index) => {
+            const child = e;
+            if (child.nodeType === Node.ELEMENT_NODE && index < parseInt(inputValue.value)) {
+                child.classList.remove('fa-reguler');
+                child.classList.add('fa-solid');
+                child.classList.add('text-yellow-300');
+            }
+            else if (child.nodeType === Node.ELEMENT_NODE) {
+                child.classList.add('fa-reguler');
+                child.classList.remove('fa-solid');
+                child.classList.remove('text-yellow-300');
+            }
+        });
+        console.log(inputValue.value);
     }
 }

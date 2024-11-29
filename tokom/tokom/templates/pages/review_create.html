@@ -1,8 +1,41 @@
-<h1>Write a Review for {{ item.name }}</h1>
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <textarea name="review_text" placeholder="Write your review"></textarea><br>
-    <input type="number" name="rating" step="0.1" max="5" placeholder="Rating (out of 5)"><br>
-    <input type="file" name="image"><br>
-    <button type="submit">Submit Review</button>
-</form>
+{% extends '../layout.html' %}
+{% block title %} Dashboard {% endblock %}
+{% block content %}
+{% load static %}
+{% load humanize %}
+<section class="bg-slate-100 md:px-16 md:py-8">
+    <div class="flex flex-col md:px-16 md:py-8 p-3 bg-white space-y-4">
+        <h1 class="font-bold text-xl">Write a Review for {{ item.name }}</h1>
+        <hr>
+        <div class="flex self-center lg:w-1/2 w-80 space-x-2 p-2 border rounded-xl shadow-md">
+            <div>
+                <img class="h-14 w-24 xs:h-28 xs:w-44 rounded-md" src="{{ item.image.url }}" alt="{{ item.name }}">
+            </div>
+            <div class="">
+                <h1 class="font-semibold text-xl">{{ item.name }}</h1>
+                <p>{{ item.description }}</p>
+                <p class="font-semibold">Rp. {{ item.price|intcomma }}</p>
+            </div>
+        </div>
+        <form method="POST" enctype="multipart/form-data" 
+            class="flex flex-col justify-center space-y-2">
+            {% csrf_token %}
+            <div id="starContainer" class="text-center text-2xl cursor-default">
+                <i onclick="reviewStar(1)" class="fa-regular fa-star cursor-pointer"></i>
+                <i onclick="reviewStar(2)" class="fa-regular fa-star cursor-pointer"></i>
+                <i onclick="reviewStar(3)" class="fa-regular fa-star cursor-pointer"></i>
+                <i onclick="reviewStar(4)" class="fa-regular fa-star cursor-pointer"></i>
+                <i onclick="reviewStar(5)" class="fa-regular fa-star cursor-pointer"></i>
+            </div>
+            <textarea name="review_text" placeholder="Write your review" rows="4" 
+                class="textarea-bordered rounded-xl ring-indigo-500 resize-none"></textarea>
+            <input type="file" class="file-input file-input-bordered w-1/3  " name="image"><br>
+            <input class="invisible" id="ratingReviewValue" type="number" name="rating" step="0.1" min="1" max="5" placeholder="Rating (out of 5)" required>
+            <button type="submit"
+                class="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 w-44 self-center rounded-xl ">
+                Submit Review
+            </button>
+        </form>
+    </div>
+</section>
+{% endblock %}

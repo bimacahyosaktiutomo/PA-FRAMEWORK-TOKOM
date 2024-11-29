@@ -3,17 +3,6 @@
 {% block content %}
 {% load static %}
 {% load humanize %}
-<!-- <h1>Order History</h1>
-<ul>
-    {% for order in orders %}
-    <li>
-        <a href="{% url 'tokom:order_detail' order.order_id %}">Order {{ order.order_id }}</a> - 
-        Status: {{ order.status }} - 
-        Total: {{ order.total_price }}
-    </li>
-    {% endfor %}
-</ul> -->
-
 <section class="sm:px-16 sm:py-8 p-2">
     <div class="space-y-4">
         <div class="flex justify-between">

@@ -101,15 +101,55 @@ _Follow the command below with your terminal/cmd/git bash._
    py manage.py runserver
    ```
    
-<!-- USAGE EXAMPLES -->
-## Project Report
+## 📖 Project Report
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+### 🏠 Home Page
+![Home Page](https://github.com/user-attachments/assets/db4cafc5-9ad5-48d6-a2fa-0691eae17648)
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+---
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### 🔍 Search
+![Search Page](https://github.com/user-attachments/assets/1d4f6e4e-edc9-43ec-8a50-63f04d198523)
 
+---
+
+### 🔑 Login
+![Login Page](https://github.com/user-attachments/assets/622d002c-730b-486d-a697-14f8ed95bad7)
+
+---
+
+### 📝 Register
+![Register Page](https://github.com/user-attachments/assets/fac516a0-768b-4c7c-a632-62b8cb484684)
+
+---
+
+### 🛒 Cart
+![Cart Page](https://github.com/user-attachments/assets/f04438e5-a102-4a72-9313-314744737d1b)
+
+---
+
+### ✅ Checkout
+![Checkout Page](https://github.com/user-attachments/assets/d33cb9cb-1361-4381-8af6-c75f2664cf6e)
+
+---
+
+### 🎉 Order Success
+![Order Success Page](https://github.com/user-attachments/assets/cc987443-684f-4525-ad93-f37d0d7f9227)
+
+---
+
+### 📜 Order History
+![Order History Page](https://github.com/user-attachments/assets/2cb4e5cb-dcba-475e-a715-8333ade0eeea)
+
+---
+
+### 📋 Order Details
+![Order Details Page](https://github.com/user-attachments/assets/b6e23ae9-bb1b-428e-b516-41f6b08cc3e1)
+
+---
+
+### ⚙️ Admin Dashboard
+![Admin Dashboard](https://github.com/user-attachments/assets/d840090c-a6e9-4e8e-a2d3-c154593974f0)
 
 
 <!-- ROADMAP -->

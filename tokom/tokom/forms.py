@@ -40,9 +40,35 @@ class ItemForm(forms.ModelForm):
         return cleaned_data
 
 class UserForm(UserChangeForm):
+    image = forms.ImageField(
+        required=False,
+        widget=forms.ClearableFileInput(attrs={'class': 'file-input file-input-bordered w-full max-w-xs'})
+    )
+
+    password = forms.CharField(
+        required=False,
+        widget=forms.PasswordInput(attrs={
+            # 'class': 'mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none',
+        }),
+        label="Password",
+    )
+
     class Meta:
         model = User
         fields = ['username', 'password', 'email', 'first_name', 'last_name', 'is_staff', 'is_active']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)  # Save the base User fields
+        if commit:
+            user.save()
+            # Save or update the UserImage model instance
+            image = self.cleaned_data.get('image')
+            if image:
+                UserImage.objects.update_or_create(
+                    user=user,
+                    defaults={'image': image},
+                )
+        return user
 
 class UserProfileForm(UserChangeForm):
     # Add the image field manually

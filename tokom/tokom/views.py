@@ -156,11 +156,18 @@ def delete_item(request, item_id):
 # User
 def edit_user(request, user_id):
     users = get_object_or_404(User, id=user_id)
-    # old_image = users.image
+    user_image = UserImage.objects.filter(user=users).first()
 
     if request.method == 'POST':
         form = UserForm(request.POST, instance=users)
         if form.is_valid():
+            if request.FILES.get('image') and user_image and user_image.image:
+                old_image_path = user_image.image.path
+                if os.path.exists(old_image_path):
+                    os.remove(old_image_path)
+            new_password = form.cleaned_data.get('password')
+            if new_password:
+                users.set_password(new_password)  # Hash and save the new password
             form.save()
             messages.success(request, 'User berhasil diubah!')
             return redirect('tokom:dashboard', dashboard_mode='users')
@@ -170,10 +177,10 @@ def edit_user(request, user_id):
         form = UserForm(instance=users)
 
     categories = Category.objects.all()
-    return render(request, 'dashboard/edit_user.html', {'form': form, 'users' : users})
+    return render(request, 'dashboard/edit_user.html', {'form': form, 'users' : users, 'user_image': user_image,})
 
-def delete_user(request, id):
-    user = get_object_or_404(User, id=id)
+def delete_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
     # if request.method == 'POST':
     if not user.is_superuser:
         user.delete()
@@ -250,7 +257,7 @@ def order_history(request):
     return render(request, 'pages/order_history.html', {'orders': orders})
 
 @login_required
-def order_detail(request, order_id):
+def order_detail(request, order_id, mode = None):
     order = get_object_or_404(Order, pk=order_id, user=request.user)
     order_details = order.order_details.all()
 
@@ -265,7 +272,8 @@ def order_detail(request, order_id):
                     'item_name': item_data['item_name'],
                     'price_per_item': item_data['price_per_item'],
                     'quantity': item_data['quantity'],
-                    'total_item_price': item_data['total_item_price']
+                    'total_item_price': item_data['total_item_price'],
+                    'image_url': item.image.url if item.image else None,
                 })
             except Item.DoesNotExist:
                 # Handle the case where an item_id in the JSON is not in the database
@@ -277,10 +285,19 @@ def order_detail(request, order_id):
                     'total_item_price': item_data['total_item_price']
                 })
 
-    return render(request, 'pages/order_detail.html', {
-        'order': order,
-        'items_data': items_data,
-    })
+    item = Item.objects.all
+    if mode == None:
+        return render(request, 'pages/order_detail.html', {
+            'order': order,
+            'items_data': items_data,
+            'item' : item,
+        })
+    else:
+        return render(request, 'dashboard/order_details.html', {
+            'order': order,
+            'items_data': items_data,
+            'item' : item,
+        })
 
 @login_required
 def change_order_status(request, order_id):

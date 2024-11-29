@@ -347,3 +347,21 @@ function DisplayMode (){
         // updateFilters(null, searchView)
     }
 }
+
+function sortOrderHistory() {
+    const historyContainer = document.getElementById('orderHistoryContainer') as HTMLElement;
+    const orderHistorySortButton = document.getElementById('orderHistorySortButton') as HTMLButtonElement;
+    const sortTextElement = orderHistorySortButton.querySelector('p');
+
+    if (historyContainer && orderHistorySortButton) {
+        historyContainer.classList.toggle('flex-col');
+        historyContainer.classList.toggle('flex-col-reverse');
+
+        orderHistorySortButton.querySelector('i')?.classList.toggle('rotate-180');
+        
+        if (sortTextElement) {
+            const currentText = sortTextElement.textContent?.trim(); // Trim the text to remove extra spaces
+            sortTextElement.textContent = currentText === "Newest" ? "Oldest" : "Newest";
+        }
+    }
+}

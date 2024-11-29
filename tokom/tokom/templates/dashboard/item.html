@@ -80,7 +80,7 @@
 function getColumnDefs() {
     if (window.innerWidth >= 540) {
         return [
-            { field: "item_id", headerName: "Item ID", flex: 1 },
+            { field: "item_id", headerName: "ID", flex: 0.5 },
             { field: "name", headerName: "Name", filter: "agTextColumnFilter", flex: 2 },
             { field: "description", headerName: "Description",  flex: 1 },
             { 
@@ -90,10 +90,21 @@ function getColumnDefs() {
                 filter: "agTextColumnFilter",
                 valueFormatter: (params) => params.value?.name || 'No Category'
             },
-            { field: "rating", headerName: "Rating", filter: "agNumberColumnFilter", flex: 1 },
-            { field: "stock", headerName: "Stock", filter: "agNumberColumnFilter", flex: 1 },
+            // { field: "rating", headerName: "Rating", filter: "agNumberColumnFilter", flex: 1 },
+            { field: "stock", headerName: "Stock", filter: "agNumberColumnFilter", flex: 0.7 },
             { field: "discount", headerName: "Discount", filter: "agNumberColumnFilter", flex: 1 },
-            { field: "price", headerName: "Price", filter: "agNumberColumnFilter", flex: 1 },
+            { 
+                field: "price", 
+                headerName: "Price", 
+                filter: "agNumberColumnFilter", 
+                flex: 1 ,
+                valueFormatter: (params) => {
+                    if (params.value != null) {
+                        return `Rp. ${params.value.toLocaleString('id-ID')}`;
+                    }
+                    return "Rp. 0";
+                }
+            },
             { 
                 field: "image", 
                 headerName: "Image", 
@@ -208,7 +219,7 @@ function getCSRFToken() {
 function confirmDelete(itemsId, itemName) {
     Swal.fire({
         title: `Item akan dihapus ${itemName} ID : ${itemsId}`,
-        text: `Item tidak akan bisa dikembalikan! ${itemName} ID : ${itemsId}`,
+        text: ``,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#ef4444',

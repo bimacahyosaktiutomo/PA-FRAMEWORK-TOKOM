@@ -34,15 +34,19 @@ urlpatterns = [
     # Order history & Review
     path('orders/', views.order_history, name='order_history'),
     path('orders/<int:order_id>/', views.order_detail, name='order_detail'),
+    path('dashboard/orders/<int:order_id>/<str:mode>/', views.order_detail, name='order_detail'),
     path('order_status_change/<int:order_id>/', views.change_order_status, name='order_status_change'),
     path('items/<int:item_id>/review/', views.create_review, name='create_review'),
     path('reviews/edit/<int:review_id>/', views.edit_review, name='edit_review'),
     path('reviews/delete/<int:review_id>/', views.delete_review, name='delete_review'),
-    path('dashboard/reviews/delete_review/<int:review_id>/', views.delete_review, name='delete_reviewd_dashboard'),
+    path('dashboard/reviews/delete_review/<int:review_id>/', views.delete_review, name='delete_review_dashboard'),
+    
     
     # API
     path('api/items/' , ItemListAPIView.as_view(), name='item_list'),
     path('api/users/' , UserListAPIView.as_view(), name='user_list'),
+    path('api/reviews/' , ReviewListAPIView.as_view(), name='review_list'),
+    path('api/orders/' , OrderListAPIView.as_view(), name='order_list'),
     path('api/reviews/' , ReviewListAPIView.as_view(), name='review_list'),
     path('api/orders/' , OrderListAPIView.as_view(), name='order_list'),
 ]

@@ -1,0 +1,69 @@
+{% extends './form-header.html' %}
+{% block title %} Edit {% endblock %}
+{% block content %}
+{% load static %}
+{% load widget_tweaks %}
+<section class="flex justify-center items-center mt-">
+    <div class="flex flex-col py-4 px-4 w-full text-lg text-center md:text-start md:mt-10 lg:w-3/4 xl:w-1/2 bg-white border roundedlg md:shadow-md">
+        <div class="p-3 font-semibold">
+            <i class="fa-regular fa-user"></i>
+            <span class="">{{ form.instance.username }}</span>
+        </div>
+        <form method="post" enctype="multipart/form-data" class="flex flex-col md:flex-row space-x-3">
+            {% csrf_token %}
+            <div class="space-y-2">
+                <div class="flex flex-col p-2 justify-self-center md:self-start text-start w-72 space-y-2 border rounded-xl shadow-md">
+                    {{ form.image.errors }}
+                    <div class="flex justify-center w-full h-64 border">
+                        {% if user_image.image %}
+                        <img id="imgPreview" src="{{ user_image.image.url }}" class="object-contain" alt="">
+                        {% else %}
+                        <img id="imgPreview" src="" class="object-contain" alt="">
+                        {% endif %}
+                    </div>
+                    <div class="flex-none space-y-2">
+                        <!-- <input type="file" class="file-input file-input-bordered w-full max-w-xs" id="id_image" name="image" accept="image/*" onchange="PreviewImage()"> -->
+                        {% render_field form.image id="id_image" onchange="PreviewImage()" class="file-input file-input-bordered w-full max-w-xs" %}
+                    </div>
+                </div>
+                <div class="flex flex-col items-center">
+                    {{ form.is_staff.errors }}
+                    <label for="id_is_staff" class="block text-sm font-medium text-center text-gray-600">Is Staff</label>
+                    {% render_field form.is_staff class="mt-1 block w-1/2 h-8 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" %}
+                </div>
+                <div class="flex flex-col items-center">
+                    {{ form.is_active.errors }}
+                    <label for="id_is_active" class="block text-sm font-medium text-center text-gray-600">Is Active</label>
+                    {% render_field form.is_active class="mt-1 block w-1/2 h-8 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" %}
+                </div>
+            </div>
+            <hr class="md:hidden my-4">
+            <div class="flex flex-col flex-grow text-start">
+                <h1 class="font-semibold text-gray-400 mb-1">Change Profile Detail</h1>
+                <div class="">
+                    {{ form.username.errors }}
+                    <label for="id_username" class="block text-sm font-medium text-gray-600">Username</label>
+                    {% render_field form.username class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" %}
+                </div>
+                <div class="">
+                    {{ form.password.errors }}
+                    <label for="id_password" class="block text-sm font-medium text-gray-600">Change Password</label>
+                    {% render_field form.password class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" %}
+                </div>
+                <div class="">
+                    {{ form.email.errors }}
+                    <label for="id_email" class="block text-sm font-medium text-gray-600">Email</label>
+                    {% render_field form.email class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" %}
+                </div>
+    
+                <!-- Submit Button -->
+                <button type="submit" id="btnSubmitUser"
+                    class="w-11/12 py-3 self-center mt-3 md:mt-auto bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Save 
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+<script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}

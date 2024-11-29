@@ -301,3 +301,18 @@ function DisplayMode() {
         // updateFilters(null, searchView)
     }
 }
+function sortOrderHistory() {
+    var _a, _b;
+    const historyContainer = document.getElementById('orderHistoryContainer');
+    const orderHistorySortButton = document.getElementById('orderHistorySortButton');
+    const sortTextElement = orderHistorySortButton.querySelector('p');
+    if (historyContainer && orderHistorySortButton) {
+        historyContainer.classList.toggle('flex-col');
+        historyContainer.classList.toggle('flex-col-reverse');
+        (_a = orderHistorySortButton.querySelector('i')) === null || _a === void 0 ? void 0 : _a.classList.toggle('rotate-180');
+        if (sortTextElement) {
+            const currentText = (_b = sortTextElement.textContent) === null || _b === void 0 ? void 0 : _b.trim(); // Trim the text to remove extra spaces
+            sortTextElement.textContent = currentText === "Newest" ? "Oldest" : "Newest";
+        }
+    }
+}

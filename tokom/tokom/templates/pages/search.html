@@ -2,6 +2,7 @@
 {% block title %} Tokom {% endblock %}
 {% block content %}
 {% load static %}
+{% load humanize %}
 <section class="md:px-16 md:py-4 flex justify-center md:space-x-5">
     <div class="sticky top-[16vh] h-full hidden md:flex md:flex-col md:flex-none md:w-44 lg:w-72 py-2 space-y-1">
 
@@ -84,7 +85,7 @@
             </div>
         </div> -->
     </div>
-    <div class="py-2 md:flex-grow">
+    <div class="py-2 px-2 md:flex-grow w-full">
         <div class="flex justify-between">
             <h1 class="self-center text-xs md:text-xl font-semibold">Search Result :</h1>
 
@@ -120,7 +121,7 @@
         </div>
 
         <!-- Column Item -->
-        <div id="searchColumn" class="px-2 md:px-0 grid grid-cols-2 lg:grid-cols-4 xs:grid-cols-3 gap-3">
+        <div id="searchColumn" class="md:px-0 grid grid-cols-2 lg:grid-cols-4 xs:grid-cols-3 gap-3">
 
             <!-- Items -->
             {% for item in items %}
@@ -143,7 +144,7 @@
                             {{ item.name }}
                         </p>
                         <p class="text-sm font-semibold truncate max-w-full">
-                            Rp. {{ item.price}}
+                            Rp. {{ item.price|intcomma}}
                         </p>
                     </div>
                 </div>
@@ -157,8 +158,8 @@
             <!-- Items -->
             {% for item in items %}
             <div class="flex w-full md:pl-1 md:py-5 md:pr-5 gap-4" href="">
-                <a href="{% url 'tokom:product_details' item.item_id %}" class="flex-none md:w-1/5 w-1/4 pl-1 h-24">
-                    <img class="object-contain w-full h-full transition-transform duration-300 transform hover:scale-110" src="{{ item.image.url }}" alt="">
+                <a href="{% url 'tokom:product_details' item.item_id %}" class="flex-none md:w-36 w-28 md:pl-1 h-24 overflow-hidden">
+                    <img class="object-cover w-full h-full transition-transform duration-300 transform hover:scale-110" src="{{ item.image.url }}" alt="">
                 </a>
                 <div class="flex flex-grow flex-col md:p-0 py-5">
                     <a href="{% url 'tokom:product_details' item.item_id %}" class="line-clamp-2 w-fit text-sm lg:text-lg">{{ item.name }}</a>
@@ -175,7 +176,15 @@
                 </div>
                 <div class="flex flex-col justify-evenly">
                     <p class="md:block hidden font-bold text-sm lg:text-base">Rp. {{ item.price }}</p>
-                    <button class="md:block hidden w-24 md:w-36 p-2 font-semibold border border-indigo-500 rounded-xl hover:bg-indigo-500 hover:text-white">Add to Cart</button>
+                    <form method="post" action="{% url 'tokom:cart_add' item.item_id %}" class="flex items-center space-x-4 w-full">
+                        {% csrf_token %}
+                        <!-- Quantity Selector -->
+                        <input type="number" id="quantity" name="quantity" class="hidden w-16 h-max text-xl px-2 py-1 border border-gray-300 rounded-md" value="1" min="1" required />
+                        <!-- Hidden Update Field -->
+                        <input type="hidden" name="update" value="false" />
+                        <!-- Add to Cart Button -->
+                        <button type="submit" class="md:block hidden w-24 md:w-36 p-2 font-semibold border border-indigo-500 rounded-xl hover:bg-indigo-500 hover:text-white">Add to Cart</button>
+                    </form>
                 </div>
             </div>
             <hr>

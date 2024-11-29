@@ -141,7 +141,7 @@
 
                 <!-- User link -->
                 {% if user.is_authenticated %}
-                <div id="UserDropdown" class="dropdown dropdown-hover dropdown-bottom flex cursor-pointer p-1 rounded-md md:hover:bg-indigo-100 hover-anim">
+                <div id="UserDropdown" class="dropdown dropdown-hover dropdown-bottom dropdown-end flex cursor-pointer p-1 rounded-md md:hover:bg-indigo-100 hover-anim">
                     <a href="{% url 'tokom:profile' user.id %}" class="flex">
                         <button class="flex text-indigo-600 md:text-2xl md:mr-2 mr-0 md:p-0 px-1 hover:bg-indigo-100 rounded-lg hover-anim">
                             <i class="self-center fa-regular fa-user xs:align-top hover:text-indigo-800"></i>

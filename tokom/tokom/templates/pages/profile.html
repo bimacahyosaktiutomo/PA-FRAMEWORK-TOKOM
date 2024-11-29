@@ -17,11 +17,10 @@
                     {% if user_image.image %}
                     <img id="imgPreview" src="{{ user_image.image.url }}" class="object-contain" alt="">
                     {% else %}
-                    <img id="imgPreview" src="" class="object-contain" alt="">
+                    <img id="imgPreview" src="{% static 'asset/blank-profile.png' %}" class="object-contain" alt="">
                     {% endif %}
                 </div>
                 <div class="flex-none space-y-2">
-                    <!-- <input type="file" class="file-input file-input-bordered w-full max-w-xs" id="id_image" name="image" accept="image/*" onchange="PreviewImage()"> -->
                     {% render_field form.image id="id_image" onchange="PreviewImage()" class="file-input file-input-bordered w-full max-w-xs" %}
                 </div>
             </div>

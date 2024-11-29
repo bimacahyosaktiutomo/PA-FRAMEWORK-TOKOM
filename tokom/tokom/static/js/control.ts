@@ -204,8 +204,6 @@ document.addEventListener('DOMContentLoaded', () => {
         overlay.addEventListener('click', hideBackground);
     }
 
-    // Review
-    reviewStar('1');
 });
 
 // CART
@@ -370,7 +368,6 @@ function sortOrderHistory() {
 }
 
 // Review
-var isRated = false
 var lastRatingValue = '1'
 function reviewStar (ratingValue: string) {
     let inputValue = document.getElementById('ratingReviewValue') as HTMLInputElement;

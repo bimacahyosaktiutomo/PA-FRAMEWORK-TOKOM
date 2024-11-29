@@ -146,7 +146,7 @@
                                 {% if profile_picture and profile_picture.image %}
                                   <img class="w-10 h-10 rounded-full" src="{{ profile_picture.image.url }}" alt="Avatar">
                                 {% else %}
-                                  <img class="w-10 h-10 rounded-full" src="{% static 'asset/profile.jpg' %}" alt="Avatar">
+                                  <img class="w-10 h-10 rounded-full" src="{% static 'asset/blank-profile.jpg' %}" alt="Avatar">
                                 {% endif %}
                             {% endwith %}
                             <div>
@@ -179,7 +179,7 @@
                         {% if review.user == user %}
                         <!-- Edit and Delete Buttons -->
                         <div class="flex space-x-2 mt-2">
-                          <a href="{% url 'tokom:edit_review' review.review_id %}" class="btn btn-primary">Edit</a>
+                          <a href="{% url 'tokom:edit_review' item.item_id  review.review_id%}" class="btn btn-primary">Edit</a>
                           <!-- <form method="POST"> -->
                             {% csrf_token %}
                             <button type="submit" onclick="confirmDelete({{review.review_id}})" class="btn btn-error text-white">Delete</button>

@@ -29,7 +29,10 @@
             </div>
             <textarea name="review_text" placeholder="Write your review" rows="4" 
                 class="textarea-bordered rounded-xl ring-indigo-500 resize-none"></textarea>
-            <input type="file" class="file-input file-input-bordered w-1/3  " name="image"><br>
+                <div class="flex flex-col md:flex-row justify-between">
+                    <input type="file" id="id_image" onchange="PreviewImage()" class="file-input file-input-bordered w-1/3  " name="image"><br>
+                    <img id="imgPreview" class="w-24 xs:w-44 max-h-24 object-cover" src="" alt="">
+                </div>
             <input class="invisible" id="ratingReviewValue" type="number" name="rating" step="0.1" min="1" max="5" placeholder="Rating (out of 5)" required>
             <button type="submit"
                 class="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 w-44 self-center rounded-xl ">
@@ -38,4 +41,25 @@
         </form>
     </div>
 </section>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      reviewStar(1); // Initialize the stars based on the current value
+    });
+
+    function PreviewImage() {
+    const fileInput = document.getElementById('id_image');
+    if (fileInput.files) {
+        const oFReader = new FileReader();
+        oFReader.readAsDataURL(fileInput.files[0]);
+        oFReader.onload = function (oFREvent) {
+            const imgPreview = document.getElementById('imgPreview');
+            if (imgPreview && oFREvent.target) {
+                imgPreview.src = oFREvent.target.result;
+            }
+            imgPreview === null || imgPreview === void 0 ? void 0 : imgPreview.className;
+        };
+    }
+    ;
+}
+</script>
 {% endblock %}

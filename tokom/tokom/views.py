@@ -338,8 +338,9 @@ def create_review(request, item_id):
 
 
 @login_required
-def edit_review(request, review_id):
+def edit_review(request, review_id, item_id):
     review = get_object_or_404(Review, review_id=review_id)
+    item = get_object_or_404(Item, pk=item_id)
     old_image = review.image
     
     # Ensure that the logged-in user is the one who created the review
@@ -359,7 +360,7 @@ def edit_review(request, review_id):
     else:
         form = ReviewForm(instance=review)
 
-    return render(request, 'pages/review_edit.html', {'form': form, 'review': review})
+    return render(request, 'pages/review_edit.html', {'form': form, 'review': review, 'item':item ,})
 
 @login_required
 def delete_review(request, review_id):

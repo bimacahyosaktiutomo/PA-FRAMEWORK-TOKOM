@@ -74,7 +74,8 @@ class UserProfileForm(UserChangeForm):
     # Add the image field manually
     image = forms.ImageField(
         required=False,
-        widget=forms.ClearableFileInput(attrs={'class': 'file-input file-input-bordered w-full max-w-xs'})
+        widget=forms.ClearableFileInput(),
+        allow_empty_file=True,
     )
 
     class Meta:

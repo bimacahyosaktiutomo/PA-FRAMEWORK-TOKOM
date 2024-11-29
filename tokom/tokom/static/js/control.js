@@ -181,8 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         overlay.addEventListener('click', hideBackground);
     }
-    // Review
-    reviewStar('1');
 });
 // CART
 const cartInteract = document.querySelectorAll('.wishlist, .remove-from-cart');
@@ -319,7 +317,6 @@ function sortOrderHistory() {
     }
 }
 // Review
-var isRated = false;
 var lastRatingValue = '1';
 function reviewStar(ratingValue) {
     let inputValue = document.getElementById('ratingReviewValue');

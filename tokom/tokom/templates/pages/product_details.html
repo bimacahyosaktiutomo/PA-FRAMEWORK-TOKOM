@@ -18,7 +18,8 @@
         <div>
           <h1 class="text-xl md:text-2xl font-semibold mb-2">{{ item.name }}</h1>
           <div class="product-details-stars mb-2">
-            <span class="text-gray-500">({{ reviews.count }})</span>
+            {% comment %} <span class="text-gray-500">({{ reviews.count }})</span> {% endcomment %}
+            <span class="text-gray-500">Available stock : {{ item.stock }}</span>
           </div>
           <hr class="product-details-separator-xs" />
           <p class="text-sm font-light text-gray-700 leading-relaxed">{{ item.description }}</p>

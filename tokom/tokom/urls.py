@@ -29,10 +29,12 @@ urlpatterns = [
     path('cart/remove/<int:item_id>/', views.cart_remove, name='cart_remove'),
     path('cart/update/<int:item_id>/', views.cart_update, name='cart_update'),
     path('checkout/', views.checkout, name='checkout'),
+    path('order_success/', views.OrderSuccess, name='order_success'),
     
     # Order history & Review
     path('orders/', views.order_history, name='order_history'),
     path('orders/<int:order_id>/', views.order_detail, name='order_detail'),
+    path('order_status_change/<int:order_id>/', views.change_order_status, name='order_status_change'),
     path('dashboard/orders/<int:order_id>/<str:mode>/', views.order_detail, name='order_detail'),
     path('items/<int:item_id>/review/', views.create_review, name='create_review'),
     path('reviews/edit/<int:item_id>/<int:review_id>/', views.edit_review, name='edit_review'),
@@ -42,6 +44,8 @@ urlpatterns = [
     # API
     path('api/items/' , ItemListAPIView.as_view(), name='item_list'),
     path('api/users/' , UserListAPIView.as_view(), name='user_list'),
+    path('api/reviews/' , ReviewListAPIView.as_view(), name='review_list'),
+    path('api/orders/' , OrderListAPIView.as_view(), name='order_list'),
     path('api/reviews/' , ReviewListAPIView.as_view(), name='review_list'),
     path('api/orders/' , OrderListAPIView.as_view(), name='order_list'),
 ]

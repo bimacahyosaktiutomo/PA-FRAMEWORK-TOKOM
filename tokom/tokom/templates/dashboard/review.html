@@ -22,44 +22,24 @@
         this.eGui = document.createElement('div');
         this.eGui.className = 'flex justify-evenly';
 
-        // // Edit button setup
-        // this.eButtonEdit = document.createElement('button');
-        // this.eButtonEdit.className = 'px-2 rounded-md bg-blue-500 text-blue-50 hover:bg-blue-600 hover:text-zinc-900 hover-anim';
-        // const iconEdit = document.createElement('i');
-        // iconEdit.className = 'fa-regular fa-pen-to-square';
-        // this.eButtonEdit.appendChild(iconEdit);
-
-        // Delete button setup
         this.eButtonDelete = document.createElement('button');
         this.eButtonDelete.className = 'px-2 rounded-md bg-red-500 text-red-50 hover:bg-red-600 hover:text-zinc-900 hover-anim';
         const iconDelete = document.createElement('i');
         iconDelete.className = 'fa-solid fa-trash';
         this.eButtonDelete.appendChild(iconDelete);
 
-        // // Event listeners
-        // this.eventListenerEdit = () => {
-        //     const itemId = params.data.review_id;
-        //     window.location.href = `edit_item/${itemId}`;
-        // };
-
         this.eventListenerDelete = () => {
-            // Access the review details
-            const reviewId = params.data.review_id; // Get reviewId from the row data
+            const reviewId = params.data.review_id;
 
-            // Access the related user and item details via the foreign key fields
-            const userName = params.data.user ? params.data.user.username : 'No user'; // Accessing user.name (assuming 'user' is the foreign key)
-            const itemName = params.data.item ? params.data.item.name : 'No item'; // Accessing item.name (assuming 'item' is the foreign key)
+            const userName = params.data.user ? params.data.user.username : 'No user'; 
+            const itemName = params.data.item ? params.data.item.name : 'No item'; 
 
-            // Trigger confirmDelete with reviewId and also passing the user and item names for reference
             confirmDelete(reviewId, userName, itemName);
         };
 
 
-        // this.eButtonEdit.addEventListener('click', this.eventListenerEdit);
         this.eButtonDelete.addEventListener('click', this.eventListenerDelete);
 
-        // Append buttons to the GUI element
-        // this.eGui.appendChild(this.eButtonEdit);
         this.eGui.appendChild(this.eButtonDelete);
     }
 
@@ -128,11 +108,11 @@ function getColumnDefs() {
                 filter: "agNumberColumnFilter", 
                 flex: 1 ,
                 valueGetter: (params) => {
-                    return params.data.user ? params.data.user.id : ''; // Use user.id for filtering
+                    return params.data.user ? params.data.user.id : '';
                 },
                 valueFormatter: (params) => {
                     const user = params.value ? params.data.user : null;
-                    return user ? `${user.id} | ${user.username}` : 'No User'; // Display both id and name
+                    return user ? `${user.id} | ${user.username}` : 'No User';
                 }
             },
             { field: "price", headerName: "Price", filter: "agNumberColumnFilter", flex: 1 },
@@ -164,20 +144,6 @@ function getColumnDefs() {
     }
 }
 
-// import { themeQuartz } from '@ag-grid-community/theming';
-// // to use myTheme in an application, pass it to the theme grid option
-// const myTheme = themeQuartz
-// 	.withParams({
-//         accentColor: "#818CF8",
-//         borderColor: "#4F47E640",
-//         browserColorScheme: "light",
-//         fontFamily: {
-//             googleFont: "Inter"
-//         },
-//         headerFontSize: 14
-//     });
-
-
 function getPagination () {
     if (window.innerWidth >= 540) {
         return true
@@ -192,25 +158,9 @@ var gridOptions = {
         filter: "agTextColumnFilter",
         // floatingFilter: false,
     },
-    // rowModelType: 'infinite',
-    cacheBlockSize: 60, // Number of rows to fetch per request
-    // datasource: {
-    //     getRows: function(params) {
-    //         const url = '/api/items/';  // Your API endpoint
-    //         fetch(url)
-    //             .then(response => response.json())
-    //             .then(data => {
-    //                 params.successCallback(data, data.length);  // Pass data and total count
-    //             })
-    //             .catch(error => {
-    //                 console.error('Error fetching data:', error);
-    //                 params.failCallback();
-    //             });
-    //     }
-    // },
+    cacheBlockSize: 60, 
     pagination: getPagination(),
     paginationPageSize: 20,
-    // themegrid: myTheme(),
 };
 
 // -------------- PENTING --------------- //

@@ -177,16 +177,14 @@ const statusDropdownRenderer = function(params) {
         selectElement.appendChild(optionElement);
     });
 
-    const selectedOption = selectElement.options[selectElement.selectedIndex];  // Get the selected option
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
 
-    // Remove previous styles first to prevent stacking them
     selectElement.classList.remove(
         'bg-green-100', 'text-green-800', 'text-xs', 'font-medium', 'me-2', 'px-2.5', 'py-0.5', 'rounded', 'dark:bg-green-900', 'dark:text-green-300',
         'bg-yellow-100', 'text-yellow-800', 'dark:bg-yellow-900', 'dark:text-yellow-300',
         'bg-blue-100', 'text-blue-800', 'dark:bg-blue-900', 'dark:text-blue-300'
     );
 
-    // Apply styles based on the selected option's text content
     if (selectedOption.textContent === 'Arrived') {
         selectElement.classList.add('bg-green-100', 'text-green-800', 'text-xs', 'font-medium', 'me-2', 'px-2.5', 'py-0.5', 'rounded', 'dark:bg-green-900', 'dark:text-green-300');
     }
@@ -197,14 +195,11 @@ const statusDropdownRenderer = function(params) {
         selectElement.classList.add('bg-blue-100', 'text-blue-800', 'text-xs', 'font-medium', 'me-2', 'px-2.5', 'py-0.5', 'rounded', 'dark:bg-blue-900', 'dark:text-blue-300');
     }
 
-    // Add event listener to update status when changed
     selectElement.addEventListener('change', function(event) {
         const selectedStatus = event.target.value;
         
-        // Call your function to update the status in the database
         updateStatusInDatabase(params.data.order_id, selectedStatus);
 
-        // Optionally, update the cell immediately
         params.node.setDataValue('status', selectedStatus);
     });
 
@@ -246,22 +241,7 @@ var gridOptions = {
         filter: "agTextColumnFilter",
         // floatingFilter: false,
     },
-    // rowModelType: 'infinite',
-    cacheBlockSize: 60, // Number of rows to fetch per request
-    // datasource: {
-    //     getRows: function(params) {
-    //         const url = '/api/items/';  // Your API endpoint
-    //         fetch(url)
-    //             .then(response => response.json())
-    //             .then(data => {
-    //                 params.successCallback(data, data.length);  // Pass data and total count
-    //             })
-    //             .catch(error => {
-    //                 console.error('Error fetching data:', error);
-    //                 params.failCallback();
-    //             });
-    //     }
-    // },
+    cacheBlockSize: 60, 
     pagination: getPagination(),
     paginationPageSize: 20,
     // themegrid: myTheme(),

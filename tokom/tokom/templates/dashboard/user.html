@@ -43,15 +43,14 @@
         };
 
         this.eventListenerDelete = () => {
-            const userId = params.data.id; // Get userId from the row data
+            const userId = params.data.id; 
             const userName = params.data.username
-            confirmDelete(userId, userName); // Trigger confirmDelete with userId
+            confirmDelete(userId, userName); 
         };
 
         this.eButtonEdit.addEventListener('click', this.eventListenerEdit);
         this.eButtonDelete.addEventListener('click', this.eventListenerDelete);
 
-        // Append buttons to the GUI element
         this.eGui.appendChild(this.eButtonEdit);
         this.eGui.appendChild(this.eButtonDelete);
     }

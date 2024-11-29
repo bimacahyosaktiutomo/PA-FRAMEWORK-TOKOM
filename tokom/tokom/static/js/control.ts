@@ -246,17 +246,6 @@ function sortButonIcon() {
     }
 }
 
-// function sortButonText(sortOption = null) {
-//     // Change the button text to reflect the selected sort option
-//     var sortText = document.getElementById('sortDropdownText')
-
-//     if (sortText) {
-//         sortText.textContent = sortOption
-//     }
-
-//     // Call the updateFilters function to update the URL with the selected sort option
-//     updateFilters(sortOption);
-// }
 
 function updateFilters(sortOption = null, viewOption: boolean) {
     const url = new URL(window.location.href);
@@ -265,10 +254,10 @@ function updateFilters(sortOption = null, viewOption: boolean) {
 
     const checkboxes = document.querySelectorAll<HTMLInputElement>('#accordion-kategori input[type="checkbox"]');
     
-    // Clear existing category filters
+    // clear filter
     params.delete('c');
 
-    // Append checked categories to the query parameters
+    // tambah checked categories ke ke query 
     checkboxes.forEach(checkbox => {
         if (checkbox.checked) {
             params.append('c', checkbox.value);
@@ -303,37 +292,9 @@ function updateFilters(sortOption = null, viewOption: boolean) {
         }
     }
 
-    // Update the URL and reload the page
+    // Update url
     window.location.href = `${url.pathname}?${params.toString()}`;
 }
-
-// let searchView = false;
-// function searchViewMode (){
-//     const searchViewButton = document.getElementById('searchViewButton')?.querySelector('i')
-//     const searchList = document.getElementById('searchList');
-//     const searchColumn = document.getElementById('searchColumn');
-
-//     if (searchList && searchColumn && searchViewButton) {
-//         if (searchView) {
-//             searchViewButton.classList.remove('fa-grip');
-//             searchViewButton.classList.add('fa-list');
-
-//             searchList.classList.remove('hidden');
-
-//             searchColumn.classList.add('hidden');
-//             searchColumn.classList.remove('grid');
-//         } else {
-//             searchViewButton.classList.remove('fa-list');
-//             searchViewButton.classList.add('fa-grip');
-
-//             searchList.classList.add('hidden');
-
-//             searchColumn.classList.remove('hidden');
-//             searchColumn.classList.add('grid');
-//         }
-//         searchView = !searchView;
-//     }
-// }
 
 function rotateAccordionIcon(accordion: string) {
     const accordionIcon = document.getElementById(accordion)?.querySelector('button span i');
@@ -357,8 +318,6 @@ function DisplayMode (){
 
         searchColumn.classList.toggle('hidden');
         searchColumn.classList.toggle('grid');
-        // searchView = !searchView
-        // updateFilters(null, searchView)
     }
 }
 
@@ -374,7 +333,7 @@ function sortOrderHistory() {
         orderHistorySortButton.querySelector('i')?.classList.toggle('rotate-180');
         
         if (sortTextElement) {
-            const currentText = sortTextElement.textContent?.trim(); // Trim the text to remove extra spaces
+            const currentText = sortTextElement.textContent?.trim();
             sortTextElement.textContent = currentText === "Newest" ? "Oldest" : "Newest";
         }
     }

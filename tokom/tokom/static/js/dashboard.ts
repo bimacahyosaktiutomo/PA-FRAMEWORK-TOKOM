@@ -70,22 +70,6 @@ function toggleSideBar(): void {
   isMinimized = !isMinimized;
 }
 
-
-// const sidebarItems = document.querySelectorAll<HTMLLIElement>(
-//   "#sidebar li, #sidebar-off-canvas li"
-// );
-
-// sidebarItems.forEach((item) => {
-//   item.addEventListener("click", function (event: Event) {
-//     event.preventDefault();
-//     const itemIndex =
-//       Array.from(sidebarItems).indexOf(item) % (sidebarItems.length / 2);
-//     const matchingItem = sidebarItems[itemIndex + sidebarItems.length / 2];
-    
-//   });
-// });
-
-
 function toggleNewCategoryInput(): void {
     const categorySelect = document.getElementById("id_category") as HTMLSelectElement;
     const newCategoryInput = document.getElementById("id_new_category") as HTMLInputElement;

@@ -57,7 +57,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-<!-- <p align="right">(<a href="#readme-top">back to top</a>)</p> -->
+**tokom** is a modern and user-friendly online store designed for buying and selling laptops and related computer accessories. Built using the Django framework, the platform aims to simplify the shopping experience while providing a robust backend for managing products, orders, and user interactions.
 
 ### Built With
 

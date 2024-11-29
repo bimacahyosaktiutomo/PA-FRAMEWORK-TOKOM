@@ -49,32 +49,35 @@ def profile(request, user_id):
 
 @login_required
 def profile(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    # Get the related image, or initialize it as None if it doesn't exist
-    user_image = UserImage.objects.filter(user=user).first()
+    if request.user.id == user_id:
+        user = get_object_or_404(User, id=user_id)
+        # Get the related image, or initialize it as None if it doesn't exist
+        user_image = UserImage.objects.filter(user=user).first()
 
-    if request.method == 'POST':
-        form = UserProfileForm(request.POST, request.FILES, instance=user)
-        if form.is_valid():
-            # Handle old image removal if a new one is uploaded
-            if request.FILES.get('image') and user_image and user_image.image:
-                old_image_path = user_image.image.path
-                if os.path.exists(old_image_path):
-                    os.remove(old_image_path)
+        if request.method == 'POST':
+            form = UserProfileForm(request.POST, request.FILES, instance=user)
+            if form.is_valid():
+                # Handle old image removal if a new one is uploaded
+                if request.FILES.get('image') and user_image and user_image.image:
+                    old_image_path = user_image.image.path
+                    if os.path.exists(old_image_path):
+                        os.remove(old_image_path)
 
-            form.save()
-            messages.success(request, 'Profile updated successfully!')
-            return redirect('tokom:profile', user_id=user_id)
+                form.save()
+                messages.success(request, 'Profile updated successfully!')
+                return redirect('tokom:profile', user_id=user_id)
+            else:
+                messages.error(request, 'Failed to update profile.')
         else:
-            messages.error(request, 'Failed to update profile.')
-    else:
-        form = UserProfileForm(instance=user)
+            form = UserProfileForm(instance=user)
 
-    return render(request, 'pages/profile.html', {
-        'form': form,
-        'user': user,
-        'user_image': user_image,
-    })
+        return render(request, 'pages/profile.html', {
+            'form': form,
+            'user': user,
+            'user_image': user_image,
+        })
+    else:
+        return redirect('tokom:home')
 
 
 # DASHBOARD
@@ -276,7 +279,7 @@ def search(request):
         'queryCategory': queryCategories,
         'sort_by': sort_by,
     })
-    
+
 # Order history & review
 @login_required
 def order_history(request):

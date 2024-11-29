@@ -76,6 +76,20 @@ function getColumnDefs() {
             },
             { field: "phone_number", headerName: "Phone Number", filter: "agNumberColumnFilter", flex: 1 },
             { field: "address", headerName: "Address", filter: "agTextColumnFilter", flex: 1 },
+            { 
+                field: "date_created", 
+                headerName: "Created", 
+                filter: "agDateColumnFilter",
+                filterParams: filterParams,
+                flex: 1 
+            },
+            { 
+                field: "date_arrived", 
+                headerName: "Arrived", 
+                filter: "agDateColumnFilter",
+                filterParams: filterParams,
+                flex: 1 
+            },
             { field: "total_price", headerName: "Total Price", filter: "agNumberColumnFilter",  flex: 1 },
             { field: "status", headerName: "Status", cellRenderer: statusDropdownRenderer, filter: "agTextColumnFilter", flex: 1 },
             { field: "actions", headerName: "Action", cellRenderer: CustomButtonComponent, filter: false, flex: 1 },
@@ -101,6 +115,32 @@ function getColumnDefs() {
         ];
     }
 }
+
+var filterParams = {
+    comparator: (filterLocalDateAtMidnight, cellValue) => {
+        var dateAsString = cellValue;
+        if (dateAsString == null) return -1;
+        var dateParts = dateAsString.split("/");
+        var cellDate = new Date(
+            Number(dateParts[2]),
+            Number(dateParts[1]) - 1,
+            Number(dateParts[0]),
+        );
+
+        if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
+            return 0;
+        }
+
+        if (cellDate < filterLocalDateAtMidnight) {
+            return -1;
+        }
+
+        if (cellDate > filterLocalDateAtMidnight) {
+            return 1;
+        }
+        return 0;
+    },
+};
 
 function getCSRFToken() {
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;

@@ -92,11 +92,15 @@
                     {% if profile_picture and profile_picture.image %}
                       <img class="w-10 h-10 rounded-full" src="{{ profile_picture.image.url }}" alt="Avatar" />
                     {% else %}
-                      <img class="w-10 h-10 rounded-full" src="{% static 'asset/blank-profile.jpg' %}" alt="Avatar" />
+                      <img class="w-10 h-10 rounded-full" src="{% static 'asset/blank-profile.png' %}" alt="Avatar" />
                     {% endif %}
                   {% endwith %}
                   <div>
                     <!-- Display Rating as Stars for each Review -->
+                    <div class="flex space-x-2">
+                      <h6 class="font-semibold">{{ review.user.username }}</h6>
+                      <p class="font-normal text-gray-400">{{ review.created_at|timesince }} ago</p>
+                    </div>
                     <div class="product-details-stars mb-2">
                       {% for i in 0|to:4 %}
                         <i class="fa-solid fa-star {% if i < review.rating %}
@@ -106,10 +110,6 @@
                           {% endif %}">
                         </i>
                       {% endfor %}
-                    </div>
-                    <div class="flex space-x-2">
-                      <h6 class="font-semibold">{{ review.user.username }}</h6>
-                      <p class="font-normal text-gray-400">{{ review.created_at|timesince }} ago</p>
                     </div>
                   </div>
                 </div>

@@ -8774,6 +8774,22 @@ html:has(.drawer-open.drawer-open) {
   }
 }
 
+@media (min-width: 768px) {
+  .md\:dropdown-end .dropdown-content {
+    inset-inline-end: 0px;
+  }
+
+  .md\:dropdown-end.dropdown-right .dropdown-content {
+    bottom: 0px;
+    top: auto;
+  }
+
+  .md\:dropdown-end.dropdown-left .dropdown-content {
+    bottom: 0px;
+    top: auto;
+  }
+}
+
 .hover\:scale-110:hover {
   --tw-scale-x: 1.1;
   --tw-scale-y: 1.1;

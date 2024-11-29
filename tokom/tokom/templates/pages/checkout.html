@@ -101,7 +101,11 @@
       {% endif %}
 
       <!-- Cart Summary -->
+      {% if cart|length > 0 %}
       <div class="md:w-1/3">
+      {% else %}
+      <div class="md:w-full">
+      {% endif %}
         <div class="flex w-full flex-col bg-white md:rounded-md p-1 md:p-5 md:top-0 space-y-2 mx-auto">
           {% if cart|length > 0 %}
           <h1 class="font-semibold text-xl">Cart Detail</h1>

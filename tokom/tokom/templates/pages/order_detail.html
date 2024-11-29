@@ -1,6 +1,10 @@
 <!-- order_detail.html -->
 <h1>Order {{ order.order_id }}</h1>
 <p>Status: {{ order.status }}</p>
+<p>Date Ordered: {{ order.date_created|date:"F j, Y H:i" }}</p>
+{% if order.date_arrived %}
+  <p>Date Arrived: {{ order.date_arrived|date:"F j, Y" }}</p>
+{% endif %}
 <p>Address: {{ order.address }}</p>
 <p>Total Price: {{ order.total_price }}</p>
 

@@ -18,7 +18,8 @@
         <div>
           <h1 class="text-xl md:text-2xl font-semibold mb-2">{{ item.name }}</h1>
           <div class="product-details-stars mb-2">
-            <span class="text-gray-500">({{ reviews.count }})</span>
+            {% comment %} <span class="text-gray-500">({{ reviews.count }})</span> {% endcomment %}
+            <span class="text-gray-500">Available stock : {{ item.stock }}</span>
           </div>
           <hr class="product-details-separator-xs" />
           <p class="text-sm font-light text-gray-700 leading-relaxed">{{ item.description }}</p>
@@ -154,13 +155,15 @@
                                     {% comment %} {% for _ in 1|to:review.rating %}
                                     <i class="fa-solid fa-star"></i>
                                     {% endfor %} {% endcomment %}
-                                    <p class="font-normal text-gray-400">{{ review.created_at|timesince }} ago</p>
                                 </div>
-                                <h6 class="font-semibold">{{ review.user.username }}</h6>
+                                <div class="flex space-x-2">
+                                  <h6 class="font-semibold">{{ review.user.username }}</h6>
+                                  <p class="font-normal text-gray-400">{{ review.created_at|timesince }} ago</p>
+                                </div>
                             </div>
                         </div>
                         <h6 class="line-clamp-4">
-                            {{ review.text }}
+                            {{ review.review_text }}
                         </h6>
                         {% if review.image %}
                         <button class="cursor-zoom-in" onclick="{{ review.id }}_modal.showModal()">

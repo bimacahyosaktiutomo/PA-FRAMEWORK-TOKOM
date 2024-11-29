@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.decorators.http import require_POST
 from django.db.models import Q
 from django.contrib.auth.models import User
+from django.utils.timezone import now
 from .models import Item, Category, Stock, OrderDetails, Order, Review
 from .models.user_image import UserImage
 from .forms import ItemForm, CartAddItemForm, UserForm, UserProfileForm, ReviewForm
@@ -44,7 +45,6 @@ def profile(request, user_id):
         'user': user,
         'user_image': user_image,
     })
-
 
 @login_required
 def profile(request, user_id):
@@ -88,6 +88,12 @@ def dashboard(request, dashboard_mode):
     elif dashboard_mode == 'users':
         context['users'] = User.objects.all()
         template = 'dashboard/user.html'
+    elif dashboard_mode == 'reviews':
+        context['reviews'] = Review.objects.all()
+        template = 'dashboard/review.html'
+    elif dashboard_mode == 'orders':
+        context['orders'] = Order.objects.all()
+        template = 'dashboard/order.html'
     else:
         return render(request, '404.html', status=404)
 
@@ -169,7 +175,10 @@ def edit_user(request, user_id):
 def delete_user(request, id):
     user = get_object_or_404(User, id=id)
     # if request.method == 'POST':
-    user.delete()
+    if not user.is_superuser:
+        user.delete()
+    else:
+        JsonResponse({'success': False})
     return JsonResponse({'success': True})
 
 # Display FRONTEND
@@ -276,13 +285,15 @@ def order_detail(request, order_id):
 @login_required
 def change_order_status(request, order_id):
     order = get_object_or_404(Order, pk=order_id, user=request.user)
-    # Only allow changing status to "finished" if the order is not already finished
+
     if order.status != 'finished':
         order.status = 'finished'
+        order.date_arrived = now().date()  # Set the arrival date
         order.save()
-        messages.success(request, "Order status has been updated to 'Finished'.")
+        messages.success(request, "Order status has been updated to 'Finished' and arrival date recorded.")
     else:
         messages.info(request, "This order is already marked as finished.")
+
     return redirect('tokom:order_detail', order_id=order_id)
 
 @login_required
@@ -299,6 +310,7 @@ def create_review(request, item_id):
 @login_required
 def edit_review(request, review_id):
     review = get_object_or_404(Review, review_id=review_id)
+    old_image = review.image
     
     # Ensure that the logged-in user is the one who created the review
     if review.user != request.user:
@@ -306,8 +318,11 @@ def edit_review(request, review_id):
         return redirect('tokom:product_details', item_id=review.item.item_id)
     
     if request.method == 'POST':
-        form = ReviewForm(request.POST, instance=review)
+        form = ReviewForm(request.POST, request.FILES, instance=review)
         if form.is_valid():
+            if request.FILES:
+                if old_image and os.path.isfile(str(old_image.path)):
+                    os.remove(os.path.join(settings.MEDIA_ROOT, str(old_image)))
             form.save()
             messages.success(request, "Your review has been updated!")
             return redirect('tokom:product_details', item_id=review.item.item_id)
@@ -326,11 +341,16 @@ def delete_review(request, review_id):
         return redirect('tokom:product_details', item_id=review.item.item_id)
     
     if request.method == 'POST':
+        if review.image:
+            try:
+                os.remove(os.path.join(settings.MEDIA_ROOT, str(review.image)))  # Adjust if necessary
+            except Exception as e:
+                messages.error(request, f'Error deleting image file: {e}')
         review.delete()
         messages.success(request, "Your review has been deleted.")
-        return redirect('tokom:product_details', item_id=review.item.item_id)
+        return JsonResponse({'success': True})
 
-    return render(request, 'pages/review_delete.html.html', {'review': review})
+    return JsonResponse({'success': True})
 
 # Cart
 @require_POST
@@ -339,47 +359,57 @@ def cart_add(request, item_id):
     View to add an item to the cart or update its quantity.
     """
     cart = Cart(request)
-    item = get_object_or_404(Item, item_id=item_id)  # Ensure you're getting the item correctly
+    item = get_object_or_404(Item, item_id=item_id)  
     form = CartAddItemForm(request.POST)
-    
+
     if form.is_valid():
         cd = form.cleaned_data
         print("Form is valid:", cd)  # Debugging line
         quantity = cd['quantity']
         update_quantity = cd['update']
-        
-        # Add or update the item in the cart
-        cart.add(item=item, quantity=quantity, update_quantity=update_quantity)
-        
-        # Debugging to check if the item is added
-        print(f"Item {item.name} added to cart with quantity {quantity}.")
+
+        try:
+            # Add or update the item in the cart, enforcing stock limits
+            cart.add(item=item, quantity=quantity, update_quantity=update_quantity)
+            messages.success(request, f"Added {quantity} x {item.name} to your cart.")
+        except ValueError as e:
+            # Handle stock limit error
+            messages.error(request, str(e))
     else:
+        messages.error(request, "Invalid form submission. Please try again.")
         print("Form is not valid:", form.errors)  # Debugging line  
+
     return redirect('tokom:cart')  # Redirect to the cart page
 
 def cart_update(request, item_id):
+    """
+    View to update the quantity of an item in the cart via + or - actions.
+    """
     cart = Cart(request)
     item = get_object_or_404(Item, item_id=item_id)
 
     # Get the action from the query parameters (?action=increase or ?action=decrease)
     action = request.GET.get('action')
 
-    if action == "increase":
-        cart.add(item=item, quantity=1, update_quantity=False)
-    elif action == "decrease":
-        if cart.get_item_quantity(item_id) > 1:  # Ensure quantity doesn't drop below 1
-            cart.add(item=item, quantity=-1, update_quantity=False)
+    try:
+        if action == "increase":
+            cart.add(item=item, quantity=1, update_quantity=False)
+            messages.success(request, f"Increased quantity of {item.name}.")
+        elif action == "decrease":
+            if cart.get_item_quantity(item_id) > 1:  # Ensure quantity doesn't drop below 1
+                cart.add(item=item, quantity=-1, update_quantity=False)
+                messages.success(request, f"Decreased quantity of {item.name}.")
+            else:
+                cart.remove(item)
+                messages.success(request, f"Removed {item.name} from your cart.")
         else:
-            cart.remove(item)  # Remove item if quantity drops to zero
-
-    # # Optionally handle AJAX responses
-    # if request.is_ajax():
-    #     return JsonResponse({
-    #         'quantity': cart.get_item_quantity(item_id),
-    #         'total_price': cart.get_total_price(),
-    #     })
+            messages.error(request, "Invalid action specified.")
+    except ValueError as e:
+        # Handle stock limit error
+        messages.error(request, str(e))
 
     return redirect('tokom:cart')
+
 
 def cart_remove(request, item_id):
     """
@@ -413,11 +443,20 @@ def checkout(request):
         address = request.POST.get('address')
 
         if not address:
-            return render(request, 'pages/checkout.html', {'cart': cart, 'error': "Address is required."})
+            messages.error(request, "Address is required.")
+            return render(request, 'pages/checkout.html', {'cart': cart})
+
+        # Validate stock availability for all items in the cart
+        for item in cart:
+            if item['quantity'] > item['item'].stock:
+                messages.error(
+                    request,
+                    f"Not enough stock for {item['item'].name}. Only {item['item'].stock} left."
+                )
+                return render(request, 'pages/checkout.html', {'cart': cart})
 
         # Create the Order
         total_price = float(cart.get_total_price())  # Convert Decimal to float
-
         order = Order.objects.create(
             user=user,
             address=address,
@@ -436,6 +475,10 @@ def checkout(request):
                 'total_item_price': float(item['total_price'])  # Convert Decimal to float
             })
 
+            # Deduct stock for each item
+            item['item'].stock -= item['quantity']
+            item['item'].save()
+
         # Create the OrderDetails entry with all items and total price
         order_details = OrderDetails.objects.create(
             order=order,
@@ -445,10 +488,12 @@ def checkout(request):
 
         # Clear the cart and redirect
         cart.clear()
+        messages.success(request, "Your order has been placed successfully!")
         return redirect('tokom:order_success')
 
     # Pre-fill form with default address if available
     return render(request, 'pages/checkout.html', {'cart': cart})
+
 
 def OrderSuccess(request):
     return render(request, 'pages/order_success.html')
@@ -457,7 +502,7 @@ def OrderSuccess(request):
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Item
-from .serializers import ItemSerializer, UserSerializer
+from .serializers import ItemSerializer, UserSerializer, ReviewSerializer, OrderSerializer
 from django.contrib.auth.models import User
 
 class ItemListAPIView(APIView):
@@ -470,4 +515,16 @@ class UserListAPIView(APIView):
     def get(self, request, *args, **kwargs):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
+    
+class ReviewListAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        reviews = Review.objects.all()
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data)
+    
+class OrderListAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        orders = Order.objects.all()
+        serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data)

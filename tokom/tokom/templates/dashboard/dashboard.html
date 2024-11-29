@@ -41,15 +41,15 @@
                     </a>
                 </li>
                 <li class="cursor-pointer hover-anim hover:text-black">
-                    <a href="" class="sidebar-item flex justify-between items-center">
+                    <a href="{% url 'tokom:dashboard' 'reviews' %}" class="sidebar-item flex justify-between items-center">
                         <i class="sidebar-icon w-1/3 fa-solid fa-comment"></i>
-                        <span class="w-full">Ulasan</span>
+                        <span class="w-full">Review</span>
                     </a>
                 </li>
                 <li class="cursor-pointer hover-anim hover:text-black">
-                    <a href="" class="sidebar-item flex justify-between items-center">
+                    <a href="{% url 'tokom:dashboard' 'orders' %}" class="sidebar-item flex justify-between items-center">
                         <i class="sidebar-icon w-1/3 fa-solid fa-cart-flatbed"></i>
-                        <span class="w-full">Transaksi</span>
+                        <span class="w-full">Order</span>
                     </a>
                 </li>
             </ul>

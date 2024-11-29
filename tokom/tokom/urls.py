@@ -3,7 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 from . import views
-from .views import ItemListAPIView, UserListAPIView 
+from .views import ItemListAPIView, UserListAPIView , ReviewListAPIView, OrderListAPIView
 
 app_name = 'tokom'
 
@@ -38,10 +38,13 @@ urlpatterns = [
     path('items/<int:item_id>/review/', views.create_review, name='create_review'),
     path('reviews/edit/<int:review_id>/', views.edit_review, name='edit_review'),
     path('reviews/delete/<int:review_id>/', views.delete_review, name='delete_review'),
+    path('dashboard/reviews/delete_review/<int:review_id>/', views.delete_review, name='delete_reviewd_dashboard'),
     
     # API
     path('api/items/' , ItemListAPIView.as_view(), name='item_list'),
     path('api/users/' , UserListAPIView.as_view(), name='user_list'),
+    path('api/reviews/' , ReviewListAPIView.as_view(), name='review_list'),
+    path('api/orders/' , OrderListAPIView.as_view(), name='order_list'),
 ]
 
 # Biar bisa baca media

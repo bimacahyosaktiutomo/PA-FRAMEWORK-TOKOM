@@ -40,37 +40,56 @@
           </div>
           {% endif %}
 
-          <!-- Full Name -->
+          <!-- Worker Name -->
           <div class="space-y-2">
-            <label for="fullname" class="font-semibold">Fullname</label>
+            <label for="worker_name" class="font-semibold">Worker Name</label>
             <div class="form-control border rounded-lg">
-              <input type="text" name="fullname" id="fullname" placeholder="Fullname" class="input input-bordered w-full" required />
+              <input 
+                type="text" 
+                name="worker_name" 
+                id="worker_name" 
+                placeholder="Worker Name" 
+                class="input input-bordered w-full {% if request.user.is_staff or request.user.is_superuser %}bg-gray-100 cursor-not-allowed{% endif %}" 
+                value="{% if request.user.is_staff or request.user.is_superuser %}{{ request.user.username }}{% endif %}" 
+                {% if request.user.is_staff or request.user.is_superuser %}readonly{% endif %}
+                required 
+              />
             </div>
           </div>
 
-          <!-- Phone Number -->
+          <!-- Phone Number (Hidden for Staff/Superusers) -->
+          {% if not request.user.is_staff and not request.user.is_superuser %}
           <div class="space-y-2">
             <label for="phone" class="font-semibold">Phone Number</label>
             <div class="form-control border rounded-lg">
               <input type="text" name="phone" id="phone" placeholder="Phone Number" class="input input-bordered w-full" required />
             </div>
           </div>
+          {% endif %}
 
           <!-- Address -->
           <div class="space-y-2">
             <label for="address" class="font-semibold">Address</label>
             <div class="form-control border rounded-lg">
-              <textarea name="address" id="address" placeholder="Street Address, City, Postal Code" class="textarea textarea-bordered w-full resize-none" rows="3" required></textarea>
+              <textarea 
+                name="address" 
+                id="address" 
+                placeholder="Street Address, City, Postal Code" 
+                class="textarea textarea-bordered w-full resize-none {% if request.user.is_staff or request.user.is_superuser %}bg-gray-100 cursor-not-allowed{% endif %}" 
+                rows="3" 
+                {% if request.user.is_staff or request.user.is_superuser %}readonly{% endif %}
+                required
+              >{% if request.user.is_staff or request.user.is_superuser %}In-store Transaction{% endif %}</textarea>
             </div>
           </div>
 
-          <!-- Save Address -->
+          {% comment %} <!-- Save Address -->
           <div class="form-control">
             <label class="cursor-pointer flex gap-2 items-center">
               <input type="checkbox" name="save_address" class="checkbox checkbox-md [--chkbg:theme(colors.indigo.500)]" />
               <span>Save as default address</span>
             </label>
-          </div>
+          </div> {% endcomment %}
 
           <!-- Payment Section -->
           <div class="space-y-2">

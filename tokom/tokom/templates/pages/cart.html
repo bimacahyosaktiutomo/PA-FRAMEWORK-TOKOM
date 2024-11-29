@@ -26,7 +26,13 @@
                     <div class="flex items-center border border-gray-300 rounded-2xl">
                       <a href="{% url 'tokom:cart_update' item.item.item_id %}?action=decrease" class="px-4 py-1 border-x border-x-gray-300 text-center text-lg font-semibold text-gray-800 rounded-l-xl">-</a>
                       <h4 class="px-3 py-1 text-lg font-semibold text-gray-600">{{ item.quantity }}</h4>
-                      <a href="{% url 'tokom:cart_update' item.item.item_id %}?action=increase" class="px-4 py-1 border-x border-x-gray-300 text-center text-lg font-semibold text-gray-800 rounded-r-xl">+</a>
+                      {% if item.quantity >= item.item.stock %}
+                        <a href="#" class="cart-update px-4 py-1 border-x border-x-gray-300 text-center text-lg font-semibold text-gray-800 rounded-r-xl cursor-not-allowed opacity-50" aria-disabled="true">+</a>
+                      {% else %}
+                        <a href="{% url 'tokom:cart_update' item.item.item_id %}?action=increase" class="cart-update px-4 py-1 border-x border-x-gray-300 text-center text-lg font-semibold text-gray-800 rounded-r-xl">+</a>
+                      {% endif %}
+
+                      {% comment %} <a href="{% url 'tokom:cart_update' item.item.item_id %}?action=increase" class="px-4 py-1 border-x border-x-gray-300 text-center text-lg font-semibold text-gray-800 rounded-r-xl">+</a> {% endcomment %}
                     </div>
                   </div>
                 </div>

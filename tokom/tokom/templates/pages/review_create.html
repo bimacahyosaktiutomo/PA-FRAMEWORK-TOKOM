@@ -8,12 +8,10 @@
         <h1 class="font-bold text-xl">Write a Review for {{ item.name }}</h1>
         <hr>
         <div class="flex self-center lg:w-1/2 w-80 space-x-2 p-2 border rounded-xl shadow-md">
-            <div>
-                <img class="h-14 w-24 xs:h-28 xs:w-44 rounded-md" src="{{ item.image.url }}" alt="{{ item.name }}">
-            </div>
+            <img class="w-32 rounded-md object-cover" src="{{ item.image.url }}" alt="{{ item.name }}">
             <div class="">
                 <h1 class="font-semibold text-xl">{{ item.name }}</h1>
-                <p>{{ item.description }}</p>
+                <p class="line-clamp-2">{{ item.description }}</p>
                 <p class="font-semibold">Rp. {{ item.price|intcomma }}</p>
             </div>
         </div>

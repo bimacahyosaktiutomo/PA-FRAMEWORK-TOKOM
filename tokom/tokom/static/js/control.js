@@ -229,6 +229,7 @@ function sortButonIcon() {
 function updateFilters(sortOption = null, viewOption) {
     const url = new URL(window.location.href);
     const params = new URLSearchParams(url.search);
+    const sortText = document.getElementById('sortDropdownText');
     const checkboxes = document.querySelectorAll('#accordion-kategori input[type="checkbox"]');
     // Clear existing category filters
     params.delete('c');
@@ -241,6 +242,17 @@ function updateFilters(sortOption = null, viewOption) {
     // Add or update the sort parameter
     if (sortOption) {
         params.set('sort', sortOption);
+        if (sortText) {
+            if (sortOption === 'default') {
+                sortText.textContent = 'Paling Sesuai';
+            }
+            else if (sortOption === 'price_asc') {
+                sortText.textContent = 'Harga Terendah';
+            }
+            else if (sortOption === 'price_desc') {
+                sortText.textContent = 'Harga Tertinggi';
+            }
+        }
     }
     let viewOptionText;
     if (viewOption) {

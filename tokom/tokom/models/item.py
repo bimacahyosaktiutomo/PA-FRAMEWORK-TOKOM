@@ -3,7 +3,7 @@ from .category import Category
 
 class Item(models.Model):
     item_id = models.BigAutoField(primary_key=True)
-    name = models.CharField(max_length=13)
+    name = models.CharField(max_length=100)
     description = models.TextField(max_length=255)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='items')
     rating = models.FloatField(null=True, blank=True)

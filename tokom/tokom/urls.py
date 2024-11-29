@@ -34,8 +34,8 @@ urlpatterns = [
     # Order history & Review
     path('orders/', views.order_history, name='order_history'),
     path('orders/<int:order_id>/', views.order_detail, name='order_detail'),
-    path('order_status_change/<int:order_id>/', views.change_order_status, name='order_status_change'),
     path('dashboard/orders/<int:order_id>/<str:mode>/', views.order_detail, name='order_detail'),
+    path('order_status_change/<int:order_id>/', views.change_order_status, name='order_status_change'),
     path('items/<int:item_id>/review/', views.create_review, name='create_review'),
     path('reviews/edit/<int:item_id>/<int:review_id>/', views.edit_review, name='edit_review'),
     path('reviews/delete/<int:review_id>/', views.delete_review, name='delete_review'),

@@ -223,6 +223,10 @@ def product_details(request, item_id):
     else:
         average_rating = 0
 
+    if request.user.is_authenticated:
+        user = request.user
+        reviews = sorted(reviews, key=lambda r: r.user != user)
+    
     return render(
         request,
         "pages/product_details.html",
@@ -278,7 +282,14 @@ def order_history(request):
 
 @login_required
 def order_detail(request, order_id, mode = None):
-    order = get_object_or_404(Order, pk=order_id, user=request.user)
+    # Determine if the user is a staff member or regular user
+    if request.user.is_staff:
+        # Allow staff to access any order
+        order = get_object_or_404(Order, pk=order_id)
+    else:
+        # Restrict regular users to their own orders
+        order = get_object_or_404(Order, pk=order_id, user=request.user)
+        
     order_details = order.order_details.all()
 
     # Parse items from JSON and retrieve corresponding Item instances
@@ -532,7 +543,6 @@ def checkout(request):
 
     # Pre-fill form with default address if available
     return render(request, 'pages/checkout.html', {'cart': cart})
-
 
 def OrderSuccess(request):
     return render(request, 'pages/order_success.html')

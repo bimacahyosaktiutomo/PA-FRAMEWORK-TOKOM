@@ -157,9 +157,9 @@
                 {% if user.is_superuser or user.is_staff %}
                 <li><a href="{% url 'tokom:dashboard' 'items' %}">Dashboard</a></li>
                 {% endif %}
-                <li>
-                  <a href="{% url 'tokom:order_history' %}" >Order</a>
-                </li>
+                {% if not user.is_superuser or not user.is_staff %}
+                <li><a href="{% url 'tokom:order_history' %}" >Order</a></li>
+                {% endif %}
                 <li>
                   <a href="{% url 'tokom:cart' %}">Cart</a>
                 </li>

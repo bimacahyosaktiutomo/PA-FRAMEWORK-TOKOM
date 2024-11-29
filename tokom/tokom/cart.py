@@ -26,10 +26,20 @@ class Cart:
                 'name': item.name,  # Optional: store additional item info
                 'image': item.image.url if item.image else None  # Optional
             }
-        if update_quantity:
-            self.cart[item_id]['quantity'] = quantity
+        
+        # Calculate the new quantity
+        new_quantity = quantity if update_quantity else self.cart[item_id]['quantity'] + quantity
+        
+        # Validate stock availability
+        if new_quantity > item.stock:
+            raise ValueError(f"Cannot add more than {item.stock} units of {item.name} to the cart.")
+        
+        # Update quantity if valid
+        if new_quantity > 0:
+            self.cart[item_id]['quantity'] = new_quantity
         else:
-            self.cart[item_id]['quantity'] += quantity
+            self.remove(item)
+
         self.save()
 
     def save(self):

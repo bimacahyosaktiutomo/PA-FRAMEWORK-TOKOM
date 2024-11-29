@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.decorators.http import require_POST
 from django.db.models import Q
 from django.contrib.auth.models import User
+from django.utils.timezone import now
 from .models import Item, Category, Stock, OrderDetails, Order, Review
 from .models.user_image import UserImage
 from .forms import ItemForm, CartAddItemForm, UserForm, UserProfileForm, ReviewForm
@@ -44,7 +45,6 @@ def profile(request, user_id):
         'user': user,
         'user_image': user_image,
     })
-
 
 @login_required
 def profile(request, user_id):
@@ -216,32 +216,6 @@ def product_details(request, item_id):
     }
     return render(request, 'pages/product_details.html', context)
 
-# def product_details(request, item_id):
-#     item = Item.objects.get(item_id=item_id)
-#     reviews = Review.objects.filter(item=item)
-
-#     # Calculate the average rating
-#     total_reviews = reviews.count()
-#     if total_reviews > 0:
-#         average_rating = sum([review.rating for review in reviews]) / total_reviews
-#     else:
-#         average_rating = 0
-
-#     # Calculate rating distribution (how many 5-star, 4-star, etc. reviews)
-#     rating_distribution = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
-#     for review in reviews:
-#         rating_distribution[review.rating] += 1
-
-#     # Prepare context for the template
-#     context = {
-#         'item': item,
-#         'average_rating': average_rating,
-#         'review_count': total_reviews,
-#         'rating_distribution': rating_distribution,
-#     }
-    
-#     return render(request, 'pages/product_details.html', context)
-
 def search(request):
     query = request.GET.get('q', '')  # Search query
     queryCategories = request.GET.getlist('c')  # List of selected categories
@@ -326,6 +300,20 @@ def order_detail(request, order_id, mode = None):
         })
 
 @login_required
+def change_order_status(request, order_id):
+    order = get_object_or_404(Order, pk=order_id, user=request.user)
+
+    if order.status != 'Arrived':
+        order.status = 'Arrived'
+        order.date_arrived = now().date()  # Set the arrival date
+        order.save()
+        messages.success(request, "Order status has been updated to 'Finished' and arrival date recorded.")
+    else:
+        messages.info(request, "This order is already marked as finished.")
+
+    return redirect('tokom:order_detail', order_id=order_id)
+
+@login_required
 def create_review(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
     if request.method == 'POST':
@@ -335,7 +323,6 @@ def create_review(request, item_id):
         Review.objects.create(user=request.user, item=item, review_text=review_text, rating=rating, image=image)
         return redirect('tokom:product_details', item_id=item_id)
     return render(request, 'pages/review_create.html', {'item': item})
-
 
 @login_required
 def edit_review(request, review_id):
@@ -381,54 +368,64 @@ def delete_review(request, review_id):
         return JsonResponse({'success': True})
     return JsonResponse({'success': True})
 
-# CARTSSSSS
+# Cart
 @require_POST
 def cart_add(request, item_id):
     """
     View to add an item to the cart or update its quantity.
     """
     cart = Cart(request)
-    item = get_object_or_404(Item, item_id=item_id)  # Ensure you're getting the item correctly
+    item = get_object_or_404(Item, item_id=item_id)  
     form = CartAddItemForm(request.POST)
-    
+
     if form.is_valid():
         cd = form.cleaned_data
         print("Form is valid:", cd)  # Debugging line
         quantity = cd['quantity']
         update_quantity = cd['update']
-        
-        # Add or update the item in the cart
-        cart.add(item=item, quantity=quantity, update_quantity=update_quantity)
-        
-        # Debugging to check if the item is added
-        print(f"Item {item.name} added to cart with quantity {quantity}.")
+
+        try:
+            # Add or update the item in the cart, enforcing stock limits
+            cart.add(item=item, quantity=quantity, update_quantity=update_quantity)
+            messages.success(request, f"Added {quantity} x {item.name} to your cart.")
+        except ValueError as e:
+            # Handle stock limit error
+            messages.error(request, str(e))
     else:
+        messages.error(request, "Invalid form submission. Please try again.")
         print("Form is not valid:", form.errors)  # Debugging line  
+
     return redirect('tokom:cart')  # Redirect to the cart page
 
 def cart_update(request, item_id):
+    """
+    View to update the quantity of an item in the cart via + or - actions.
+    """
     cart = Cart(request)
     item = get_object_or_404(Item, item_id=item_id)
 
     # Get the action from the query parameters (?action=increase or ?action=decrease)
     action = request.GET.get('action')
 
-    if action == "increase":
-        cart.add(item=item, quantity=1, update_quantity=False)
-    elif action == "decrease":
-        if cart.get_item_quantity(item_id) > 1:  # Ensure quantity doesn't drop below 1
-            cart.add(item=item, quantity=-1, update_quantity=False)
+    try:
+        if action == "increase":
+            cart.add(item=item, quantity=1, update_quantity=False)
+            messages.success(request, f"Increased quantity of {item.name}.")
+        elif action == "decrease":
+            if cart.get_item_quantity(item_id) > 1:  # Ensure quantity doesn't drop below 1
+                cart.add(item=item, quantity=-1, update_quantity=False)
+                messages.success(request, f"Decreased quantity of {item.name}.")
+            else:
+                cart.remove(item)
+                messages.success(request, f"Removed {item.name} from your cart.")
         else:
-            cart.remove(item)  # Remove item if quantity drops to zero
-
-    # # Optionally handle AJAX responses
-    # if request.is_ajax():
-    #     return JsonResponse({
-    #         'quantity': cart.get_item_quantity(item_id),
-    #         'total_price': cart.get_total_price(),
-    #     })
+            messages.error(request, "Invalid action specified.")
+    except ValueError as e:
+        # Handle stock limit error
+        messages.error(request, str(e))
 
     return redirect('tokom:cart')
+
 
 def cart_remove(request, item_id):
     """
@@ -456,22 +453,33 @@ def checkout(request):
     cart = Cart(request)
 
     if request.method == 'POST':
+        
         fullname = request.POST.get('fullname')
-        email = request.POST.get('email')
-        phone = request.POST.get('phone')
+        # email = request.POST.get('email')
+        phone_number = request.POST.get('phone')
         address = request.POST.get('address')
 
-        if not address:
-            return render(request, 'pages/checkout.html', {'cart': cart, 'error': "Address is required."})
+        # if not address:
+        #     messages.error(request, "Address is required.")
+        #     return render(request, 'pages/checkout.html', {'cart': cart})
+
+        # Validate stock availability for all items in the cart
+        for item in cart:
+            if item['quantity'] > item['item'].stock:
+                messages.error(
+                    request,
+                    f"Not enough stock for {item['item'].name}. Only {item['item'].stock} left."
+                )
+                return render(request, 'pages/checkout.html', {'cart': cart})
 
         # Create the Order
         total_price = float(cart.get_total_price())  # Convert Decimal to float
-
         order = Order.objects.create(
             user=user,
             address=address,
+            phone_number=phone_number,
             total_price=total_price,
-            status=False
+            status='Ongoing'
         )
 
         # Create OrderDetails with item details (name, id, price per item, etc.)
@@ -485,6 +493,10 @@ def checkout(request):
                 'total_item_price': float(item['total_price'])  # Convert Decimal to float
             })
 
+            # Deduct stock for each item
+            item['item'].stock -= item['quantity']
+            item['item'].save()
+
         # Create the OrderDetails entry with all items and total price
         order_details = OrderDetails.objects.create(
             order=order,
@@ -494,10 +506,15 @@ def checkout(request):
 
         # Clear the cart and redirect
         cart.clear()
-        return redirect('tokom:home')
+        messages.success(request, "Your order has been placed successfully!")
+        return redirect('tokom:order_success')
 
     # Pre-fill form with default address if available
     return render(request, 'pages/checkout.html', {'cart': cart})
+
+
+def OrderSuccess(request):
+    return render(request, 'pages/order_success.html')
 
 # BUAT AG GRID
 from rest_framework.views import APIView

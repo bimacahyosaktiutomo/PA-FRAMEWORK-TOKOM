@@ -16,7 +16,7 @@ from .cart import Cart
 
 # cek apakah user memiliki akses
 def is_Authorized(user):
-    return user.groups.filter(name__in=['Worker', 'Admin']).exists() or user.is_superuser
+    return user.groups.filter(name__in=['Worker', 'Admin']).exists() or user.is_superuser or user.is_staff
 
 @login_required
 def profile(request, user_id):
@@ -163,7 +163,7 @@ def edit_user(request, user_id):
     user_image = UserImage.objects.filter(user=users).first()
 
     if request.method == 'POST':
-        form = UserForm(request.POST, instance=users)
+        form = UserForm(request.POST, request.FILES, instance=users)
         if form.is_valid():
             if request.FILES.get('image') and user_image and user_image.image:
                 old_image_path = user_image.image.path

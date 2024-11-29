@@ -1,5 +1,5 @@
 {% extends './form-header.html' %}
-{% block title %} Edit {% endblock %}
+{% block title %} Edit User {% endblock %}
 {% block content %}
 {% load static %}
 {% load widget_tweaks %}
@@ -26,11 +26,13 @@
                         {% render_field form.image id="id_image" onchange="PreviewImage()" class="file-input file-input-bordered w-full max-w-xs" %}
                     </div>
                 </div>
+                {% if user.is_superuser %}
                 <div class="flex flex-col items-center">
                     {{ form.is_staff.errors }}
                     <label for="id_is_staff" class="block text-sm font-medium text-center text-gray-600">Is Staff</label>
                     {% render_field form.is_staff class="mt-1 block w-1/2 h-8 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" %}
                 </div>
+                {% endif %}
                 <div class="flex flex-col items-center">
                     {{ form.is_active.errors }}
                     <label for="id_is_active" class="block text-sm font-medium text-center text-gray-600">Is Active</label>

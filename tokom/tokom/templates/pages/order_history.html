@@ -1,5 +1,5 @@
 {% extends '../layout.html' %}
-{% block title %} Dashboard {% endblock %}
+{% block title %} Order History {% endblock %}
 {% block content %}
 {% load static %}
 {% load humanize %}
@@ -54,7 +54,7 @@
                     </div>
                     <div class="sm:basis-2/6 basis-3/6 text-center self-center">
                         <h1>
-                            {{ order.total_price }}
+                            {{ order.total_price|intcomma }}
                         </h1>
                     </div>
                     <div class="sm:basis-1/6 basis-3/6 text-center self-center hidden sm:block">

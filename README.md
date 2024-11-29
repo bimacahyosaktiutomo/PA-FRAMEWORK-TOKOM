@@ -1,27 +1,8 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<a id="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
 
-
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
 
 <div align="center">
   
-[![Contributors][contributors-shield]][contributors-url]
+<!-- [![Contributors][contributors-shield]][contributors-url] -->
 
 </div>
 
@@ -84,7 +65,10 @@ Lorem
 <!-- This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples. -->
 
 - [![Django][Django]][Django-url]
-
+- [![Tailwind][Tailwind]][Tailwind-url]
+- [![DaisyUI][DaisyUI]][DaisyUI-url]
+- [![NodeJS][NodeJS]][Nodeurl]
+  
 <!-- GETTING STARTED -->
 ## Getting Started
 
@@ -164,14 +148,14 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 </a>
 
 
-1. 22091060xx - Bimasakti Cahyo Utomo
+1. 2209106021 - Bimasakti Cahyo Utomo
    
 2. 2209106029 - Natanael Primus Lung H.N
 
 <!-- CONTACT -->
 ## Contact
 
-Bimasakti Cahyo - [GitHub](https://github.com/bimacahyosaktiutomo) - @gmail.com
+Bimasakti Cahyo - [GitHub](https://github.com/bimacahyosaktiutomo) - [Email](bimasakticahyoutomo@gmail.com)
 
 Natanael P.L - [GitHub](https://github.com/NatanaelPLHN) - [Email](natannaelprimuslung@example.com)
 
@@ -180,11 +164,9 @@ Project Link: https://github.com/bimacahyosaktiutomo/PA-FRAMEWORK-TOKOM
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
-
-* [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
-* [contrib.rocks](https://contrib.rocks/preview?repo=angular%2Fangular-ja)
-* [Static Badge](https://shields.io/)
+* [Best-README-Template](https://github.com/othneildrew/Best-README-Template) - For the amazing README.md template provided
+* [Shield.io](https://shields.io/) - For the ![Badges]
+* [contrib.rocks](https://contrib.rocks/preview?repo=angular%2Fangular-ja) 
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
@@ -193,3 +175,10 @@ Use this space to list resources you find helpful and would like to give credit 
 
 [Django]: https://img.shields.io/badge/Django-0?style=for-the-badge&logo=django&logoColor=white&labelColor=%230c4b33&color=%230c4b33
 [Django-url]: https://www.djangoproject.com/
+[Tailwind]: https://img.shields.io/badge/tailwind_css-0?style=for-the-badge&logo=tailwindcss&labelColor=grey&color=grey
+[Tailwind-url]: https://tailwindcss.com/
+[DaisyUI]: https://img.shields.io/badge/daisy_ui-0?style=for-the-badge&logo=daisyui&labelColor=%230a374d%20&color=%230a374d%20
+[DaisyUI-url]: https://daisyui.com/
+[NodeJS]: https://img.shields.io/badge/node.js-0?style=for-the-badge&logo=nodedotjs&labelColor=%23f9f5e6&color=%23f9f5e6
+[Nodeurl]: https://nodejs.org/en
+[Badges]: https://img.shields.io/badge/badges-0?style=for-the-badge&labelColor=%234a4a4a&color=%234a4a4a

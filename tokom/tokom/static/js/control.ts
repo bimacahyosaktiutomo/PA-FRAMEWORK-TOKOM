@@ -175,6 +175,37 @@ swiperContainer.forEach((container) => {
     });
 });
 
+// BUat pas baru ngeload halaman
+document.addEventListener('DOMContentLoaded', () => {
+    // Darken Background
+    const dropdownBackgroundEffect = document.querySelectorAll('#cartDropdownHover , #UserDropdown');
+    const overlay = document.getElementById('overlay') as HTMLElement;
+    let hideTimeout: number | null = null;
+
+    if (dropdownBackgroundEffect && overlay) {
+        const showBackground = (): void => {
+            if (hideTimeout) {
+                clearTimeout(hideTimeout);
+            }
+            overlay.classList.remove('hidden');
+        };
+
+        const hideBackground = (): void => {
+            hideTimeout = setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 200)
+        };
+
+        dropdownBackgroundEffect.forEach((items) => {
+            items.addEventListener('mouseenter', showBackground);
+            items.addEventListener('mouseleave', hideBackground);
+        })
+
+        overlay.addEventListener('click', hideBackground);
+    }
+
+});
+
 // CART
 const cartInteract =  document.querySelectorAll<HTMLElement>('.wishlist, .remove-from-cart');
 
@@ -190,30 +221,180 @@ cartInteract.forEach((item) => {
     });
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    const cartDropdownHover = document.querySelectorAll('#cartDropdownHoverButton , #cartDropdownHover');
-    const overlay = document.getElementById('overlay') as HTMLElement;
-    let hideTimeout: number | null = null;
+// Search
+const sortButton = document.getElementById('sortDropdown') as HTMLElement;
+const icon = sortButton.querySelector('div span i') as HTMLElement;
+let flip = true;
 
-    if (cartDropdownHover && overlay) {
-        const showDropdown = (): void => {
-            if (hideTimeout) {
-                clearTimeout(hideTimeout);
-            }
-            overlay.classList.remove('hidden');
-        };
-
-        const hideDropdown = (): void => {
-            hideTimeout = setTimeout(() => {
-                overlay.classList.add('hidden');
-            }, 200)
-        };
-
-        cartDropdownHover.forEach((items) => {
-            items.addEventListener('mouseenter', showDropdown);
-            items.addEventListener('mouseleave', hideDropdown);
-        })
-
-        overlay.addEventListener('click', hideDropdown);
+function sortButonFocusOut() {
+    if (icon) {
+        if (!flip) {
+            icon.classList.remove('rotate-180');
+            flip = !flip;
+        }
     }
-});
+}
+
+function sortButonIcon() {
+    if (icon) {
+        if (flip) {
+            icon.classList.add('rotate-180');
+        } else {
+            icon.classList.remove('rotate-180');
+        }
+        flip = !flip;
+    }
+}
+
+// function sortButonText(sortOption = null) {
+//     // Change the button text to reflect the selected sort option
+//     var sortText = document.getElementById('sortDropdownText')
+
+//     if (sortText) {
+//         sortText.textContent = sortOption
+//     }
+
+//     // Call the updateFilters function to update the URL with the selected sort option
+//     updateFilters(sortOption);
+// }
+
+function updateFilters(sortOption = null, viewOption: boolean) {
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+
+    const checkboxes = document.querySelectorAll<HTMLInputElement>('#accordion-kategori input[type="checkbox"]');
+    
+    // Clear existing category filters
+    params.delete('c');
+
+    // Append checked categories to the query parameters
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            params.append('c', checkbox.value);
+        }
+    });
+
+    // Add or update the sort parameter
+    if (sortOption) {
+        params.set('sort', sortOption);
+    }
+
+    let viewOptionText
+    if (viewOption) {
+        if (viewOption === true) {
+            viewOptionText = 'grid'
+            params.set('view', viewOptionText)
+        } else {
+            viewOptionText = 'list'
+            params.set('view', viewOptionText)
+        }
+    }
+
+    // Update the URL and reload the page
+    window.location.href = `${url.pathname}?${params.toString()}`;
+}
+
+// let searchView = false;
+// function searchViewMode (){
+//     const searchViewButton = document.getElementById('searchViewButton')?.querySelector('i')
+//     const searchList = document.getElementById('searchList');
+//     const searchColumn = document.getElementById('searchColumn');
+
+//     if (searchList && searchColumn && searchViewButton) {
+//         if (searchView) {
+//             searchViewButton.classList.remove('fa-grip');
+//             searchViewButton.classList.add('fa-list');
+
+//             searchList.classList.remove('hidden');
+
+//             searchColumn.classList.add('hidden');
+//             searchColumn.classList.remove('grid');
+//         } else {
+//             searchViewButton.classList.remove('fa-list');
+//             searchViewButton.classList.add('fa-grip');
+
+//             searchList.classList.add('hidden');
+
+//             searchColumn.classList.remove('hidden');
+//             searchColumn.classList.add('grid');
+//         }
+//         searchView = !searchView;
+//     }
+// }
+
+function rotateAccordionIcon(accordion: string) {
+    const accordionIcon = document.getElementById(accordion)?.querySelector('button span i');
+
+    if (accordionIcon) {
+        accordionIcon.classList.toggle('rotate-180');
+    }
+}
+
+// let searchView = true;
+function DisplayMode (){
+    const DisplayButton = document.getElementById('DisplayButton')?.querySelector('i');
+    const searchList = document.getElementById('searchList');
+    const searchColumn = document.getElementById('searchColumn');
+
+    if (searchList && searchColumn && DisplayButton) {
+        DisplayButton.classList.toggle('fa-grip');
+        DisplayButton.classList.toggle('fa-list');
+
+        searchList.classList.toggle('hidden');
+
+        searchColumn.classList.toggle('hidden');
+        searchColumn.classList.toggle('grid');
+        // searchView = !searchView
+        // updateFilters(null, searchView)
+    }
+}
+
+function sortOrderHistory() {
+    const historyContainer = document.getElementById('orderHistoryContainer') as HTMLElement;
+    const orderHistorySortButton = document.getElementById('orderHistorySortButton') as HTMLButtonElement;
+    const sortTextElement = orderHistorySortButton.querySelector('p');
+
+    if (historyContainer && orderHistorySortButton) {
+        historyContainer.classList.toggle('flex-col');
+        historyContainer.classList.toggle('flex-col-reverse');
+
+        orderHistorySortButton.querySelector('i')?.classList.toggle('rotate-180');
+        
+        if (sortTextElement) {
+            const currentText = sortTextElement.textContent?.trim(); // Trim the text to remove extra spaces
+            sortTextElement.textContent = currentText === "Newest" ? "Oldest" : "Newest";
+        }
+    }
+}
+
+// Review
+var lastRatingValue = '1'
+function reviewStar (ratingValue: string) {
+    let inputValue = document.getElementById('ratingReviewValue') as HTMLInputElement;
+    const starContainer = document.getElementById('starContainer') as HTMLElement;
+
+    if (lastRatingValue === ratingValue) {
+        inputValue.value = '1';
+        lastRatingValue = '1';
+    } else {
+        inputValue.value = ratingValue;
+        lastRatingValue = ratingValue;
+    }
+    
+
+    if (starContainer) {
+        Array.from(starContainer.children).forEach((e, index) => {
+            const child = e as HTMLElement
+            if (child.nodeType === Node.ELEMENT_NODE && index < parseInt(inputValue.value)) {
+                child.classList.remove('fa-reguler')
+                child.classList.add('fa-solid')
+                child.classList.add('text-yellow-300')
+            } else if (child.nodeType === Node.ELEMENT_NODE) {
+                child.classList.add('fa-reguler')
+                child.classList.remove('fa-solid')
+                child.classList.remove('text-yellow-300')
+            }
+        });
+        console.log(inputValue.value)
+    }  
+}

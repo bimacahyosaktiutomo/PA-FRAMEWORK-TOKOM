@@ -1,0 +1,298 @@
+{% extends '../dashboard/dashboard.html' %}
+{% block title %} Dashboard {% endblock %}
+{% block content %}
+{% load static %}
+{% csrf_token %}
+<div class="flex justify-between mb-2">
+    <h1 class="self-center font-bold text-lg">Review Dashboard</h3>
+    </div>
+    <div id="reviewGrid" class="ag-theme-quartz shadow-lg" style="height: 540px;"></div>
+    
+    
+<script src="{% static 'node_modules/sweetalert2/dist/sweetalert2.all.min.js' %}"></script>
+<script type="module">
+    class CustomButtonComponent {
+    eGui;
+    // eButtonEdit;
+    eButtonDelete;
+    // eventListenerEdit;
+    eventListenerDelete;
+
+    init(params) {
+        this.eGui = document.createElement('div');
+        this.eGui.className = 'flex justify-evenly';
+
+        // // Edit button setup
+        // this.eButtonEdit = document.createElement('button');
+        // this.eButtonEdit.className = 'px-2 rounded-md bg-blue-500 text-blue-50 hover:bg-blue-600 hover:text-zinc-900 hover-anim';
+        // const iconEdit = document.createElement('i');
+        // iconEdit.className = 'fa-regular fa-pen-to-square';
+        // this.eButtonEdit.appendChild(iconEdit);
+
+        // Delete button setup
+        this.eButtonDelete = document.createElement('button');
+        this.eButtonDelete.className = 'px-2 rounded-md bg-red-500 text-red-50 hover:bg-red-600 hover:text-zinc-900 hover-anim';
+        const iconDelete = document.createElement('i');
+        iconDelete.className = 'fa-solid fa-trash';
+        this.eButtonDelete.appendChild(iconDelete);
+
+        // // Event listeners
+        // this.eventListenerEdit = () => {
+        //     const itemId = params.data.review_id;
+        //     window.location.href = `edit_item/${itemId}`;
+        // };
+
+        this.eventListenerDelete = () => {
+            // Access the review details
+            const reviewId = params.data.review_id; // Get reviewId from the row data
+
+            // Access the related user and item details via the foreign key fields
+            const userName = params.data.user ? params.data.user.username : 'No user'; // Accessing user.name (assuming 'user' is the foreign key)
+            const itemName = params.data.item ? params.data.item.name : 'No item'; // Accessing item.name (assuming 'item' is the foreign key)
+
+            // Trigger confirmDelete with reviewId and also passing the user and item names for reference
+            confirmDelete(reviewId, userName, itemName);
+        };
+
+
+        // this.eButtonEdit.addEventListener('click', this.eventListenerEdit);
+        this.eButtonDelete.addEventListener('click', this.eventListenerDelete);
+
+        // Append buttons to the GUI element
+        // this.eGui.appendChild(this.eButtonEdit);
+        this.eGui.appendChild(this.eButtonDelete);
+    }
+
+    getGui() {
+        return this.eGui;
+    }
+
+    refresh(params) {
+        return true;
+    }
+
+    destroy() {
+        if (this.eButtonEdit) {
+            // this.eButtonEdit.removeEventListener("click", this.eventListenerEdit);
+        }
+        if (this.eButtonDelete) {
+            // this.eButtonDelete.removeEventListener("click", this.eventListenerDelete);
+        }
+    }
+}
+
+var filterParams = {
+    comparator: (filterLocalDateAtMidnight, cellValue) => {
+        var dateAsString = cellValue;
+        if (dateAsString == null) return -1;
+        var dateParts = dateAsString.split("/");
+        var cellDate = new Date(
+            Number(dateParts[2]),
+            Number(dateParts[1]) - 1,
+            Number(dateParts[0]),
+        );
+
+        if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
+            return 0;
+        }
+
+        if (cellDate < filterLocalDateAtMidnight) {
+            return -1;
+        }
+
+        if (cellDate > filterLocalDateAtMidnight) {
+            return 1;
+        }
+        return 0;
+    },
+};
+
+function getColumnDefs() {
+    if (window.innerWidth >= 540) {
+        return [
+            { field: "review_id", headerName: "Review Id", flex: 1 },
+            { field: "review_text", headerName: "Review", filter: "agTextColumnFilter", flex: 2 },
+            { field: "rating", headerName: "Rating",  flex: 1 },
+            { 
+                field: "item", 
+                headerName: "Item ID", 
+                flex: 1, 
+                filter: "agNumberColumnFilter",
+                valueGetter: (params) => {
+                    return params.data.item ? params.data.item.item_id : '';
+                },
+            },
+            { 
+                field: "user", 
+                headerName: "User ID", 
+                filter: "agNumberColumnFilter", 
+                flex: 1 ,
+                valueGetter: (params) => {
+                    return params.data.user ? params.data.user.id : ''; // Use user.id for filtering
+                },
+                valueFormatter: (params) => {
+                    const user = params.value ? params.data.user : null;
+                    return user ? `${user.id} | ${user.username}` : 'No User'; // Display both id and name
+                }
+            },
+            { field: "price", headerName: "Price", filter: "agNumberColumnFilter", flex: 1 },
+            { 
+                field: "image", 
+                headerName: "Image", 
+                flex: 1,
+                filter: false,
+                cellRenderer: (params) => {
+                    return params.value ? `<img src="${params.value}" alt="Product Image" class="" />` : 'No Image';
+                }
+            },
+            { 
+                field: "created_at", 
+                headerName: "Created", 
+                filter: "agDateColumnFilter",
+                filterParams: filterParams,
+                flex: 1 
+            },
+            { field: "actions", headerName: "Actions", cellRenderer: CustomButtonComponent, filter: false, flex: 1 },
+        ];
+    } else {
+        return [
+            { field: "review_id", headerName: "Review Id", flex: 1 },
+            { field: "review_text", headerName: "Review", filter: "agTextColumnFilter", flex: 2 },
+            { field: "rating", headerName: "Rating",  flex: 1 },
+            { field: "actions", headerName: "Actions", cellRenderer: CustomButtonComponent, filter: false, flex: 1 },
+        ];
+    }
+}
+
+// import { themeQuartz } from '@ag-grid-community/theming';
+// // to use myTheme in an application, pass it to the theme grid option
+// const myTheme = themeQuartz
+// 	.withParams({
+//         accentColor: "#818CF8",
+//         borderColor: "#4F47E640",
+//         browserColorScheme: "light",
+//         fontFamily: {
+//             googleFont: "Inter"
+//         },
+//         headerFontSize: 14
+//     });
+
+
+function getPagination () {
+    if (window.innerWidth >= 540) {
+        return true
+    } else {
+        return false;
+    }
+}
+
+var gridOptions = {
+    columnDefs: getColumnDefs(),
+    defaultColDef: {
+        filter: "agTextColumnFilter",
+        // floatingFilter: false,
+    },
+    // rowModelType: 'infinite',
+    cacheBlockSize: 60, // Number of rows to fetch per request
+    // datasource: {
+    //     getRows: function(params) {
+    //         const url = '/api/items/';  // Your API endpoint
+    //         fetch(url)
+    //             .then(response => response.json())
+    //             .then(data => {
+    //                 params.successCallback(data, data.length);  // Pass data and total count
+    //             })
+    //             .catch(error => {
+    //                 console.error('Error fetching data:', error);
+    //                 params.failCallback();
+    //             });
+    //     }
+    // },
+    pagination: getPagination(),
+    paginationPageSize: 20,
+    // themegrid: myTheme(),
+};
+
+// -------------- PENTING --------------- //
+let api;
+document.addEventListener("DOMContentLoaded", function () {
+    var myGridElement = document.querySelector("#reviewGrid");
+    api = agGrid.createGrid(myGridElement, gridOptions);
+
+    fetch('/api/reviews/')
+        .then((response) => response.json())
+        .then((data) => {
+            api.setGridOption("rowData", data);
+        })
+})
+// -------------- PENTING --------------- //
+
+function destroyGrid() { // Ngehapus grid, referensi saja
+    api.destroy();
+}
+
+window.addEventListener("resize", () => {
+
+    // Buat ngubah header kolom sesuai ukuran
+    if (window.innerWidth <= 540) {
+        const newColumnDefs = getColumnDefs();
+        api.setGridOption("columnDefs", newColumnDefs);
+
+        const newPagination = getPagination();
+        api.setGridOption("pagination", newPagination );
+    } else {
+        const newColumnDefs = getColumnDefs();
+        api.setGridOption("columnDefs", newColumnDefs);
+        
+        const newPagination = getPagination();
+        api.setGridOption("pagination", newPagination );
+    }
+});
+
+function getCSRFToken() {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    return csrfToken;
+}
+
+function confirmDelete(reviewId, userName, itemName) {
+    Swal.fire({
+        title: `Review pada ${itemName} oleh ${userName} akan dihapus ID : ${reviewId}`,
+        text: `Review tidak akan bisa dikembalikan! ID : ${reviewId}`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '##e5e7eb',
+        confirmButtonText: 'Ya, Hapus!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const csrfToken = getCSRFToken();
+            // Ini AJAX
+            fetch(`/reviews/delete/${reviewId}/`, {
+                method: 'POST',
+                headers: {
+                    // 'X-CSRFToken': '{{ csrf_token }}'
+                    'X-CSRFToken': csrfToken 
+                }
+            }).then(response => {
+                if (response.ok) {
+                    Swal.fire(
+                        'Deleted!',
+                        'Review berhasil dihapus.',
+                        'success'
+                    ).then(() => {
+                        // Reload the page after success
+                        window.location.reload();
+                    });
+                } else {
+                    Swal.fire(
+                        'Error!',
+                        'Gagal menghapus review.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+}
+</script>
+{% endblock %}

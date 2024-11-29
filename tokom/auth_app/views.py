@@ -1,5 +1,6 @@
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import Group
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from .forms import UserRegisForm
@@ -11,12 +12,31 @@ def register(request):
             user = form.save()
             login(request, user) #login user habis regis
             messages.success(request, "Registration Successful!")
-            return redirect('tokom:dashboard')
+            return redirect('tokom:home')
         else:
             messages.error(request, "Registration Failed. Invalid registration info, try again!")
     else:
         form = UserRegisForm()
     return render(request, 'auth_app/register.html', {'form': form})
+
+# def register(request):
+#     if request.method == 'POST':
+#         form = UserRegisForm(request.POST)
+#         if form.is_valid():
+#             user = form.save()
+            
+#             # Assign the user to the Customer group
+#             customer_group = Group.objects.get(name='Customer')
+#             user.groups.add(customer_group)
+            
+#             login(request, user)  # Log the user in after registration
+#             messages.success(request, "Registration Successful!")
+#             return redirect('tokom:home')
+#         else:
+#             messages.error(request, "Registration Failed. Invalid registration info, try again!")
+#     else:
+#         form = UserRegisForm()
+#     return render(request, 'auth_app/register.html', {'form': form})
 
 def user_login(request):
     if request.method == 'POST':
@@ -28,7 +48,7 @@ def user_login(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f"Login Succeessful! Youre now logged in as {username}")
-                return redirect('tokom:dashboard')
+                return redirect('tokom:home')
             else:
                 messages.error(request, "Invalid Username or Password.")
         else:

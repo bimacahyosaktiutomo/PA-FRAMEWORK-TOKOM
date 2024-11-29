@@ -1,0 +1,195 @@
+{% extends '../layout.html' %}
+{% block title %} Tokom {% endblock %}
+{% block content %}
+{% load static %}
+{% load humanize %}
+<section class="md:px-16 md:py-4 flex justify-center md:space-x-5">
+    <div class="sticky top-[16vh] h-full hidden md:flex md:flex-col md:flex-none md:w-44 lg:w-72 py-2 space-y-1">
+
+        <!-- Accordion -->
+        <div id="" data-accordion="open" class="w-full h-fit p-4 space-y-3 border">
+            <h1 id="accordion-kategori-heading" class="text-lg font-semibold">
+                <button type="button" class="flex justify-between bg-inherit w-full text-start" onclick="rotateAccordionIcon('accordion-kategori-heading')" data-accordion-target="#accordion-kategori" aria-expanded="true" aria-controls="accordion-kategori">    
+                    Kategori
+                    <span class=""><i class="flex-none text-xs md:text-base fa-solid fa-chevron-up transition-transform"></i></span>
+                </button>
+            </h1>
+            <div id="accordion-kategori" class="flex flex-col space-y-2">
+
+                <!-- Bikin Perulangan pake kategori -->
+                <div class="space-y-3">
+                    {% for categories in category %}
+                    {% if not forloop.first %}
+                    <div class="flex items-center">
+                        <input 
+                            id="{{ categories.name }}-checkbox" 
+                            name="c" 
+                            type="checkbox" 
+                            value="{{ categories.name|default:'' }}" 
+                            {% if categories.name in queryCategory %}checked{% endif %}
+                            class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded"
+                            onchange="updateFilters()">
+                        <label for="{{ categories.name }}-checkbox" class="ms-2 text-base font-medium">
+                            {{ categories.name }}
+                        </label>
+                    </div>
+                    {% endif %}
+                {% endfor %}                
+                </div>
+                <!-- <div class="flex items-center">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded">
+                    <label for="default-checkbox" class="ms-2 text-base font-medium">GPU</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded">
+                    <label for="default-checkbox" class="ms-2 text-base font-medium">Casing</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded">
+                    <label for="default-checkbox" class="ms-2 text-base font-medium">PSU</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded">
+                    <label for="default-checkbox" class="ms-2 text-base font-medium">Motherboard</label>
+                </div> -->
+            </div>
+        </div>
+        <!-- <div data-accordion="open" class="w-full h-fit p-4 space-y-3 border">
+            <h1 id="accordion-brand-heading" class="text-lg font-semibold flex">
+                <button type="button" class="flex justify-between bg-inherit w-full text-start" onclick="rotateAccordionIcon('accordion-brand-heading')" data-accordion-target="#accordion-brand" aria-expanded="true" aria-controls="accordion-brand">    
+                    Brand
+                    <span class=""><i class="flex-none text-xs md:text-base fa-solid fa-chevron-up transition-transform"></i></span>
+                </button>
+            </h1>
+            <div id="accordion-brand" class="flex flex-col space-y-2">
+                <div class="flex items-center">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded">
+                    <label for="default-checkbox" class="ms-2 text-base font-medium">AMD</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded">
+                    <label for="default-checkbox" class="ms-2 text-base font-medium">Intel</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded">
+                    <label for="default-checkbox" class="ms-2 text-base font-medium">Nvidia</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded">
+                    <label for="default-checkbox" class="ms-2 text-base font-medium">ASUS</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-500 bg-gray-100 border-gray-300 rounded">
+                    <label for="default-checkbox" class="ms-2 text-base font-medium">MSI</label>
+                </div>
+            </div>
+        </div> -->
+    </div>
+    <div class="py-2 px-2 md:flex-grow w-full">
+        <div class="flex justify-between">
+            <h1 class="self-center text-xs md:text-xl font-semibold">Search Result :</h1>
+
+            <div class="flex align-middle py-2 space-x-2">
+                <!-- Display Mode -->
+                <button id="DisplayButton" onclick="DisplayMode()" class="w-8 md:w-12 h-full px-2 border-2 rounded-xl box-border text-sm md:text-lg focus:border-indigo-500">
+                    <i class="fa-solid fa-grip transition-transform duration-30"></i>
+                </button>
+    
+                <!-- Sort by Button -->
+                <button id="sortDropdown" data-dropdown-toggle="sortDropdownList" onclick="sortButonIcon()" onblur="sortButonFocusOut()" 
+                    class="h-full items-end px-3 py-2 border-2 rounded-xl focus:border-indigo-500">
+                    <div class="flex items-center space-x-4">
+                        <h1 id="sortDropdownText" class="flex-grow text-xs md:text-base text-left">
+                            Paling Sesuai
+                        </h1>
+                        <span class=""><i class="flex-none text-xs md:text-base fa-solid fa-chevron-down transition-transform"></i></span>
+                    </div>                    
+                    <div id="sortDropdownList" class="z-10 hidden">
+                        <!-- <select name="sort" id="" class="menu dropdown-content bg-white border rounded-lg shadow-sm -translate-y-2">
+                            <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Paling Sesuai</option>
+                            <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Harge Terendah</option>
+                            <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Harga Tertinggi</option>
+                        </select> -->
+                        <ul class="menu dropdown-content bg-white border rounded-lg shadow-sm -translate-y-2">
+                            <li onclick="updateFilters('default')"><a>Paling Sesuai</a></li>
+                            <li onclick="updateFilters('price_asc')"><a>Harga Terendah</a></li>
+                            <li onclick="updateFilters('price_desc')"><a>Harga Tertinggi</a></li>
+                        </ul>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Column Item -->
+        <div id="searchColumn" class="md:px-0 grid grid-cols-2 lg:grid-cols-4 xs:grid-cols-3 gap-3">
+
+            <!-- Items -->
+            {% for item in items %}
+            <a href="{% url 'tokom:product_details' item.item_id %}"> <!-- Sementara -->
+                <div class="flex flex-col rounded-lg shadow-md hover:shadow-lg">
+                    <div class="card-img-container">
+                        <img class="card-img h-40"
+                            src="{{ item.image.url }}"
+                            alt="">
+                    </div>
+                    <div class="p-3 h-28">
+                        <div class="text-yellow-300 text-xs">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-sm line-clamp-2 max-w-full">
+                            {{ item.name }}
+                        </p>
+                        <p class="text-sm font-semibold truncate max-w-full">
+                            Rp. {{ item.price|intcomma}}
+                        </p>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+        <!-- List Item -->
+        <div id="searchList" class="hidden border-x border-t">
+
+            <!-- Items -->
+            {% for item in items %}
+            <div class="flex w-full md:pl-1 md:py-5 md:pr-5 gap-4" href="">
+                <a href="{% url 'tokom:product_details' item.item_id %}" class="flex-none md:w-36 w-28 md:pl-1 h-24 overflow-hidden">
+                    <img class="object-cover w-full h-full transition-transform duration-300 transform hover:scale-110" src="{{ item.image.url }}" alt="">
+                </a>
+                <div class="flex flex-grow flex-col md:p-0 py-5">
+                    <a href="{% url 'tokom:product_details' item.item_id %}" class="line-clamp-2 w-fit text-sm lg:text-lg">{{ item.name }}</a>
+                    <div class="text-gray-400 text-xs lg:text-base">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <span class="text-gray-500">(0)</span>
+                    </div>
+                    <p class="block md:hidden font-bold text-sm lg:text-base">Rp. {{ item.price }}</p>
+                    <button class="self-end block md:hidden w-fit p-2 text-xs font-semibold border border-indigo-500 rounded-xl hover:bg-indigo-500 hover:text-white">Add to Cart</button>
+                </div>
+                <div class="flex flex-col justify-evenly">
+                    <p class="md:block hidden font-bold text-sm lg:text-base">Rp. {{ item.price }}</p>
+                    <form method="post" action="{% url 'tokom:cart_add' item.item_id %}" class="flex items-center space-x-4 w-full">
+                        {% csrf_token %}
+                        <!-- Quantity Selector -->
+                        <input type="number" id="quantity" name="quantity" class="hidden w-16 h-max text-xl px-2 py-1 border border-gray-300 rounded-md" value="1" min="1" required />
+                        <!-- Hidden Update Field -->
+                        <input type="hidden" name="update" value="false" />
+                        <!-- Add to Cart Button -->
+                        <button type="submit" class="md:block hidden w-24 md:w-36 p-2 font-semibold border border-indigo-500 rounded-xl hover:bg-indigo-500 hover:text-white">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+            <hr>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

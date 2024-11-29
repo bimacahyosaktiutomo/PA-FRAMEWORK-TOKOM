@@ -1,0 +1,44 @@
+{% extends '../dashboard/dashboard.html' %}
+{% block title %} Dashboard {% endblock %}
+{% block content %}
+{% load static %}
+{% load humanize %}
+<section>
+    <div class="bg-white space-y-3 p-4 shadow-sm border rounded-lg">
+        <h1 class="font-bold text-xl">Order Information</h1>
+        <hr>
+        <div class="text-sm md:text-base">
+            <h1>Order Id : {{ order.order_id }}</h1>
+            <p>Status: {{ order.status }}</p>
+            <p>Address: {{ order.address }}</p>
+            <p class="font-semibold text-lg">Total Price: Rp. {{ order.total_price|intcomma }}</p>
+        </div>
+        <hr>
+        <h1 class="font-bold text-xl">Item Detail</h1>
+        <div class="space-y-3 p-3 border rounded-lg shadow-lg">
+            {% for item_data in items_data %}
+            <div class="space-y-2">
+                <div class="flex space-x-3">
+                    <a href="{% url 'tokom:product_details' item_data.item.item_id %}">
+                        {% if item_data.image_url %}
+                            <img class="h-14 w-24 xs:h-28 xs:w-44 rounded-md" src="{{ item_data.image_url }}" alt="{{ item.name }}">
+                        {% endif %}
+                    </a>
+                    <a href="{% url 'tokom:product_details' item_data.item.item_id %}" class="">
+                        <h1 class="line-clamp-2 text-base xs:text-xl font-bold">{{ item_data.item_name }}</h1>
+                        <p class="font-light text-xs xs:text-base">{{ item_data.quantity }} x {{ item_data.price_per_item|intcomma }}</p>
+                    </a>
+                </div>
+                <div>
+                    <p class="text-xs">Total Harga</p>
+                    <h1 class="font-semibold text-sm">{{ item_data.total_item_price|intcomma }}</h1>
+                </div>
+            </div>
+            {% if not forloop.last %}
+                <hr>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

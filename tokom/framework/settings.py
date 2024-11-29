@@ -42,12 +42,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'tokom', 
     'auth_app', #login regis
     'django_bootstrap5',
     'django_seed', # Seeder
     'widget_tweaks',
     'livereload',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -74,6 +76,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.static',
+                'tokom.context_processors.cart',  # Ensure this is here
             ],
         },
     },
@@ -92,7 +95,7 @@ DATABASES = {
         'USER': 'root',  # User default MySQL di XAMPP
         # Biasanya password default di XAMPP kosong (tidak diisi)
         'PASSWORD': '',
-        'HOST': '127.0.0.1',  # Host MySQL di XAMPP (localhost)
+        'HOST': 'localhost',  # Host MySQL di XAMPP (localhost)
         'PORT': '3306',
     }
 }
@@ -142,3 +145,6 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/auth/login/'  # The URL to redirect to when the user is not authenticated
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Ensure this is set
+CART_SESSION_ID = 'cart'  # Ensure this matches your usage in cart.py

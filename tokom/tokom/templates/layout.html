@@ -1,17 +1,22 @@
 {% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %} Home {% endblock %}</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link href="{% static 'style/output.css' %}" rel="stylesheet">
-        <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-        <!-- <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script> -->
-    </head>
-<body class="">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}
+        Home
+      {% endblock %}
+    </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="{% static 'style/output.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script> -->
+  </head>
+  <body class="min-h-[100vh]">
     <div id="overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-10"></div>
 
     <!-- Header -->
@@ -37,10 +42,11 @@
             </a>
             
             <!-- Search Bar  -->
-            <div class="md:flex hidden justify-center self-center h-10 basis-3/5">
-                <input type="text" class="flex-grow border-solid border-2 border-indigo-300 rounded-l-lg px-1 w-96 outline-none focus:ring-2 focus:ring-indigo-400 hover-anim" placeholder="Cari. . .">
-                <button class="border-solid border-2 border-y-indigo-300 border-r-indigo-300 rounded-r-lg bg-transparent text-indigo-600 py-1 px-4 hover:bg-indigo-600 hover:text-white hover-anim"><i class="fa-solid fa-magnifying-glass"></i></button>
-            </div>
+            <form class="md:flex hidden justify-center self-center h-10 basis-3/5" id="search-bar" action="{% url 'tokom:search' %}" method="get">
+                <input type="search" name="q" placeholder="Cari. . ." value="{{ query|default:'' }}" aria-label="Search"
+                    class="flex-grow border-solid border-2 border-indigo-300 rounded-l-lg px-1 w-96 outline-none focus:ring-2 focus:ring-indigo-400 hover-anim">
+                <button type="submit" class="border-solid border-2 border-y-indigo-300 border-r-indigo-300 rounded-r-lg bg-transparent text-indigo-600 py-1 px-4 hover:bg-indigo-600 hover:text-white hover-anim"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
             
             <!-- Authentication Button -->
             <div class="flex gap-4">
@@ -52,19 +58,19 @@
                             class="flex md:p-3 px-1 rounded-md hover:bg-indigo-100 hover-anim">
                             <i class="self-center fa-solid fa-cart-shopping md:text-2xl text-indigo-600 hover:text-indigo-800 hover-anim"></i>
                         </button>
-                    </a> -->
+                    </a>  -->
 
-                    <!-- Cart Dropdown -->
-                    <!-- <div id="cartDropdownHover" class="w-[35rem] z-10 hidden absolute">
+          <!-- Cart Dropdown -->
+          <!--  <div id="cartDropdownHover" class="w-[35rem] z-10 hidden absolute">
                         <div class="relative -left-10 w-[30rem] p-2 space-y-2 self-center bg-white rounded-lg shadow-2xl">
                             <div class="flex">
                                 <h1>Keranjang </h1>
                                 <span>(2)</span>
                             </div>
-                            <hr> -->
+                            <hr>  -->
 
-                            <!-- Cart Items -->
-                            <!-- <div class="overflow-y-auto h-60">
+          <!-- Cart Items -->
+          <!--  <div class="overflow-y-auto h-60">
                                 <div class="flex">
                                     <div class="flex flex-none justify-center w-1/4">
                                         <img class="w-20 h-20" src="https://www.amd.com/content/dam/amd/en/images/products/processors/ryzen/2505503-ryzen-7-7800x3d.jpg" alt="">
@@ -86,101 +92,122 @@
                             </div>
                         </div>
                     </div>
-                </div> -->
+                </div>  -->
 
-                <!-- Cart Daisy.ui -->
-                <div class="dropdown dropdown-hover dropdown-end">
-                    <a href="{% url 'tokom:cart' %}">
-                        <button id="cartDropdownHoverButton"
-                            class="flex h-full md:p-3 px-1 rounded-md hover:bg-indigo-100 hover-anim">
-                            <i class="self-center fa-solid fa-cart-shopping md:text-2xl text-indigo-600 hover:text-indigo-800 hover-anim"></i>
-                        </button>
-                    </a>
+          <!-- Cart Daisy.ui -->
+          <div id="cartDropdownHover" class="dropdown dropdown-hover dropdown-end">
+            <a href="{% url 'tokom:cart' %}">
+              <button class="flex h-full md:p-3 px-1 rounded-md hover:bg-indigo-100 hover-anim">
+                <i class="self-center fa-solid fa-cart-shopping md:text-2xl text-indigo-600 hover:text-indigo-800 hover-anim"></i>
+                <span class="ml-2 text-sm font-semibold text-gray-600">{{ cart|length }} <!-- Number of items in the cart --></span>
+              </button>
+            </a>
 
-                    <!-- Cart Content -->
-                    <div id="cartDropdownHover" class="dropdown-content menu relative w-[30rem] p-2 space-y-2 self-center bg-white rounded-lg shadow-2xl">
-                        <div class="flex text-lg font-semibold">
-                            <h1>Keranjang</h1>
-                            <span>(2)</span>
-                        </div>
-                        <hr>
+            <!-- Cart Content -->
+            <div class="dropdown-content menu relative w-[30rem] p-2 space-y-2 self-center bg-white border rounded-lg shadow-2xl">
+              <div class="flex text-lg font-semibold">
+                <h1>Keranjang</h1>
+                <span>({{ cart|length }})</span>
+              </div>
+              <hr />
 
-                        <!-- Cart Items -->
-                        <div class="overflow-y-auto h-60">
-                            <div class="flex">
-                                <div class="flex flex-none justify-center w-1/4">
-                                    <img class="w-20 h-20" src="https://www.amd.com/content/dam/amd/en/images/products/processors/ryzen/2505503-ryzen-7-7800x3d.jpg" alt="">
-                                </div>
-                                <div class="flex flex-col text-sm">
-                                    <h1 class="line-clamp-1">AMD Ryzen™ 7 7800X3D Gaming Processor</h1>
-                                    <h1 class="font-semibold">Rp. 7.875.000</h1>
-                                </div>
-                            </div>
-                            <div class="flex">
-                                <div class="flex flex-none justify-center w-1/4">
-                                    <img class="w-20 h-20" src="https://www.asus.com/microsite/motherboard/AMD-AM5-X670-B650/websites/img/pd/ROG-STRIX-X670E-A-GAMING-WIFI.png" alt="">
-                                </div>
-                                <div class="flex flex-col text-sm">
-                                    <h1 class="line-clamp-1">ROG Strix X670E-A Gaming WiFi</h1>
-                                    <h1 class="font-semibold">Rp. 7.310.000</h1>
-                                </div>
-                            </div>
-                        </div>
+              <!-- Cart Items -->
+              <div class="overflow-y-auto h-60">
+                {% for item in cart %}
+                  <div class="flex space-x-4">
+                    <div class="flex flex-none justify-center w-1/4">
+                      <img class="w-20 h-20" src="{{ item.item.image.url }}" alt="{{ item.item.name }}" />
                     </div>
-                </div>
+                    <div class="flex flex-col text-sm">
+                      <h1 class="line-clamp-1">{{ item.item.name }}</h1>
+                      <h1 class="font-semibold">Rp. {{ item.price|intcomma }}</h1>
+                      <p>Quantity: {{ item.quantity }}</p>
+                    </div>
+                  </div>
+                {% empty %}
+                  <p class="text-center text-sm text-gray-500">Your cart is empty.</p>
+                {% endfor %}
+              </div>
+
+              <hr />
+              <div class="flex justify-between font-semibold">
+                <h1>Total:</h1>
+                <h1>Rp. {{ cart.get_total_price|intcomma }}</h1>
+              </div>
+
+              <a href="{% url 'tokom:checkout' %}" class="btn btn-primary bg-indigo-500 text-white w-full text-center mt-2">Checkout</a>
+            </div>
+          </div>
 
                 <!-- User link -->
                 {% if user.is_authenticated %}
-                <a href="{% url 'auth:logout' %}" class="flex align-middle p-1 rounded-md md:hover:bg-indigo-100 hover-anim">
-                    <button class="flex text-indigo-600 md:text-2xl md:mr-2 mr-0 md:p-0 px-1 hover:bg-indigo-100 rounded-lg hover-anim">
-                        <i class="self-center fa-regular fa-user xs:align-top hover:text-indigo-800"></i>
-                    </button>
-                    <div class="object-contain md:flex md:flex-col md:justify-center hidden">
-                        <p class="text-xs">Welcome back, {{ user.username }}</p>
-                        <p class="font-semibold">Logout</p>
-                    </div>
-                </a>
-                {% else %}
-                <a href="{% url 'auth:login' %}" class="flex align-middle p-1 rounded-md md:hover:bg-indigo-100 hover-anim">
-                    <button class="flex text-indigo-600 md:text-2xl md:mr-2 mr-0 md:p-0 px-1 hover:bg-indigo-100 rounded-lg hover-anim">
-                        <i class="self-center fa-regular fa-user xs:align-top hover:text-indigo-800"></i>
-                    </button>
-                    <div class="object-contain md:flex md:flex-col md:justify-center hidden">
-                        <p class="text-xs">Welcome</p>
-                        <p class="font-semibold">Sign in / Sign Up</p>
-                    </div>
-                </a>
+                <div id="UserDropdown" class="dropdown dropdown-hover dropdown-bottom dropdown-end flex cursor-pointer p-1 rounded-md md:hover:bg-indigo-100 hover-anim">
+                    <a href="{% url 'tokom:profile' user.id %}" class="flex">
+                        <button class="flex text-indigo-600 md:text-2xl md:mr-2 mr-0 md:p-0 px-1 hover:bg-indigo-100 rounded-lg hover-anim">
+                            <i class="self-center fa-regular fa-user xs:align-top hover:text-indigo-800"></i>
+                        </button>
+                        <div class="object-contain md:flex md:flex-col md:justify-center hidden">
+                            <p class="text-xs">Welcome back, {{ user.username }}</p>
+                            <p class="font-semibold">Profil</p>
+                        </div>
+                    </a>
+
+              <!-- Dropdown Item -->
+              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-44 p-2 shadow">
+                {% if user.is_superuser or user.is_staff %}
+                <li><a href="{% url 'tokom:dashboard' 'items' %}">Dashboard</a></li>
                 {% endif %}
+                <li>
+                  <a href="{% url 'tokom:order_history' %}" >Order</a>
+                </li>
+                <li>
+                  <a href="{% url 'tokom:cart' %}">Cart</a>
+                </li>
+                <li>
+                  <a href="{% url 'auth:logout' %}" class="text-red-500">Logout</a>
+                </li>
+              </ul>
             </div>
-        </nav>
-        
-        <!-- Hidden -->
-        <div class="md:hidden flex justify-center mt-1">
-            <input type="text" class="w-full xs:w-96 border-solid border-2 border-indigo-300 rounded-l-lg h-auto px-1 outline-none focus:ring-2 focus:ring-indigo-400 hover-anim" placeholder="Cari. . .">
-            <button class="border-solid border-2 border-y-indigo-300 border-r-indigo-300 rounded-r-lg bg-transparent text-indigo-600 py-1 px-4 hover:bg-indigo-600 hover:text-white hover-anim"><i class="fa-solid fa-magnifying-glass"></i></button>
+          {% else %}
+            <a href="{% url 'auth:login' %}" class="flex align-middle p-1 rounded-md md:hover:bg-indigo-100 hover-anim">
+              <button class="flex text-indigo-600 md:text-2xl md:mr-2 mr-0 md:p-0 px-1 hover:bg-indigo-100 rounded-lg hover-anim"><i class="self-center fa-regular fa-user xs:align-top hover:text-indigo-800"></i></button>
+              <div class="object-contain md:flex md:flex-col md:justify-center hidden">
+                <p class="text-xs">Welcome</p>
+                <p class="font-semibold">Sign in / Sign Up</p>
+              </div>
+            </a>
+          {% endif %}
         </div>
+      </nav>
+
+      <!-- Hidden -->
+      <div class="md:hidden flex justify-center mt-1">
+        <input type="text" class="w-full xs:w-96 border-solid border-2 border-indigo-300 rounded-l-lg h-auto px-1 outline-none focus:ring-2 focus:ring-indigo-400 hover-anim" placeholder="Cari. . ." />
+        <button class="border-solid border-2 border-y-indigo-300 border-r-indigo-300 rounded-r-lg bg-transparent text-indigo-600 py-1 px-4 hover:bg-indigo-600 hover:text-white hover-anim"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
     </header>
 
-    <div class="">
-        <div id="overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-10"></div>
-        {% block content %}
-        {% endblock %}
+    <div class="min-h-[80vh]">
+      <div id="overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-10"></div>
+      {% block content %}
+
+      {% endblock %}
     </div>
 
     <!-- Footer -->
-    <footer class="bg-indigo-900 flex justify-center bottom-0">
-        <div class="flex flex-col justify-center py-8 basis-3/4">
-            <div class="flex justify-evenly py-4 basis-1/2 text-lg text-indigo-50">
-                <a href=""><i class="fa-brands fa-facebook"></i></a>
-                <a href=""><i class="fa-brands fa-twitter"></i></a>
-                <a href=""><i class="fa-brands fa-youtube"></i></a>
-                <a href=""><i class="fa-brands fa-instagram"></i></a>
-                <a href=""><i class="fa-brands fa-github"></i></a>
-            </div>
-            <p class="text-xs text-center mt-8 text-indigo-50">©2024 Tokom, Inc. All rights reserved.</p>
+    <footer class="bg-indigo-900 flex justify-center w-full bottom-0">
+      <div class="flex flex-col justify-center py-8 basis-3/4">
+        <div class="flex justify-evenly py-4 basis-1/2 text-lg text-indigo-50">
+          <a href=""><i class="fa-brands fa-facebook"></i></a>
+          <a href=""><i class="fa-brands fa-twitter"></i></a>
+          <a href=""><i class="fa-brands fa-youtube"></i></a>
+          <a href=""><i class="fa-brands fa-instagram"></i></a>
+          <a href=""><i class="fa-brands fa-github"></i></a>
         </div>
+        <p class="text-xs text-center mt-8 text-indigo-50">©2024 Tokom, Inc. All rights reserved.</p>
+      </div>
     </footer>
-</body>
-<script src="{% static 'node_modules/flowbite/dist/flowbite.min.js' %}"></script>
-<script src="{% static 'js/control.js' %}"></script>
+  </body>
+  <script src="{% static 'node_modules/flowbite/dist/flowbite.min.js' %}"></script>
+  <script src="{% static 'js/control.js' %}"></script>
 </html>

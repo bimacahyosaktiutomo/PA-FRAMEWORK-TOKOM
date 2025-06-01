@@ -25,16 +25,6 @@
         <div class="max-w-sm mx-auto mt-4 p-6 bg-white border border-gray-200 rounded-lg shadow-md">
             <h1 class="text-3xl font-semibold text-center text-gray-800 mb-6">Register</h1>
         
-            {% comment %} {% if messages %}
-                <div class="mb-4">
-                    {% for message in messages %}
-                        <div class="text-sm {% if message.tags == 'error' %}text-red-500{% else %}text-green-500{% endif %}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %} {% endcomment %}
-        
             <form method="post">
                 {% csrf_token %}
                 

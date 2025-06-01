@@ -1,5 +1,7 @@
 # Ignore __pycache__ directories
 __pycache__/
+*.pyc
 
 # Ignore all image files in the media/items folder
-media/items/
+**/media/
+**/media/items/

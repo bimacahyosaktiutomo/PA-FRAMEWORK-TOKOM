@@ -5,3 +5,4 @@ __pycache__/
 # Ignore all image files in the media/items folder
 **/media/
 **/media/items/
+**/media/reviews/
